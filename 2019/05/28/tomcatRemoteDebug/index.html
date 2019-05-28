@@ -334,7 +334,7 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        669
+                        620
                     </div>
                     
 
@@ -364,7 +364,7 @@
 <p>一旦远程调试开始，访问调试代码的请求都会挂起。注意，划重点了哈，千万不要在正式服务中这么干，要不然别说是我教你的哈</p>
 <h2 id="Tomcat的配置"><a href="#Tomcat的配置" class="headerlink" title="Tomcat的配置"></a>Tomcat的配置</h2><p>好，Tomcat的配置还是非常简单的</p>
 <h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>如下图：</p>
-<p><a href="https://upload-images.jianshu.io/upload_images/810934-888e7b8be432217c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" target="_blank" rel="noopener">https://upload-images.jianshu.io/upload_images/810934-888e7b8be432217c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240</a><br>在Tomcat的catalina.sh（windows下是catalina.bat）中添加如下代码</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/810934-888e7b8be432217c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="pic1"><br>在Tomcat的catalina.sh（windows下是catalina.bat）中添加如下代码</p>
 <p>set JPDA_TRANSPORT=dt_socket<br>set JPDA_ADDRESS=8000<br>set JPDA_SUSPEND=n</p>
 <p>解释一下：</p>
 <p>JPDA_TRANSPORT：调试器（也就是Eclipse或者IDEA）和虚拟机之间的传输方式</p>
@@ -374,7 +374,7 @@
 <p>Eclipse的配置</p>
 <p>OK，Tomcat的配置是不是很简单，接下说Eclipse的配置</p>
 <h4 id="第一步-1"><a href="#第一步-1" class="headerlink" title="第一步"></a>第一步</h4><p>先把你要debug的代码打上断点</p>
-<h4 id="第二步-1"><a href="#第二步-1" class="headerlink" title="第二步"></a>第二步</h4><p>如图：<br><a href="https://upload-images.jianshu.io/upload_images/810934-3a3157c58db7aa08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" target="_blank" rel="noopener">https://upload-images.jianshu.io/upload_images/810934-3a3157c58db7aa08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240</a><br>点击bug虫旁边的三角，下拉菜单选择Debug Configurations打开之后，界面如下：<br><a href="https://upload-images.jianshu.io/upload_images/810934-5c2fdd802222cb2d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" target="_blank" rel="noopener">https://upload-images.jianshu.io/upload_images/810934-5c2fdd802222cb2d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240</a></p>
+<h4 id="第二步-1"><a href="#第二步-1" class="headerlink" title="第二步"></a>第二步</h4><p>如图：<br><img src="https://upload-images.jianshu.io/upload_images/810934-3a3157c58db7aa08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="pic2"><br>点击bug虫旁边的三角，下拉菜单选择Debug Configurations打开之后，界面如下：<br><img src="https://upload-images.jianshu.io/upload_images/810934-5c2fdd802222cb2d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="pic3"></p>
 <p>找到Remote Java Application选项，如果你下面有一个你要调试的应用了，点击打开，没有的话就点击上面的新建按钮创建一个。在右侧，看看Project一栏是不是你要调试的应用，不是的话重新选择在Host中填写你要远程调试的Tomcat服务器IP地址在Port填写端口，就是我们上面再catalina.sh中配置的8000OK，都填写好了之后，点击下面的Debug按钮</p>
 <h4 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h4><p>请求远程Tomcat，调用你要调试的代码。Duang！！！是不是Eclipse进入了Debug模式？</p>
 <h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>如果你是IDEA用户，配置起来跟Eclipse差不多，可以参考这篇博客<a href="http://blog.csdn.net/mhmyqn/article/details/49160339" target="_blank" rel="noopener">IDEA 14在MAC下如何对tomcat进行远程调试</a>。</p>
@@ -800,7 +800,7 @@
             &copy;2019枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">1.3k</span>
+                <span class="white-color">1.2k</span>
             
 
             
