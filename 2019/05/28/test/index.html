@@ -4,8 +4,9 @@
 
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, 枫山别院,博客,Java,框架">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex">
+    <meta name="keywords" content="Hikari:Apparent connection leak detected连接泄露分析, 枫山别院,博客,Java,框架">
+    <meta name="description" content="部分报错日志如下:
+16-05-2019 13:25:46.494 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.ProxyLeakTask.run - Connection">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Hello World | 枫山别院</title>
+    <title>Hikari:Apparent connection leak detected连接泄露分析 | 枫山别院</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -179,13 +180,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Hello World
+                        Hikari:Apparent connection leak detected连接泄露分析
                     </div>
                 </div>
             </div>
@@ -296,12 +297,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/node-js/" target="_blank">
-                                <span class="chip bg-color">node.js</span>
+                            <a href="/tags/Hikari/" target="_blank">
+                                <span class="chip bg-color">Hikari</span>
                             </a>
                         
-                            <a href="/tags/express/" target="_blank">
-                                <span class="chip bg-color">express</span>
+                            <a href="/tags/中间件/" target="_blank">
+                                <span class="chip bg-color">中间件</span>
+                            </a>
+                        
+                            <a href="/tags/数据库/" target="_blank">
+                                <span class="chip bg-color">数据库</span>
                             </a>
                         
                     </div>
@@ -312,8 +317,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/学习笔记/" class="post-category" target="_blank">
-                                学习笔记
+                            <a href="/categories/问题排查/" class="post-category" target="_blank">
+                                问题排查
                             </a>
                         
                     </div>
@@ -324,21 +329,21 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2018-06-07
+                    2019-05-28
                 </div>
 
                 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        75
+                        600
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        1 分
+                        2 分
                     </div>
                     
                 
@@ -354,19 +359,39 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
-</code></pre>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+                <p>部分报错日志如下:</p>
+<pre><code>16-05-2019 13:25:46.494 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.ProxyLeakTask.run - Connection leak detection triggered for com.mysql.jdbc.JDBC4Connection@7c3beffb, stack trace follows
+java.lang.Exception: Apparent connection leak detected
+    at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:111)
+    at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:77)
+    at org.mybatis.spring.transaction.SpringManagedTransaction.openConnection(SpringManagedTransaction.java:84)
+    at org.mybatis.spring.transaction.SpringManagedTransaction.getConnection(SpringManagedTransaction.java:70)
+    at org.apache.ibatis.executor.BaseExecutor.getConnection(BaseExecutor.java:336)
+    at org.apache.ibatis.executor.SimpleExecutor.prepareStatement(SimpleExecutor.java:84)
+    at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:62)
+    at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:324)
+    at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156)
+    at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109)
+    at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83)
+    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:148)
+    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:141)
+    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:77)
+    at sun.reflect.GeneratedMethodAccessor148.invoke(Unknown Source)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke(Method.java:498)
+    at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:434)
+    at com.sun.proxy.$Proxy107.selectOne(Unknown Source)
+    at org.mybatis.spring.SqlSessionTemplate.selectOne(SqlSessionTemplate.java:167)
+</code></pre><p>日志显示，检测到了连接泄露<br>Hikari配置如下：</p>
+<pre><code>hikari:
+      maximum-pool-size: 100
+      minimum-idle: 0
+      leak-detection-threshold: 180000
+      connection-timeout: 180000
+      validation-timeout: 180000
+      idle-timeout: 180000
+</code></pre><p>leak-detection-threshold:用来设置连接被占用的超时时间，单位为毫秒，默认为0，表示禁用连接泄露检测。<br>connection-timeout:从连接池获取连接的超时时间。</p>
+<p>分析源代码发现，该错误的原因是从连接池获取连接超时，触发了连接泄露检测。<br>在org.springframework.jdbc.datasource.DataSourceUtils#doGetConnection中，<br><img src="https://upload-images.jianshu.io/upload_images/810934-e08f2ee9e723620d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br>此处调用了hikari，从连接池中获取连接，进入该方法继续看，<br>com.zaxxer.hikari.HikariDataSource#getConnection()<br><img src="https://upload-images.jianshu.io/upload_images/810934-8f57bab452892b20.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br>在com.zaxxer.hikari.pool.HikariPool#getConnection(long)中，<br><img src="https://upload-images.jianshu.io/upload_images/810934-7c8ac9222e8f5f7a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br>com.zaxxer.hikari.pool.ProxyLeakTask#ProxyLeakTask(com.zaxxer.hikari.pool.ProxyLeakTask, com.zaxxer.hikari.pool.PoolEntry)中<br><img src="https://upload-images.jianshu.io/upload_images/810934-11fa93ece27156b0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br>分析上面的代码会发现，在获取Connection的时候，创建了一个ProxyLeakTask，这个task是一个定时任务，在leakDetectionThreshold毫秒后调用run()方法抛出Apparent connection leak detected异常。也就是说，获取连接的时间+使用连接的时间+还回连接的时间，超出了leakDetectionThreshold毫秒，就抛出检测到连接泄露的异常。结合我们的业务发现，此处是获取连接的时间超出了leakDetectionThreshold毫秒，但是，connection-timeout设置的跟leakDetectionThreshold一样，这样在获取连接超时的时候，大概率会先触发leakDetectionThreshold的异常，导致异常不准确，所以建议leakDetectionThreshold要设置的比connection-timeout长，不能是一样的。</p>
 
             </div>
             <hr>
@@ -522,9 +547,9 @@
             </div>
             <br>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
-                    《Hello World》
+                    《Hikari:Apparent connection leak detected连接泄露分析》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2018/06/07/hello-world/" property="cc:attributionName" rel="cc:attributionURL">
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/05/28/test/" property="cc:attributionName" rel="cc:attributionURL">
                 枫山别院
             </a> 采用
             <a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh">
@@ -565,7 +590,8 @@
         
         <div class="article col s12 m6 overflow-policy" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2019/05/28/test/">
                     <div class="card-image">
@@ -584,9 +610,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-28
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-28
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -599,6 +625,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -622,7 +649,7 @@
         
         <div class="article col s12 m6 overflow-policy" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="fa fa-dot-circle-o"></i>
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
                 <a href="/2018/06/07/hello-world/">
@@ -656,7 +683,6 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
