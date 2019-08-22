@@ -7,8 +7,10 @@
     <meta name="keywords" content="Sail中文文档:一个开发环境快速部署工具-05-项目所需的插件, 枫山别院,博客,Java,框架,架构">
     <meta name="description" content="05-项目所需的插件通过Dockerfile来安装VS Code插件是超级简单的。在Dockerfile中，调用installext &amp;lt;extension ID&amp;gt;即可。
 
-提示：在插件市场的详细页面可以找到插件的id例如：
-FR">
+提示：在插件市场的详细页面可以找到插件的id
+
+例如：
+">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -383,11 +385,12 @@ FR">
             <div id="articleContent">
                 <h1 id="05-项目所需的插件"><a href="#05-项目所需的插件" class="headerlink" title="05-项目所需的插件"></a>05-项目所需的插件</h1><p>通过Dockerfile来安装VS Code插件是超级简单的。<br>在Dockerfile中，调用<code>installext &lt;extension ID&gt;</code>即可。</p>
 <blockquote>
-<p>提示：在插件市场的详细页面可以找到插件的id<br><img src="https://sail.dev/extension-id.png" alt="vscode"><br>例如：</p>
+<p>提示：在插件市场的详细页面可以找到插件的id<br><img src="https://sail.dev/extension-id.png" alt="vscode"></p>
+</blockquote>
+<p>例如：</p>
 <pre><code>FROM codercom/ubuntu-dev:latest
 RUN installext vscodevim.vim
 </code></pre><p>但是<code>installext</code>命令只在<code>ubuntu-dev</code> or <code>ubuntu-dev-*</code>镜像中是可用的。</p>
-</blockquote>
 <h2 id="其实"><a href="#其实" class="headerlink" title="其实"></a>其实</h2><p><code>code-server</code>的两个拓展目录是:</p>
 <ul>
 <li><code>~/.vscode/extensions</code>这个目录包含环境中特需的插件</li>
