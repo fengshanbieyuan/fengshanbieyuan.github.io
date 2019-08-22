@@ -4,11 +4,11 @@
 
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Tomcat 远程调试(debug), 枫山别院,博客,Java,框架">
-    <meta name="description" content="Tomcat开启远程调试以及怎么在Eclipse中配置远程调试
-前言在很多时候我们需要调试一些bug，但是代码运行在远程服务器环境中，这个时候应该怎么办呢？  答案就是：远程调试
-注意事项：
-远程代码必须跟本地代码一致，否则单步运行的时候你">
+    <meta name="keywords" content="Sail:一个开发环境快速部署工具-03-浏览器插件, 枫山别院,博客,Java,框架">
+    <meta name="description" content="一个开发环境快速部署工具-03-浏览器插件浏览器插件Sail的浏览器插件可以让您在Github或者Gitlab中，只需要点击一下就可以打开项目了。
+Your browser does not support the video tag.
+
+">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -16,7 +16,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Tomcat 远程调试(debug) | 枫山别院</title>
+    <title>Sail:一个开发环境快速部署工具-03-浏览器插件 | 枫山别院</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -182,13 +182,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('medias/featureimages/23.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Tomcat 远程调试(debug)
+                        Sail:一个开发环境快速部署工具-03-浏览器插件
                     </div>
                 </div>
             </div>
@@ -299,12 +299,32 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Tomcat/" target="_blank">
-                                <span class="chip bg-color">Tomcat</span>
+                            <a href="/tags/Sail/" target="_blank">
+                                <span class="chip bg-color">Sail</span>
                             </a>
                         
-                            <a href="/tags/Debug/" target="_blank">
-                                <span class="chip bg-color">Debug</span>
+                            <a href="/tags/开发环境/" target="_blank">
+                                <span class="chip bg-color">开发环境</span>
+                            </a>
+                        
+                            <a href="/tags/文档/" target="_blank">
+                                <span class="chip bg-color">文档</span>
+                            </a>
+                        
+                            <a href="/tags/中文文档/" target="_blank">
+                                <span class="chip bg-color">中文文档</span>
+                            </a>
+                        
+                            <a href="/tags/部署/" target="_blank">
+                                <span class="chip bg-color">部署</span>
+                            </a>
+                        
+                            <a href="/tags/快速/" target="_blank">
+                                <span class="chip bg-color">快速</span>
+                            </a>
+                        
+                            <a href="/tags/code-server/" target="_blank">
+                                <span class="chip bg-color">code-server</span>
                             </a>
                         
                     </div>
@@ -315,8 +335,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Tomcat/" class="post-category" target="_blank">
-                                Tomcat
+                            <a href="/categories/Sail/" class="post-category" target="_blank">
+                                Sail
                             </a>
                         
                     </div>
@@ -327,21 +347,21 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-05-28
+                    2019-08-22
                 </div>
 
                 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        620
+                        90
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        2 分
+                        1 分
                     </div>
                     
                 
@@ -357,30 +377,13 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Tomcat开启远程调试以及怎么在Eclipse中配置远程调试</p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在很多时候我们需要调试一些bug，但是代码运行在远程服务器环境中，这个时候应该怎么办呢？  答案就是：远程调试</p>
-<p>注意事项：</p>
-<p>远程代码必须跟本地代码一致，否则单步运行的时候你会发现一些奇怪的事情</p>
-<p>一旦远程调试开始，访问调试代码的请求都会挂起。注意，划重点了哈，千万不要在正式服务中这么干，要不然别说是我教你的哈</p>
-<h2 id="Tomcat的配置"><a href="#Tomcat的配置" class="headerlink" title="Tomcat的配置"></a>Tomcat的配置</h2><p>好，Tomcat的配置还是非常简单的</p>
-<h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>如下图：</p>
-<p><img src="https://blog-1256176814.cos.ap-beijing.myqcloud.com/1.jpg" alt="pic1"><br>在Tomcat的catalina.sh（windows下是catalina.bat）中添加如下代码</p>
-<p>set JPDA_TRANSPORT=dt_socket<br>set JPDA_ADDRESS=8000<br>set JPDA_SUSPEND=n</p>
-<p>解释一下：</p>
-<p>JPDA_TRANSPORT：调试器（也就是Eclipse或者IDEA）和虚拟机之间的传输方式</p>
-<p>JPDA_ADDRESS：连接端口，在调试器连接虚拟机时会用到</p>
-<p>JPDA_SUSPEND：是否Tomcat启动之后就挂起，等待调试器连接；n是不挂起，调试器可以随时连接</p>
-<h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><p>好了，配置完成之后，如果没有部署代码，把你的代码部署到Tomcat中，然后使用命令./catalina.sh jpda start启动Tomcat服务器</p>
-<p>Eclipse的配置</p>
-<p>OK，Tomcat的配置是不是很简单，接下说Eclipse的配置</p>
-<h4 id="第一步-1"><a href="#第一步-1" class="headerlink" title="第一步"></a>第一步</h4><p>先把你要debug的代码打上断点</p>
-<h4 id="第二步-1"><a href="#第二步-1" class="headerlink" title="第二步"></a>第二步</h4><p>如图：<br><img src="https://blog-1256176814.cos.ap-beijing.myqcloud.com/2.jpg" alt="pic2"><br>点击bug虫旁边的三角，下拉菜单选择Debug Configurations打开之后，界面如下：<br><img src="https://blog-1256176814.cos.ap-beijing.myqcloud.com/3.jpg" alt="pic3"></p>
-<p>找到Remote Java Application选项，如果你下面有一个你要调试的应用了，点击打开，没有的话就点击上面的新建按钮创建一个。在右侧，看看Project一栏是不是你要调试的应用，不是的话重新选择在Host中填写你要远程调试的Tomcat服务器IP地址在Port填写端口，就是我们上面再catalina.sh中配置的8000OK，都填写好了之后，点击下面的Debug按钮</p>
-<h4 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h4><p>请求远程Tomcat，调用你要调试的代码。Duang！！！是不是Eclipse进入了Debug模式？</p>
-<h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>如果你是IDEA用户，配置起来跟Eclipse差不多，可以参考这篇博客<a href="http://blog.csdn.net/mhmyqn/article/details/49160339" target="_blank" rel="noopener">IDEA 14在MAC下如何对tomcat进行远程调试</a>。</p>
-<p>如果你想深入了解Java远程调试的内容，请自行搜索JPDA进行学习。</p>
-<p>参考资料：<a href="https://www.ibm.com/developerworks/cn/views/java/libraryview.jsp?search_by=%E6%B7%B1%E5%85%A5+Java+%E8%B0%83%E8%AF%95%E4%BD%93%E7%B3%BB" target="_blank" rel="noopener">IBM深入Java调试体系</a></p>
-<p>转载请注明出处，谢谢！</p>
+                <h1 id="一个开发环境快速部署工具-03-浏览器插件"><a href="#一个开发环境快速部署工具-03-浏览器插件" class="headerlink" title="一个开发环境快速部署工具-03-浏览器插件"></a>一个开发环境快速部署工具-03-浏览器插件</h1><h2 id="浏览器插件"><a href="#浏览器插件" class="headerlink" title="浏览器插件"></a>浏览器插件</h2><p>Sail的浏览器插件可以让您在Github或者Gitlab中，只需要点击一下就可以打开项目了。</p>
+<video src="https://sail.dev/github-open.mp4" controls="controls"><br>Your browser does not support the video tag.<br></video>
+
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ol>
+<li>您可以使用命令<code>sail install-for-chrome-ext</code>来安装Chrome插件manifest.json</li>
+<li>您也可以从<a href="https://chrome.google.com/webstore/detail/sail/deeepphleikpinikcbjplcgojfhkcmna" target="_blank" rel="noopener">Chrome Marketplace</a>安装</li>
+</ol>
 
             </div>
             <hr>
@@ -536,9 +539,9 @@
             </div>
             <br>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
-                    《Tomcat 远程调试(debug)》
+                    《Sail:一个开发环境快速部署工具-03-浏览器插件》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/05/28/tomcatRemoteDebug/" property="cc:attributionName" rel="cc:attributionURL">
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/22/SailDocument-03-BrowserExtension/" property="cc:attributionName" rel="cc:attributionURL">
                 枫山别院
             </a> 采用
             <a rel="license" href="https://creativecommons.org/licenses/by/4.0/deed.zh">
@@ -581,22 +584,24 @@
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/08/22/SailDocument-03-BrowserExtension/">
+                <a href="/2019/08/22/SailDocument-02-Installation/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="Sail:一个开发环境快速部署工具-03-浏览器插件">
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="Sail:一个开发环境快速部署工具-02-安装">
                         
-                        <span class="card-title">Sail:一个开发环境快速部署工具-03-浏览器插件</span>
+                        <span class="card-title">Sail:一个开发环境快速部署工具-02-安装</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            一个开发环境快速部署工具-03-浏览器插件浏览器插件Sail的浏览器插件可以让您在Github或者Gitlab中，只需要点击一下就可以打开项目了。
-Your browser does not support the video tag.
+                            Sail:一个开发环境快速部署工具-02-安装安装支持的平台当前的Sail只支持Linux和MacOS，Windows将在未来的版本中得到支持。
+本地依赖在使用Sail之前，必须安装几个依赖的组件：
 
-
+Docker
+Git
+Chrome 或
                         
                     </div>
                     <div class="publish-info">
@@ -657,20 +662,21 @@ Your browser does not support the video tag.
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/05/28/hikari-leak/">
+                <a href="/2019/05/28/tomcatRemoteDebug/">
                     <div class="card-image">
                         
+                        <img src="medias/featureimages/23.jpg" class="responsive-img" alt="Tomcat 远程调试(debug)">
                         
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Hikari:Apparent connection leak detected连接泄露分析">
-                        
-                        <span class="card-title">Hikari:Apparent connection leak detected连接泄露分析</span>
+                        <span class="card-title">Tomcat 远程调试(debug)</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            部分报错日志如下:
-16-05-2019 13:25:46.494 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.ProxyLeakTask.run - Connection
+                            Tomcat开启远程调试以及怎么在Eclipse中配置远程调试
+前言在很多时候我们需要调试一些bug，但是代码运行在远程服务器环境中，这个时候应该怎么办呢？  答案就是：远程调试
+注意事项：
+远程代码必须跟本地代码一致，否则单步运行的时候你
                         
                     </div>
                     <div class="publish-info">
@@ -681,8 +687,8 @@ Your browser does not support the video tag.
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/问题排查/" class="post-category" target="_blank">
-                                    问题排查
+                            <a href="/categories/Tomcat/" class="post-category" target="_blank">
+                                    Tomcat
                                 </a>
                             
                             
@@ -692,16 +698,12 @@ Your browser does not support the video tag.
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Hikari/" target="_blank">
-                        <span class="chip bg-color">Hikari</span>
+                    <a href="/tags/Tomcat/" target="_blank">
+                        <span class="chip bg-color">Tomcat</span>
                     </a>
                     
-                    <a href="/tags/中间件/" target="_blank">
-                        <span class="chip bg-color">中间件</span>
-                    </a>
-                    
-                    <a href="/tags/数据库/" target="_blank">
-                        <span class="chip bg-color">数据库</span>
+                    <a href="/tags/Debug/" target="_blank">
+                        <span class="chip bg-color">Debug</span>
                     </a>
                     
                 </div>
