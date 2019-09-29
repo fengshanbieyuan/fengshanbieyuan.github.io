@@ -380,7 +380,7 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <p>首先搭建一个Spring Boot工程，非常简单，在<a href="https://start.spring.io/" target="_blank" rel="noopener">Spring Initializr</a>上快速生成一个项目就可以了，使用Java语言，其他的可以根据需要自己选择。<br>如果你没有什么特殊需要，可以参照我下面的设置。<br><img src="https://raw.githubusercontent.com/fengshanbieyuan/picbed/master/img/20190929140316.jpg" alt="Initializr"><br>点击Generate之后，下载生成的工程。<br>在工程目录下，执行<code>mvn package -Dmaven.test.skip=true</code>命令，打包。</p>
-<p>在target目录下，会生成一个jar，名字是demo-0.0.1-SNAPSHOT.jar，这就是我们要分析的jar，如下图:<br><img src="https://raw.githubusercontent.com/fengshanbieyuan/picbed/master/img/20190929144245.png" alt="jar"><br>然后我们解压这个jar，看看跟普通的jar有什么区别。<br>解压之后，目录是这样的，只展开了2级目录(详细的请看附录):</p>
+<p>在target目录下，会生成一个jar，名字是demo-0.0.1-SNAPSHOT.jar，这就是我们要分析的jar，如下图:<br><img src="https://raw.githubusercontent.com/fengshanbieyuan/picbed/master/img/20190929220745.jpg" alt><br>然后我们解压这个jar，看看跟普通的jar有什么区别。<br>解压之后，目录是这样的，只展开了2级目录(详细的请看附录):</p>
 <pre><code>├── BOOT-INF
 │   ├── classes
 │   └── lib
