@@ -400,7 +400,7 @@ java.lang.Exception: Apparent connection leak detected
       validation-timeout: 180000
       idle-timeout: 180000
 </code></pre><p>leak-detection-threshold:用来设置连接被占用的超时时间，单位为毫秒，默认为0，表示禁用连接泄露检测。<br>connection-timeout:从连接池获取连接的超时时间。</p>
-<p>分析源代码发现，该错误的原因是从连接池获取连接超时，触发了连接泄露检测。<br>此处spring调用了doGetConnection从hikari中获取连接，<br>在org.springframework.jdbc.datasource.DataSourceUtils#doGetConnection中，<br><img src="https://raw.githubusercontent.com/fengshanbieyuan/picbed/master/img/20190628170547.png" alt><br>我们看看hikari中的实现，，进入该方法继续看，<br>com.zaxxer.hikari.HikariDataSource#getConnection()<br><img src="https://raw.githubusercontent.com/fengshanbieyuan/picbed/master/img/20190628170452.png" alt><br>在com.zaxxer.hikari.pool.HikariPool#getConnection(long)中，<br><img src="https://raw.githubusercontent.com/fengshanbieyuan/picbed/master/img/20190628170652.png" alt><br>com.zaxxer.hikari.pool.ProxyLeakTask#ProxyLeakTask(com.zaxxer.hikari.pool.ProxyLeakTask, com.zaxxer.hikari.pool.PoolEntry)中<br><img src="https://raw.githubusercontent.com/fengshanbieyuan/picbed/master/img/20190628171030.png" alt><br>这个地方是真正的获取连接的实现了，<br>分析上面的代码会发现，在获取Connection的时候，创建了一个ProxyLeakTask，这个task是一个定时任务，在leakDetectionThreshold毫秒后调用run()方法抛出Apparent connection leak detected异常。<br><img src="https://raw.githubusercontent.com/fengshanbieyuan/picbed/master/img/20190928133051.jpg" alt><br>也就是说，获取连接的时间+使用连接的时间+还回连接的时间，超出了leakDetectionThreshold毫秒，就抛出检测到连接泄露的异常。结合我们的业务发现，此处是获取连接的时间超出了leakDetectionThreshold毫秒，但是，connection-timeout设置的跟leakDetectionThreshold一样，这样在获取连接超时的时候，大概率会先触发leakDetectionThreshold的异常，导致异常不准确，所以建议leakDetectionThreshold要设置的比connection-timeout长，不能是一样的。</p>
+<p>分析源代码发现，该错误的原因是从连接池获取连接超时，触发了连接泄露检测。<br>此处spring调用了doGetConnection从hikari中获取连接，<br>在org.springframework.jdbc.datasource.DataSourceUtils#doGetConnection中，<br><img src="img/hikari-1.jpg" alt="hikari-1"><br>我们看看hikari中的实现，，进入该方法继续看，<br>com.zaxxer.hikari.HikariDataSource#getConnection()<br><img src="img/hikari-2.jpg" alt="hikari-2"><br>在com.zaxxer.hikari.pool.HikariPool#getConnection(long)中，<br><img src="img/hikari-3.jpg" alt="hikari-3"><br>com.zaxxer.hikari.pool.ProxyLeakTask#ProxyLeakTask(com.zaxxer.hikari.pool.ProxyLeakTask, com.zaxxer.hikari.pool.PoolEntry)中<br><img src="img/hikari-4.jpg" alt="hikari-4"><br>这个地方是真正的获取连接的实现了，<br>分析上面的代码会发现，在获取Connection的时候，创建了一个ProxyLeakTask，这个task是一个定时任务，在leakDetectionThreshold毫秒后调用run()方法抛出Apparent connection leak detected异常。<br><img src="img/hikari-5.jpg" alt="hikari-5"><br>也就是说，获取连接的时间+使用连接的时间+还回连接的时间，超出了leakDetectionThreshold毫秒，就抛出检测到连接泄露的异常。结合我们的业务发现，此处是获取连接的时间超出了leakDetectionThreshold毫秒，但是，connection-timeout设置的跟leakDetectionThreshold一样，这样在获取连接超时的时候，大概率会先触发leakDetectionThreshold的异常，导致异常不准确，所以建议leakDetectionThreshold要设置的比connection-timeout长，不能是一样的。</p>
 
             </div>
             <hr>
@@ -601,33 +601,33 @@ java.lang.Exception: Apparent connection leak detected
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/05/28/tomcatRemoteDebug/">
+                <a href="/2019/08/06/SailDocument-01-Introduction/">
                     <div class="card-image">
                         
-                        <img src="medias/featureimages/23.jpg" class="responsive-img" alt="Tomcat 远程调试(debug)">
                         
-                        <span class="card-title">Tomcat 远程调试(debug)</span>
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="Sail:一个开发环境快速部署工具-01-简介">
+                        
+                        <span class="card-title">Sail:一个开发环境快速部署工具-01-简介</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Tomcat开启远程调试以及怎么在Eclipse中配置远程调试
-前言在很多时候我们需要调试一些bug，但是代码运行在远程服务器环境中，这个时候应该怎么办呢？  答案就是：远程调试
-注意事项：
-远程代码必须跟本地代码一致，否则单步运行的时候你
+                            Sail:一个开发环境快速部署工具-01-简介简介什么是Sail?Sail是一个用来管理docker化的开发环境的CLI工具。它使用docker工具链和code-server来创建预配置，不可变和源代码控制的开发环境。
+
+译注：Sail是一
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-05-28
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-06
                         </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Tomcat/" class="post-category" target="_blank">
-                                    Tomcat
+                            <a href="/categories/Sail/" class="post-category" target="_blank">
+                                    Sail
                                 </a>
                             
                             
@@ -637,12 +637,32 @@ java.lang.Exception: Apparent connection leak detected
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Tomcat/" target="_blank">
-                        <span class="chip bg-color">Tomcat</span>
+                    <a href="/tags/Sail/" target="_blank">
+                        <span class="chip bg-color">Sail</span>
                     </a>
                     
-                    <a href="/tags/Debug/" target="_blank">
-                        <span class="chip bg-color">Debug</span>
+                    <a href="/tags/开发环境/" target="_blank">
+                        <span class="chip bg-color">开发环境</span>
+                    </a>
+                    
+                    <a href="/tags/文档/" target="_blank">
+                        <span class="chip bg-color">文档</span>
+                    </a>
+                    
+                    <a href="/tags/中文文档/" target="_blank">
+                        <span class="chip bg-color">中文文档</span>
+                    </a>
+                    
+                    <a href="/tags/部署/" target="_blank">
+                        <span class="chip bg-color">部署</span>
+                    </a>
+                    
+                    <a href="/tags/快速/" target="_blank">
+                        <span class="chip bg-color">快速</span>
+                    </a>
+                    
+                    <a href="/tags/code-server/" target="_blank">
+                        <span class="chip bg-color">code-server</span>
                     </a>
                     
                 </div>
@@ -821,7 +841,7 @@ java.lang.Exception: Apparent connection leak detected
             &copy;2019枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">10.5k</span>
+                <span class="white-color">10.3k</span>
             
 
             
