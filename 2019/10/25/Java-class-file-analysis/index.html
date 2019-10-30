@@ -13,11 +13,11 @@
     </script>
     <meta charset="utf-8">
     <meta name="google-site-verification" content="tW1RD83KSuf9lr73Vi76x7_5A1UdOy12mdLqpHWY5Mc">
-    <meta name="keywords" content="Java Class 字节码文件分析----附带逐字节码分析图, 枫山别院,博客,Java,框架,架构">
-    <meta name="description" content="今天给大家分享下Java Class字节码文件的结构解析。
+    <meta name="keywords" content="Java Class 字节码文件结构分析----附带逐字节码分析图, 枫山别院,博客,Java,框架,架构">
+    <meta name="description" content="今天给大家分享下Java Class字节码文件的结构解析。（文末附有详细大图）
 代码首先我们创建一个Java类，然后添加一些成员变量和方法，如下:
 public class Test {
-    String name = &amp;quot;hello&amp;quot;;">
+    String name = &amp;quot;he">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -25,7 +25,7 @@ public class Test {
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Java Class 字节码文件分析----附带逐字节码分析图 | 枫山别院</title>
+    <title>Java Class 字节码文件结构分析----附带逐字节码分析图 | 枫山别院</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -191,13 +191,13 @@ public class Test {
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Java Class 字节码文件分析----附带逐字节码分析图
+                        Java Class 字节码文件结构分析----附带逐字节码分析图
                     </div>
                 </div>
             </div>
@@ -324,6 +324,10 @@ public class Test {
                                 <span class="chip bg-color">分析图</span>
                             </a>
                         
+                            <a href="/tags/结构/" target="_blank">
+                                <span class="chip bg-color">结构</span>
+                            </a>
+                        
                     </div>
                     
                 </div>
@@ -351,14 +355,14 @@ public class Test {
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        417
+                        1.2k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        1 分
+                        4 分
                     </div>
                     
                 
@@ -374,7 +378,7 @@ public class Test {
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>今天给大家分享下Java Class字节码文件的结构解析。</p>
+                <p>今天给大家分享下Java Class字节码文件的结构解析。（文末附有详细大图）</p>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>首先我们创建一个Java类，然后添加一些成员变量和方法，如下:</p>
 <pre><code>public class Test {
     String name = &quot;hello&quot;;
@@ -399,9 +403,30 @@ public class Test {
 ..........
 00 00 00 0C 00 01 00 00 00 0B 00 1F 00 20 00 00
 00 01 00 27 00 00 00 02 00 28            
-
-</code></pre><p>是一行一行的十六进制的字符，我省略掉了中间的多行数据，如果要看完整数据，请看文末。<br>这些就是编译之后的信息了，文件中的字符在我们看来是一行一行接连不断的，其实是划分格式的。我们来看一下是如何划分的。</p>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p>大家请看下图：<br><img src="https://i.loli.net/2019/10/29/iQVFHB6WyLtZ2Mq.png" alt="class-simple.png">不同的结构之间，我用不同的颜色标识了出来，大家可以看到非常多的颜色，这也表示有非常多的结构。<br><img src="https://i.loli.net/2019/10/29/1qnzA5Qt4rFVLKM.png" alt="image.png"></p>
+</code></pre><p>是一行一行的十六进制的字符，每两个字符是一个字节，每个字节之间用空格分隔，我省略掉了中间的多行数据，如果要看完整数据，请看文末。<br>这些就是编译之后的信息了，文件中的字符在我们看来只是一行一行字符，其实是划分格式的。我们来看一下是如何划分的。</p>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p>Class文件的结构，是一个结构体，有以下元素，描述如下：</p>
+<pre><code>ClassFile{
+u4  magic;  //魔数
+u2  minor_version;  //Java的次版本号
+u2  major_version;  //Java的主版本号
+u2  constant_pool_count;  //常量池的长度
+cp_info  constant_pool[constant_pool_count];  //常量池数组
+u2  access_flags;  //类访问标志
+u2  this_class;  //类名索引
+u2  super_class;  //父类名索引
+u2  interface_count;  //实现的接口的数量
+u2  interfaces[interface_count];  //接口数组
+u2  fields_count;  //字段数量
+field_info  fields[fields_count];  //字段数组
+u2  methods_count;  //方法数量
+method_info  methods[methods_count];  //方法数组
+u2  attributes_count;  //属性数量
+attribute_info  attributes[attributes_count];  //属性数组
+}
+</code></pre><p>左边u2,u4都是表示字节的长度，u2是两字节，u4是四字节。右边是元素的名称。<br>Class文件就是由以上元素，一个紧挨一个组成的。总体的结构还是不复杂的，开头的三个值，magic，minor_version，major_version和中间的access_flags，this_class，super_class，他们是固定的位置，固定的字节长度。其他的数量不一定的值，都是一个长度，然后后面就是紧跟着该长度的数组，存储着该组值。数组结构通常都有下一级的子结构。<br>我把字节文件按照上面的元素格式，以不同的颜色划分了出来，请大家看下我结构图：<br><img src="https://i.loli.net/2019/10/29/iQVFHB6WyLtZ2Mq.png" alt="class-simple.png"><br>看图非常的一目了然，读两遍书，不如看一遍图啊。<br>连续的相同颜色的格子，是同一种元素的值。元素之间是紧紧的排列在一起，大家可以看到结构非常的紧凑，节省空间。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><h4 id="1-magic-魔数"><a href="#1-magic-魔数" class="headerlink" title="1. magic  魔数"></a>1. magic  魔数</h4><p>我们知道有时候通过后缀识别文件是不准确的，因为很容易就改掉后缀。所以很多文件格式，在文件的开头写上几个固定的值，为了识别方便该种格式。比如PDF文件的开头是“%PDF”，这个固定的值，就叫魔数，其实就是个标识。class文件的魔数就是“CA FE BA BE”，JVM读取开头的四个字节，如果是这个值，那么就认为这个文件是个class。</p>
+<h4 id="2-version-版本号"><a href="#2-version-版本号" class="headerlink" title="2. version 版本号"></a>2. version 版本号</h4><p>魔数之后，是版本号，大家可以看到，我们有两部分的版本号。第一个版本号就是次版本号，第二个是主版本号。比如52.0，52是主版本号，0是次版本号。这个版本是为了让JVM识别编译这个clas文件的Java版本，比如Java SE8，对应的版本号是52.0，Java SE7 是51.0，Java SE6 是50.0。如果一个最高只支持Java SE7版本的JVM，读取到一个52.0，那么它可能是执行不了这个class的，以为它是Java SE8编译出来的，可能用了JavaSE8的新特性。</p>
+<h4 id="3-constant-pool-常量池"><a href="#3-constant-pool-常量池" class="headerlink" title="3. constant_pool 常量池"></a>3. constant_pool 常量池</h4><h4 id="4-access-flags-类访问标志"><a href="#4-access-flags-类访问标志" class="headerlink" title="4. access_flags 类访问标志"></a>4. access_flags 类访问标志</h4><h4 id="5-this-class-类名索引"><a href="#5-this-class-类名索引" class="headerlink" title="5. this_class 类名索引"></a>5. this_class 类名索引</h4><h4 id="6-super-class-父类名索引"><a href="#6-super-class-父类名索引" class="headerlink" title="6. super_class 父类名索引"></a>6. super_class 父类名索引</h4><h4 id="7-interfaces-接口池"><a href="#7-interfaces-接口池" class="headerlink" title="7. interfaces  接口池"></a>7. interfaces  接口池</h4><h4 id="8-fields-字段池"><a href="#8-fields-字段池" class="headerlink" title="8. fields 字段池"></a>8. fields 字段池</h4><h4 id="9-methods-方法池"><a href="#9-methods-方法池" class="headerlink" title="9. methods 方法池"></a>9. methods 方法池</h4><h4 id="10-attributes-属性池"><a href="#10-attributes-属性池" class="headerlink" title="10. attributes 属性池"></a>10. attributes 属性池</h4><h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><p>最后，附上一张非常详细的大图，我在图中画出了更详细的结构，包括常量池中子元素的结构，每个字节对应的值是什么等等，非常详细，也耗费了我很多时间，希望对大家有用。大家可以下载下来，经常看一看。<br><img src="https://i.loli.net/2019/10/29/1qnzA5Qt4rFVLKM.png" alt="image.png"></p>
 
             </div>
             <hr>
@@ -557,7 +582,7 @@ public class Test {
             </div>
             <br>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">
-                    《Java Class 字节码文件分析----附带逐字节码分析图》
+                    《Java Class 字节码文件结构分析----附带逐字节码分析图》
                 </span> 由
             <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/10/25/Java-class-file-analysis/" property="cc:attributionName" rel="cc:attributionURL">
                 枫山别院
@@ -607,18 +632,18 @@ public class Test {
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Java Class 字节码文件分析----附带逐字节码分析图">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="Java Class 字节码文件结构分析----附带逐字节码分析图">
                         
-                        <span class="card-title">Java Class 字节码文件分析----附带逐字节码分析图</span>
+                        <span class="card-title">Java Class 字节码文件结构分析----附带逐字节码分析图</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            今天给大家分享下Java Class字节码文件的结构解析。
+                            今天给大家分享下Java Class字节码文件的结构解析。（文末附有详细大图）
 代码首先我们创建一个Java类，然后添加一些成员变量和方法，如下:
 public class Test {
-    String name = &quot;hello&quot;;
+    String name = &quot;he
                         
                     </div>
                     <div class="publish-info">
@@ -655,6 +680,10 @@ public class Test {
                     
                     <a href="/tags/分析图/" target="_blank">
                         <span class="chip bg-color">分析图</span>
+                    </a>
+                    
+                    <a href="/tags/结构/" target="_blank">
+                        <span class="chip bg-color">结构</span>
                     </a>
                     
                 </div>
@@ -843,7 +872,7 @@ public class Test {
             &copy;2019枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">10.3k</span>
+                <span class="white-color">11k</span>
             
 
             
