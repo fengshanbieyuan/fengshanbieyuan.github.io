@@ -474,7 +474,7 @@ public class Test {
 </code></pre><p><code>name_index</code>中存的就是字段名字的索引，老规矩大家自己找一下。<code>access_flags</code>是变量的访问标识符，<code>descriptor_index</code>保存的是变量的类型信息。最后剩下的属性，为什么有了类的属性池还会在这里有个字段下的属性池呢？这个字段下的属性池是留给JVM来自定义拓展的，各个JVM实现可能会不一样，JVM遇到识别不了的属性会自动跳过。</p>
 <h4 id="9-methods-方法池"><a href="#9-methods-方法池" class="headerlink" title="9. methods 方法池"></a>9. methods 方法池</h4><p>大家可以看到，在附录详细大图中，方法池没有展开详细的结构，这是因为这里太复杂了，展开图不太好画，我太懒了，所以没画，哈哈哈哈。依然是上来就是一个长度，3个方法，后面跟着一个数组。有人要问了，不对啊，怎么是3个方法，我们只写了2个。那是因为还有个类的默认构造方法，忘了吧，哈哈。后面有机会我们详细分析方法池的结构。</p>
 <h4 id="10-attributes-属性池"><a href="#10-attributes-属性池" class="headerlink" title="10. attributes 属性池"></a>10. attributes 属性池</h4><p>属性池这个地方，跟常量池一样，保存了很多信息，不过我们这个类中的属性信息较少。属性也有很多的子结构，而且不同的JVM实现还可能会有自己的属性值，这里我们后面有机会单独说一下，大家现在知道即可。</p>
-<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><p>最后，附上一张非常详细的大图，我在图中画出了更详细的结构，包括常量池中子元素的结构，每个字节对应的值是什么等等，非常详细，也耗费了我很多时间，希望对大家有用。大家可以下载下来，经常看一看。<br><img src="https://i.loli.net/2019/10/29/1qnzA5Qt4rFVLKM.png" alt="image.png"></p>
+<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><p>最后，附上一张非常详细的大图，我在图中画出了更详细的结构，包括常量池中子元素的结构，每个字节对应的值是什么等等，非常详细，也耗费了我很多时间，希望对大家有用。大家可以下载下来，经常看一看。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/03/31/1qnzA5Qt4rFVLKM.png" alt="image.png"></p>
 
             </div>
             <hr>
@@ -673,31 +673,27 @@ public class Test {
         
         <div class="article col s12 m6 overflow-policy" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
-            </div>
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/10/25/Java-class-file-analysis/">
+                <a href="/2020/04/01/Servlet-HttpServlet-01/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="Java Class 字节码文件结构分析----附带逐字节码分析图">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="Servlet和HttpServlet解析-01">
                         
-                        <span class="card-title">Java Class 字节码文件结构分析----附带逐字节码分析图</span>
+                        <span class="card-title">Servlet和HttpServlet解析-01</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            今天给大家分享下Java Class字节码文件的结构解析。（文末附有详细大图）
-代码首先我们创建一个Java类，然后添加一些成员变量和方法，如下:
-public class Test {
-    String name = &quot;he
+                            一个servlet应用，通常会包括两部分：容器和servlet应用。既然在研究SpringMVC源码，那么大家肯定知道servlet容器了，常见的就是tomcat；servlet应用呢，就是我们写的代码。我们需要把自己的代码部署到tomca
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-25
-                            </span>
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-01
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -710,7 +706,6 @@ public class Test {
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -718,20 +713,20 @@ public class Test {
                         <span class="chip bg-color">Java</span>
                     </a>
                     
-                    <a href="/tags/Class/" target="_blank">
-                        <span class="chip bg-color">Class</span>
+                    <a href="/tags/Spring/" target="_blank">
+                        <span class="chip bg-color">Spring</span>
                     </a>
                     
-                    <a href="/tags/字节码/" target="_blank">
-                        <span class="chip bg-color">字节码</span>
+                    <a href="/tags/servlet/" target="_blank">
+                        <span class="chip bg-color">servlet</span>
                     </a>
                     
-                    <a href="/tags/分析图/" target="_blank">
-                        <span class="chip bg-color">分析图</span>
+                    <a href="/tags/mvc/" target="_blank">
+                        <span class="chip bg-color">mvc</span>
                     </a>
                     
-                    <a href="/tags/结构/" target="_blank">
-                        <span class="chip bg-color">结构</span>
+                    <a href="/tags/源码/" target="_blank">
+                        <span class="chip bg-color">源码</span>
                     </a>
                     
                 </div>
@@ -920,7 +915,7 @@ public class Test {
             &copy;2019枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">12.4k</span>
+                <span class="white-color">14.8k</span>
             
 
             
