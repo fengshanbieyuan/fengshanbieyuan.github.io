@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>HttpServletBean解析-02</title>
+      <link href="/2020/04/01/HttpServletBean-02/"/>
+      <url>/2020/04/01/HttpServletBean-02/</url>
+      
+        <content type="html"><![CDATA[<p>有一句名言：“计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决（Any problem in computer science can be solved by anther layer of indirection）” 。</p><p>这就是为啥我们从servlet说到了HttpServlet还没有进入主题SpringMVC的源码的原因，中间加了太多层。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/zUhpPO.jpg" alt="HttpServletBean"></p><p>言归正传，看上图，上一节我们说道了HttpServlet，然后下面又是一个HttpServlet的子类，HttpServletBean，并且也是一个抽象类，这就是说明，HttpServletBean也不是主角，它也是一个中间层，用来解决一个问题的。</p><p>解决什么问题？答案就是：把配置文件中的init-param配置的参数，都转换成bean的成员变量，方便使用。这一层主要的就是解析servlet配置文件中的参数，有人可能会问了：为了这个单独搞一层值当的吗，这么费劲？</p><p>如果你自己研究各种开源代码的话，可能会发现，很多前辈们的设计，就是一个洋葱，洋葱心是一个核心功能，然后每个功能都抽象出一层，一层一层的往洋葱心上贴，到最后一个完整的洋葱就出来了。</p><p>为什么这么做呢？好处是什么？这么做其实是遵循了一个原则，叫单一职责，每一个抽象层就做一件事。</p><p>我们可以回忆下，Servlet：是servlet协议的一些约定方法，是核心。GenericServlet：提供了默认的生命周期管理，HttpServlet：提供了Http协议的Servlet实现。</p><p>这样每一层只做一件事，好处是万一要做任何定制都可以非常方便。</p><p>假如一层有多个功能，而你只想定制其中一个功能，那么你不得不把所有的功能都覆盖一遍，累不累？</p><p>当然这只是个普遍的规律，肯定有不是单一职责的层，大家不要较真。其实越往洋葱的外层，类聚合的接口越多，类的功能也越多，这个时候其实不是在做单一职责的设计了，是在使用单一职责设计出来的东西；也就是说，不是单纯的在做设计了，是在使用前面设计出来的结构解决问题，实现我们的目的。因为不管你做多少设计，最终的目的就是解决我们的问题，所以洋葱的最外层就是解决问题的地方了，这些地方当然也有设计了，只是不是单一职责罢了。</p><p>继续说HttpServletBean🤣，上面说了，它的目的是解析init-param配置参数</p><p><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/5KObU2.jpg" alt="HttpServletBean"></p><p>请大家注意：第一处，这个方法是主要逻辑，但是大家不知道注意到了没有，这是重写的的父类的方法；第二处是调用了自己的初始化方法，但是这个初始化方法没有东西，留给子类实现。这是一个设计，从servlet到现在的HttpServletBean，都是子类重写父类的init方法，然后自己的init，留给自己的子类去实现。这是设计模板类的诀窍，能让子类参与到初始化中，方便子类定制自己的东西。</p><p>这个方法的主体逻辑就是将init-param的参数解析成一个map，然后将这个map中的参数注入到子类的属性中，它的子类是FrameworkServlet，也是抽象的，所以最终是注入到DispatcherServlet中。只要配置的参数名字跟属性名匹配，就可以注入。</p><p>逻辑代码没有一句一句的解析，因为我个人觉得，刚开始研究一份源代码，最重要的是先理清大体的脉络和思路，让你不至于看着看着晕头转向，迷了路。我们只要摸清楚了大体的思路和方向，然后可以仔细研究每个方法的实现。方法实现非常的复杂，调用关系乱七八糟，如果你一开始就钻进去，最后很可能会处处碰壁，灰心丧气。</p><p>另外，阅读开源代码的注释非常重要，我们可以从注释中得知作者的设计意图，使用方法，注意事项等等。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> servlet </tag>
+            
+            <tag> Spring </tag>
+            
+            <tag> mvc </tag>
+            
+            <tag> 源码 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Servlet和HttpServlet解析-01</title>
+      <link href="/2020/04/01/Servlet-HttpServlet-01/"/>
+      <url>/2020/04/01/Servlet-HttpServlet-01/</url>
+      
+        <content type="html"><![CDATA[<p>一个servlet应用，通常会包括两部分：容器和servlet应用。既然在研究SpringMVC源码，那么大家肯定知道servlet容器了，常见的就是tomcat；servlet应用呢，就是我们写的代码。我们需要把自己的代码部署到tomcat中运行，才能正常提供服务。</p><p>一个请求的流转大体上如下图：<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/gs1ujl.jpg" alt="Request"></p><ol><li>用户发送的请求，先被容器收到</li><li>容器把请求传递给servlet应用</li><li>servlet处理请求，生成一个Response</li><li>servlet将Response传给容器</li><li>容器将Response返回给用户</li></ol><p>第一个发现：<br>通过上面的流程，大家可以看出，容器和servlet应用之间，是有通信的，也就是调用。我们知道，两个组件之间通信，肯定要遵循一个共同的协议，也就是一个规范，才能相互识别通信的内容。鸡同鸭讲，就是这个道理，语言不通肯定讲不明白。那么servlet应用和容器之间的语言，也就是通信规范，是什么呢？就是servlet规范。</p><p>所以，这个servlet规范，如果你有兴趣，可以读一读：<a href="https://github.com/waylau/servlet-3.1-specification" target="_blank" rel="noopener">Servlet规范</a></p><p>第二个发现：<br>整个流程，除了第三步处理过程外，其他的流程几乎都是固定的，第三步就是我们的业务逻辑，是根据需求来定制的。所以我们可以把第一二四五步抽象出一个组件来方便大家使用，不需要每个人都自己实现一遍，这就是容器；然后第三步的业务逻辑让用户自己定制。这个像什么？是不是很像设计模式中的模板？这里可以看做一个模板的设计模式。ps:我们没法知道当时各位前辈的想法了，但是通过现有的东西，我们可以反推一下。</p><p>第三个发现：<br>既然我们抽象出两个组件，那么这两个组件之间也设计了一个规范，怎么实现呢？servlet规范中规定了几个方法，双方约定，容器会调用init方法，创建servlet；调用service方法， 把用户的请求传递给servlet应用处理；移除servlet服务的时候，调用destroy方法销毁servlet等等。那么，容器和servlet应用只要使用同一个接口就可以搞定了。</p><p>接下来，我们看看这个容器和servlet应用的公共接口：Servlet<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/by1KkY.jpg" alt="servlet"></p><p>其实没啥，就是按照约定，定义了几个方法。init和destroy是生命周期方法，service是处理请求的方法，getServletConfig是获取servlet配置信息，getServletInfo是获取当前servlet信息，比如作者，版本，版权等等。</p><p>我刚开始学习web编程的时候，先学习用原生的servlet来写代码，最后学框架。但是，大家回忆下，我们是继承了HttpServlet，而不是Servlet。</p><p>大家看下HttpServlet的继承关系：<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/ZhnSEa.jpg" alt="HttpServlet"></p><p>ServletConfig：这个接口抽象的是servlet的相关配置，比如我们定义的servlet名字等等。它是创建servlet的入参，也就是说容器在创建servlet的时候，会把servlet的配置传递进来，传的就是ServletConfig的实现，通过这个接口定义的方法，能拿到servlet的配置。如果你在写代码的时候需要用到servlet配置，那么可以通过调用ServletConfig的方法拿到。</p><p>Servlet：这个接口里定义的servlet规范中约定的方法，上面说过了。</p><p>GenericServlet：这个抽象类很有意思，它实现了ServletConfig和Servlet接口，然而它是抽象的，是一个不能实例化的servlet。为什么要抽象一个这个？答案有点狗血，是为了让你写servlet省事点！(源代码中的注释就是这么说的！)它把两个接口的方法聚合在一起，然后提供了一些默认实现（比如，log，init，destory等等）管理生命周期，实现ServletConfig接口是为了在servlet中可以拿到servlet配置。然后我们只要重写service方法就可以了，其他的不需要关心，相当于提供了一个通用的，协议无关的模板给你，是为了可以实现一个通用的servlet，前辈们想的周到不周到？为了我等菜鸟真是操碎了心！当然这个层次的抽象我们还是不能直接使用的，仍然非常的简陋。</p><p>HttpServlet：这个就容易理解了吧，是http协议的servlet实现，相当于又给我们提供了一个http协议的servlet模板。我们最常用的就是http协议了，然而http协议有很多请求方法（get，post，put等等），HttpServlet将各个请求方法拆分了出来，我们只要继承HttpServlet，实现需要用的请求方法就可以了。又是前辈们在帮我们省事，你不需要非常精通http协议，就能实现你的业务逻辑了。说道这个类，大家应该都学过，最原始的servlet web应用，继承它，实现doGet, doPost方法，就能提供服务了。</p><p>学习到这里，相信大家都理解了整个从Servlet到HttpServlet的设计意图：一方面就是前辈们在给我们庖丁解牛，给我们铺路，提供便利；另一方面就是这种设计非常灵活，对于不熟悉的人，你可以立即上手实现业务逻辑。对于熟悉的人，你可以各种自己定制实现你的想法。</p><p>总结起来这么设计的目的就是几个词：灵活，解耦，方便。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> servlet </tag>
+            
+            <tag> Spring </tag>
+            
+            <tag> mvc </tag>
+            
+            <tag> 源码 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Java Class 字节码文件结构分析----附带逐字节码分析图</title>
+      <link href="/2019/10/25/Java-class-file-analysis/"/>
+      <url>/2019/10/25/Java-class-file-analysis/</url>
+      
+        <content type="html"><![CDATA[<p>今天给大家分享下Java Class字节码文件的结构解析。（文末附有详细大图）</p><h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><p>首先我们创建一个Java类，然后添加一些成员变量和方法，如下:</p><pre><code>public class Test {    String name = &quot;hello&quot;;    int size = 10;    long num = 100;    Double pi = 3.14;    public static void main(String[] args) {        Test test = new Test();        test.print();    }    public void print() {        System.out.print(name);    }}</code></pre><p>大家可以看到，这是一个非常简单的类，仅仅有几个基本类型的成员变量和两个简单的方法。这是为了我们分析Class文件方便起见，没有添加复杂的结构。</p><h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>然后大家可以用<code>javac</code>命令编译一下这个类。编译之后，我们就得到了一个class文件，用sublime之类的软件打开这个class文件，我们可以看到如下信息:</p><pre><code>CA FE BA BE 00 00 00 34 00 40 0A 00 11 00 29 0800 2A 09 00 0C 00 2B 09 00 0C 00 2C 05 00 00 0000 00 00 00 64 09 00 0C 00 2D 06 40 09 1E B8 51..........00 00 00 0C 00 01 00 00 00 0B 00 1F 00 20 00 0000 01 00 27 00 00 00 02 00 28            </code></pre><p>是一行一行的十六进制的字符，每两个字符是一个字节，每个字节之间用空格分隔，我省略掉了中间的多行数据，如果要看完整数据，请看文末。<br>这些就是编译之后的信息了，文件中的字符在我们看来只是一行一行字符，其实是划分格式的。我们来看一下是如何划分的。</p><h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><p>Class文件的结构，是一个结构体，有以下元素，描述如下：</p><pre><code>ClassFile {    u4  magic;  //魔数    u2  minor_version;  //Java的次版本号    u2  major_version;  //Java的主版本号    u2  constant_pool_count;  //常量池的长度    cp_info  constant_pool[constant_pool_count];  //常量池数组    u2  access_flags;  //类访问标志    u2  this_class;  //类名索引    u2  super_class;  //父类名索引    u2  interface_count;  //实现的接口的数量    u2  interfaces[interface_count];  //接口数组    u2  fields_count;  //字段数量    field_info  fields[fields_count];  //字段数组    u2  methods_count;  //方法数量    method_info  methods[methods_count];  //方法数组    u2  attributes_count;  //属性数量    attribute_info  attributes[attributes_count];  //属性数组}</code></pre><p>左边u2,u4都是表示字节的长度，u2是两字节，u4是四字节。右边是元素的名称。<br>Class文件就是由以上元素，一个紧挨一个组成的。总体的结构还是不复杂的，开头的三个值，<code>magic，minor_version，major_version</code>和中间的<code>access_flags，this_class，super_class</code>，他们是固定的位置，固定的字节长度。其他的数量不一定的值，都是一个长度，然后后面就是紧跟着该长度的数组，存储着该组值。数组结构通常都有下一级的子结构。<br>我把字节文件按照上面的元素格式，以不同的颜色划分了出来，请大家看下结构图：<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/ob2yf2.jpg" alt="class-simple.png"><br>看图非常的一目了然，读两遍书，不如看一遍图啊。<br>连续的相同颜色的格子，是同一种元素的值。元素之间是紧紧的排列在一起，大家可以看到结构非常的紧凑，节省空间。看不清的同学可以下载下来，放大一下看。</p><h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><h4 id="1-magic-魔数"><a href="#1-magic-魔数" class="headerlink" title="1. magic  魔数"></a>1. magic  魔数</h4><p>我们知道有时候通过后缀识别文件是不准确的，因为很容易就改掉后缀。所以很多文件格式，在文件的开头写上几个固定的值，为了识别方便该种格式。比如PDF文件的开头是“%PDF”，这个固定的值，就叫魔数，其实就是个标识。class文件的魔数就是“CA FE BA BE”，JVM读取开头的四个字节，如果是这个值，那么就认为这个文件是个class。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/2PeYHT.jpg" alt="magic.jpg"></p><h4 id="2-version-版本号"><a href="#2-version-版本号" class="headerlink" title="2. version 版本号"></a>2. version 版本号</h4><p>魔数之后，是版本号，大家可以看到，我们有两部分的版本号。第一个版本号就是次版本号，第二个是主版本号。比如52.0，52是主版本号，0是次版本号。这个版本是为了让JVM识别编译这个clas文件的Java版本，比如Java SE8，对应的版本号是52.0，Java SE7 是51.0，Java SE6 是50.0。如果一个最高只支持Java SE7版本的JVM，读取到一个52.0，那么它可能是执行不了这个class的，以为它是Java SE8编译出来的，可能用了JavaSE8的新特性。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/73qnZW.jpg" alt="version.jpg"></p><h4 id="3-constant-pool-常量池"><a href="#3-constant-pool-常量池" class="headerlink" title="3. constant_pool 常量池"></a>3. constant_pool 常量池</h4><p>常量池占用了class中非常多的空间，存放着非常多的信息，包括数字，字符串，类和接口的名字，字段和方法的名字等等。上来先是常量池的数量，也就是常量池数组的长度。后面紧跟着就是数组的内容，非常长，结构也不太一样。大家可以仔细看看附录中的详细图，太大了，在这就不截图了。<br>常量池中元素的子结构虽然有非常多的种类，但是都差不多的。首先是tag，tag的值表示这个元素是一个什么类型，也就是一个什么数据结构，然后JVM就可以根据这个结构来解析数据了。一般的XXX_index就是一个索引，length就是一个长度，bytes中是该元素存储的值。结构非常多，我们后面单独一篇文章介绍下这里。</p><h4 id="4-access-flags-类访问标志"><a href="#4-access-flags-类访问标志" class="headerlink" title="4. access_flags 类访问标志"></a>4. access_flags 类访问标志</h4><p><code>access_flags</code>保存的信息是，该类的访问标志，比如是public还是private，是个接口还是个类，或者枚举，等等。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/bU17en.jpg" alt="access_flags.jpg"><br>此处<code>access_flags</code>的值是0x0021，代表什么意思呢？我们需要看个表格：</p><table><thead><tr><th>名称</th><th>值</th><th style="text-align:right">说明</th></tr></thead><tbody><tr><td>ACC_PUBLIC</td><td>0x0001</td><td style="text-align:right">public类型</td></tr><tr><td>ACC_FINAL</td><td>0x0010</td><td style="text-align:right">final修饰符</td></tr><tr><td>ACC_SUPER</td><td>0x0020</td><td style="text-align:right">使用invokespecial字节码指令，在JDK1.2之后添加</td></tr><tr><td>ACC_INTERFACE</td><td>0x0200</td><td style="text-align:right">接口</td></tr></tbody></table><p>还有好几种类型，我们就先看这些。我们的值是0x0021，好像没有这个值对应的类型。其实是，0x0020 加上 0x0001，也就是说0x0021表示<code>ACC_PUBLIC</code>和<code>ACC_SUPER</code>。也就是说，这是个public访问级别的类。</p><h4 id="5-this-class-类名索引"><a href="#5-this-class-类名索引" class="headerlink" title="5. this_class 类名索引"></a>5. this_class 类名索引</h4><p><code>this_class</code>元素保存的是类的全限定类名，即包路径加类名。为什么还有个索引呢？因为这个地方保存的不是具体的全限定类名的字符串，是一个索引值。这个索引是常量池的索引，也就是说，其实真正的全限定类名字符串是在常量池存着呢。我们在附录的详细表中找一下这个值，找到第39行数据的最后，是<code>this_class</code>的位置。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/wiIKrk.jpg" alt="this_class"><br>它的值是0x000c，是十进制的12对吧？我们找常量池中的索引是12的值，在第4行最后。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/LHZuYK.jpg" alt="index_12.jpg"><br>很奇怪，这个地方比不是我们说的全限定类名字符串，是一个叫<code>name_index</code>的索引。其实这个位置存放的数据，是有一个子结构的，它由tag和<code>name_index</code>组成。tag的值是7，这个值7代表了一种数据结构，就是<code>CONSTANT_Class_info</code>，这个类型保存的值是类或者接口的符号引用。又是一个引用，也就是索引。从表上我们可以知道，这个索引的值是49，OK，我们再从常量池找索引49的值。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/8SpUaI.jpg" alt="index_49.jpg"><br>在第26和27行上，我们终于找到了类的全限定名称。</p><h4 id="6-super-class-父类名索引"><a href="#6-super-class-父类名索引" class="headerlink" title="6. super_class 父类名索引"></a>6. super_class 父类名索引</h4><p><code>super_class</code>跟<code>this_class</code>是一样的，不过这里保存的是类的父类全限定名称而已。大家可以自己找一下看看。不过需要注意的是，如果没有明确指定某个类的父类，在Java中默认父类都是java.lang.Object，而java.lang.Object本身是没有父类的，所以如果是Object类，它的<code>super_class</code>值就是0。</p><h4 id="7-interfaces-接口池"><a href="#7-interfaces-接口池" class="headerlink" title="7. interfaces  接口池"></a>7. interfaces  接口池</h4><p>接着就是接口索引表或者说是接口池了，这里保存类实现的接口。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/Nc7AxX.jpg" alt="interfaces.jpg"><br>因为我们的类没有实现接口，所以它的长度是0，后面的数组自然也就省略了。</p><h4 id="8-fields-字段池"><a href="#8-fields-字段池" class="headerlink" title="8. fields 字段池"></a>8. fields 字段池</h4><p><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/70w2DW.jpg" alt="fields.jpg"><br>接着是我们的字段信息。从 <code>fields_count</code>的值我们可以知道有4个字段，这跟我们在代码中的字段数量是一致的。然后紧接着就是字段数组了。字段数组中的元素是有数据结构的。如下：</p><pre><code>field_info {  u2  access_flags;  //变量的访问标识符  u2  name_index;  //名称索引  u2  descriptor_index;  //类型信息索引  u2  attributes_count;  //自定义属性长度  attribute_info  attributes[attributes_count];  //自定义属性池}</code></pre><p><code>name_index</code>中存的就是字段名字的索引，老规矩大家自己找一下。<code>access_flags</code>是变量的访问标识符，<code>descriptor_index</code>保存的是变量的类型信息。最后剩下的属性，为什么有了类的属性池还会在这里有个字段下的属性池呢？这个字段下的属性池是留给JVM来自定义拓展的，各个JVM实现可能会不一样，JVM遇到识别不了的属性会自动跳过。</p><h4 id="9-methods-方法池"><a href="#9-methods-方法池" class="headerlink" title="9. methods 方法池"></a>9. methods 方法池</h4><p>大家可以看到，在附录详细大图中，方法池没有展开详细的结构，这是因为这里太复杂了，展开图不太好画，我太懒了，所以没画，哈哈哈哈。依然是上来就是一个长度，3个方法，后面跟着一个数组。有人要问了，不对啊，怎么是3个方法，我们只写了2个。那是因为还有个类的默认构造方法，忘了吧，哈哈。后面有机会我们详细分析方法池的结构。</p><h4 id="10-attributes-属性池"><a href="#10-attributes-属性池" class="headerlink" title="10. attributes 属性池"></a>10. attributes 属性池</h4><p>属性池这个地方，跟常量池一样，保存了很多信息，不过我们这个类中的属性信息较少。属性也有很多的子结构，而且不同的JVM实现还可能会有自己的属性值，这里我们后面有机会单独说一下，大家现在知道即可。</p><h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><p>最后，附上一张非常详细的大图，我在图中画出了更详细的结构，包括常量池中子元素的结构，每个字节对应的值是什么等等，非常详细，也耗费了我很多时间，希望对大家有用。大家可以下载下来，经常看一看。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/03/31/1qnzA5Qt4rFVLKM.png" alt="image.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> Class </tag>
+            
+            <tag> 字节码 </tag>
+            
+            <tag> 分析图 </tag>
+            
+            <tag> 结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Spring Boot Jar 是怎么启动的--FatJar启动流程分析</title>
+      <link href="/2019/09/29/Spring-Boot-Jar-start-step/"/>
+      <url>/2019/09/29/Spring-Boot-Jar-start-step/</url>
+      
+        <content type="html"><![CDATA[<p>首先搭建一个Spring Boot工程，非常简单，在<a href="https://start.spring.io/" target="_blank" rel="noopener">Spring Initializr</a>上快速生成一个项目就可以了，使用Java语言，其他的可以根据需要自己选择。<br>如果你没有什么特殊需要，可以参照我下面的设置。<br><img src="https://i.loli.net/2019/10/29/hjXWMCVKm7cT3qO.png" alt="initializr.png"><br>点击Generate之后，下载生成的工程。<br>在工程目录下，执行<code>mvn package -Dmaven.test.skip=true</code>命令，打包。<br><img src="https://i.loli.net/2019/10/29/pWK9iku4hdEmBcq.png" alt="jar-file.png"><br>在target目录下，会生成一个jar，名字是demo-0.0.1-SNAPSHOT.jar，这就是我们要分析的jar，如下图:</p><p>然后我们解压这个jar，看看跟普通的jar有什么区别。<br>解压之后，目录是这样的，只展开了2级目录(详细的请看附录):</p><pre><code>├── BOOT-INF│   ├── classes│   └── lib├── META-INF│   ├── MANIFEST.MF│   └── maven└── org    └── springframework</code></pre><p>再看一个普通的jar，也就是非Spring Boot的jar是什么样子的</p><pre><code>├── META-INF│   ├── MANIFEST.MF│   └── maven└── com    └── guofeng</code></pre><p>大家对比一下，Spring Boot的jar只比普通的jar多出了一个BOOT-INF目录，其他的东西在结构上是一样的。也就是说，首先Spring Boot的jar肯定是兼容普通的jar，普通jar有的东西，它都有，这样，它才能用<code>java -jar</code>运行。普通的jar，依赖都是在外部的，Spring Boot的fatjar，依赖都在Jar包内，还有就是把工程代码换了下位置。</p><p>我们知道在jar运行之前，会首先从MANIFEST.MF文件中，查找jar的相关信息。我们看看这个文件里的内容</p><pre><code>Manifest-Version: 1.0Created-By: Maven Archiver 3.4.0Build-Jdk-Spec: 12Implementation-Title: demoImplementation-Version: 0.0.1-SNAPSHOTMain-Class: org.springframework.boot.loader.JarLauncherStart-Class: com.example.demo.DemoApplicationSpring-Boot-Version: 2.2.0.M6Spring-Boot-Classes: BOOT-INF/classes/Spring-Boot-Lib: BOOT-INF/lib/</code></pre><p>上面有几个参数是需要我们关注的：</p><ol><li>Main-Class<br>这个是jar的入口函数main方法的类路径，这里可以看到，这个是spring的方法，不是我们工程中写的方法。</li><li>Start-Class<br>这个参数是 Spring Boot定义的，可以看到，这个类是我们工程里的了。这个是我们工程的main方法的类路径。</li><li>Spring-Boot-Classes<br>这个很明显，是工程代码在jar中的路径</li><li>Spring-Boot-Lib<br>这个是工程中引入的依赖jar。Spring Boot把工程依赖的所有jar都打包在了项目的jar中，这就是为什么它是个fatjar。</li></ol><p>好的， 我们跟踪着普通jar启动的脚步，先看看jar的入口函数org.springframework.boot.loader.JarLauncher。<br>这个类在工程中是找不到的，因为是jar启动需要的，在打包阶段由maven打进去的，工程是不需要的。<br>它在包spring-boot-loader中，GAV是:</p><pre><code>&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;spring-boot-loader&lt;/artifactId&gt;    &lt;version&gt;2.0.2.RELEASE&lt;/version&gt;    &lt;scope&gt;provided&lt;/scope&gt;&lt;/dependency&gt;</code></pre><p>你可以在<a href="https://github.com/spring-projects/spring-boot/blob/8a9c60a29a81a0abdc145cf85c037daae8defbf0/spring-boot-project/spring-boot-tools/spring-boot-loader/src/main/java/org/springframework/boot/loader/JarLauncher.java" target="_blank" rel="noopener">JarLauncher</a>中找到这个类的源代码。<br>我们看下它的main方法:</p><pre><code>public static void main(String[] args) throws Exception{        new JarLauncher().launch(args);    }</code></pre><p>非常的简单，它调用了<code>JarLauncher</code>的<code>launch</code>方法，并且把参数都传递进去了。但是在<code>JarLauncher</code>中并没有<code>launch</code>这个方法，这个方法是<code>JarLauncher</code>的祖父类<code>Launcher</code>的方法，继承关系是这样的<code>JarLauncher---&gt;ExecutableArchiveLauncher---&gt;Launcher</code>。<br>我们看一下<code>launch</code>方法的实现:</p><pre><code>protected void launch(String[] args) throws Exception {        JarFile.registerUrlProtocolHandler();        ClassLoader classLoader = createClassLoader(getClassPathArchives());        launch(args, getMainClass(), classLoader);    }</code></pre><p>这是一个<code>protected</code>方法，只能在它的子类中使用。<br>首先看第一句代码:<code>JarFile.registerUrlProtocolHandler();</code>，它的实现是:</p><pre><code>public static void registerUrlProtocolHandler() {        //PROTOCOL_HANDLER = &quot;java.protocol.handler.pkgs&quot;;        String handlers = System.getProperty(PROTOCOL_HANDLER, &quot;&quot;);        //HANDLERS_PACKAGE = &quot;org.springframework.boot.loader&quot;        System.setProperty(PROTOCOL_HANDLER, (&quot;&quot;.equals(handlers) ? HANDLERS_PACKAGE : handlers + &quot;|&quot; + HANDLERS_PACKAGE));        resetCachedUrlHandlers();    }</code></pre><p>这几句代码非常简单，就是重新设置了一个属性值，叫做<code>java.protocol.handler.pkgs</code>。<br>那么这个属性值是干什么用的呢，从属性名字上我们能大体猜测一下，跟protocol有关，也就是协议。什么是协议？http，https这是最常见的协议吧？对的，这个属性值是存放的一个路径，这个路径下面对应的是各种协议的处理逻辑。除了http和https，还有jar，file，ftp等等协议。这个属性值默认是<code>sun.net.www.protocol.jar.Handler</code>，这是Java的默认实现，大家可以去这个路径下看一下。</p><p>Spring Boot重新将这个路径设置了一下，添加了<code>org.springframework.boot.loader</code>路径，这个路径下有Spring Boot提供的Jar协议处理逻辑，也就是覆盖了原来的Jar处理逻辑。Spring Boot的Jar跟普通的Jar是有区别的，依赖是打包在Jar中的，引导类是Spring提供的实现，但是我们最后的目的肯定是启动我们自己的工程。所以在这个地方覆盖了默认的Jar启动逻辑，按照Spring的Jar启动逻辑来走，其目的就是自定义Jar包依赖的查找逻辑，从Jar内部找依赖，最终启动用户的工程。</p><p>我们再看第二句代码：</p><pre><code>ClassLoader classLoader = createClassLoader(getClassPathArchives());</code></pre><p>简略一看，大家都能懂的，是创建了一个ClassLoader。我们仔细研究下<code>getClassPathArchives</code>方法，它的实现是：</p><pre><code>@Override    protected List&lt;Archive&gt; getClassPathArchives() throws Exception {        List&lt;Archive&gt; archives = new ArrayList&lt;&gt;(                this.archive.getNestedArchives(this::isNestedArchive));        postProcessClassPathArchives(archives);        return archives;    }</code></pre><p>最主要就是方法的第一句代码，它是获取用户工程代码和依赖的。拆分一下，我们先看<code>isNestedArchive</code>方法，它在JarLauncher和WarLauncher中，一共两种实现，我们看下JarLauncher中的实现：</p><pre><code>@Override    protected boolean isNestedArchive(Archive.Entry entry) {        if (entry.isDirectory()) {            return entry.getName().equals(BOOT_INF_CLASSES);        }        return entry.getName().startsWith(BOOT_INF_LIB);    }</code></pre><p>这个方法是一个过滤器，它把<code>BOOT-INF/classes/</code>和<code>BOOT-INF/lib/</code>中的类和jar过滤了出来。然后再回到<code>getClassPathArchives</code>方法中，在<code>getNestedArchives</code>方法中：</p><pre><code>@Override    public List&lt;Archive&gt; getNestedArchives(EntryFilter filter) throws IOException {        List&lt;Archive&gt; nestedArchives = new ArrayList&lt;&gt;();        for (Entry entry : this) {            if (filter.matches(entry)) {                nestedArchives.add(getNestedArchive(entry));            }        }        return Collections.unmodifiableList(nestedArchives);    }</code></pre><p>在这里，把所有符合过滤条件的文件，都放到了nestedArchives中，然后返回给调用者。<br>现在，在代码<code>ClassLoader classLoader = createClassLoader(getClassPathArchives());</code>中，我们就好理解了，<code>getClassPathArchives</code>方法获取到了工程代码和工程的依赖jar，然后根据这些东西，创建了<code>ClassLoader</code>。</p><p>好的，还有最后一句代码:</p><pre><code>launch(args, getMainClass(), classLoader);</code></pre><p>这个毫无疑问，就是最后的启动过程了。同样的，先分析参数<code>getMainClass</code>方法：</p><pre><code>@Override    protected String getMainClass() throws Exception {        Manifest manifest = this.archive.getManifest();        String mainClass = null;        if (manifest != null) {            mainClass = manifest.getMainAttributes().getValue(&quot;Start-Class&quot;);        }        if (mainClass == null) {            throw new IllegalStateException(                    &quot;No &#39;Start-Class&#39; manifest entry specified in &quot; + this);        }        return mainClass;    }</code></pre><p>首先代码上来是获取Manifest，这个文件对应的就是Jar包中的MANIFEST.MF文件，我们说过，这个文件中定义了Jar包的信息。然后，注意后面的代码，从文件中获取了<code>Start-Class</code>的值。我们在看这个文件的时候，<code>Start-Class</code>是定义了我们工程的启动类，对吧？终于，这个地方要运行我们自己的main方法了，现在我们拿到了用户的main方法的所在类。</p><p>然后看launch方法，是怎么启动的：</p><pre><code>protected void launch(String[] args, String mainClass, ClassLoader classLoader)            throws Exception {        Thread.currentThread().setContextClassLoader(classLoader);        createMainMethodRunner(mainClass, args, classLoader).run();    }</code></pre><p>首先把我们刚刚创建的classLoader放到了当前线程中。这个classLoader中带着我们工程代码和工程依赖，没忘吧？OK。<br>继续继续，敲黑板，重点来了，createMainMethodRunner方法的实现如下：</p><pre><code>public void run() throws Exception {        Class&lt;?&gt; mainClass = Thread.currentThread().getContextClassLoader()                .loadClass(this.mainClassName);        Method mainMethod = mainClass.getDeclaredMethod(&quot;main&quot;, String[].class);        mainMethod.invoke(null, new Object[] { this.args });    }</code></pre><p>通过我们创建的classLoader，去找<code>Start-Class</code>定义的class类文件。在这个class文件中，找main方法，然后调用这个main方法。<br>咚咚咚咚，Jar启动流程到这里就结束了，后面就是Spring Boot应用的启动过程了。<br>到这里，Spring Boot Jar启动流程就分析完了，是不是非常简洁和条理清晰，很巧妙的方法，佩服这些大佬。<br>大家可以下载Spring Boot的源代码，然后再仔细的回味一下。</p><p>附录：</p><ol><li><p>Spring Boot Jar解压之后的文件目录树</p><pre><code>├── BOOT-INF│   ├── classes│   │   ├── application.properties│   │   └── com│   │       └── example│   │           └── demo│   │               └── DemoApplication.class│   └── lib│       ├── classmate-1.5.0.jar│       ├── hibernate-validator-6.0.17.Final.jar│       ├── jackson-annotations-2.9.0.jar│       ├── jackson-core-2.9.9.jar│       ├── jackson-databind-2.9.9.3.jar│       ├── jackson-datatype-jdk8-2.9.9.jar│       ├── jackson-datatype-jsr310-2.9.9.jar│       ├── jackson-module-parameter-names-2.9.9.jar│       ├── jakarta.annotation-api-1.3.5.jar│       ├── jakarta.validation-api-2.0.1.jar│       ├── jboss-logging-3.4.1.Final.jar│       ├── jul-to-slf4j-1.7.28.jar│       ├── log4j-api-2.12.1.jar│       ├── log4j-to-slf4j-2.12.1.jar│       ├── logback-classic-1.2.3.jar│       ├── logback-core-1.2.3.jar│       ├── slf4j-api-1.7.28.jar│       ├── snakeyaml-1.25.jar│       ├── spring-aop-5.2.0.RC2.jar│       ├── spring-beans-5.2.0.RC2.jar│       ├── spring-boot-2.2.0.M6.jar│       ├── spring-boot-autoconfigure-2.2.0.M6.jar│       ├── spring-boot-starter-2.2.0.M6.jar│       ├── spring-boot-starter-json-2.2.0.M6.jar│       ├── spring-boot-starter-logging-2.2.0.M6.jar│       ├── spring-boot-starter-tomcat-2.2.0.M6.jar│       ├── spring-boot-starter-validation-2.2.0.M6.jar│       ├── spring-boot-starter-web-2.2.0.M6.jar│       ├── spring-context-5.2.0.RC2.jar│       ├── spring-core-5.2.0.RC2.jar│       ├── spring-expression-5.2.0.RC2.jar│       ├── spring-jcl-5.2.0.RC2.jar│       ├── spring-test-5.2.0.RC2.jar│       ├── spring-web-5.2.0.RC2.jar│       ├── spring-webmvc-5.2.0.RC2.jar│       ├── tomcat-embed-core-9.0.24.jar│       ├── tomcat-embed-el-9.0.24.jar│       └── tomcat-embed-websocket-9.0.24.jar├── META-INF│   ├── MANIFEST.MF│   └── maven│       └── com.example│           └── demo│               ├── pom.properties│               └── pom.xml└── org └── springframework     └── boot         └── loader             ├── ExecutableArchiveLauncher.class             ├── JarLauncher.class             ├── LaunchedURLClassLoader$UseFastConnectionExceptionsEnumeration.class             ├── LaunchedURLClassLoader.class             ├── Launcher.class             ├── MainMethodRunner.class             ├── PropertiesLauncher$1.class             ├── PropertiesLauncher$ArchiveEntryFilter.class             ├── PropertiesLauncher$PrefixMatchingArchiveFilter.class             ├── PropertiesLauncher.class             ├── WarLauncher.class             ├── archive             │   ├── Archive$Entry.class             │   ├── Archive$EntryFilter.class             │   ├── Archive.class             │   ├── ExplodedArchive$1.class             │   ├── ExplodedArchive$FileEntry.class             │   ├── ExplodedArchive$FileEntryIterator$EntryComparator.class             │   ├── ExplodedArchive$FileEntryIterator.class             │   ├── ExplodedArchive.class             │   ├── JarFileArchive$EntryIterator.class             │   ├── JarFileArchive$JarFileEntry.class             │   └── JarFileArchive.class             ├── data             │   ├── RandomAccessData.class             │   ├── RandomAccessDataFile$1.class             │   ├── RandomAccessDataFile$DataInputStream.class             │   ├── RandomAccessDataFile$FileAccess.class             │   └── RandomAccessDataFile.class             ├── jar             │   ├── AsciiBytes.class             │   ├── Bytes.class             │   ├── CentralDirectoryEndRecord.class             │   ├── CentralDirectoryFileHeader.class             │   ├── CentralDirectoryParser.class             │   ├── CentralDirectoryVisitor.class             │   ├── FileHeader.class             │   ├── Handler.class             │   ├── JarEntry.class             │   ├── JarEntryFilter.class             │   ├── JarFile$1.class             │   ├── JarFile$2.class             │   ├── JarFile$JarFileType.class             │   ├── JarFile.class             │   ├── JarFileEntries$1.class             │   ├── JarFileEntries$EntryIterator.class             │   ├── JarFileEntries.class             │   ├── JarURLConnection$1.class             │   ├── JarURLConnection$2.class             │   ├── JarURLConnection$CloseAction.class             │   ├── JarURLConnection$JarEntryName.class             │   ├── JarURLConnection.class             │   ├── StringSequence.class             │   └── ZipInflaterInputStream.class             └── util                 └── SystemPropertyUtils.class</code></pre></li><li><p>普通Jar解压之后的文件树：</p><pre><code>├── META-INF│   ├── MANIFEST.MF│   └── maven│       └── com.guofeng│           └── first-spring-boot│               ├── pom.properties│               └── pom.xml└── com └── guofeng     └── think         └── App.class</code></pre></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Spring-Boot </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Spring </tag>
+            
+            <tag> Boot </tag>
+            
+            <tag> Jar </tag>
+            
+            <tag> 启动 </tag>
+            
+            <tag> FatJar </tag>
+            
+            <tag> 分析 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>maven的mvn dependency依赖分析和常用命令介绍</title>
+      <link href="/2019/09/28/mvn-dependency/"/>
+      <url>/2019/09/28/mvn-dependency/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>在项目开发过程中，我们经常会有分析项目依赖的需要，查找jar依赖路径，查找jar冲突等等。这时候，dependency命令会非常的有用，在此我们介绍下关于maven的dependency命令的一些用法。</p></blockquote><h2 id="1-mvn-dependency-list-—-列出项目的所有jar包"><a href="#1-mvn-dependency-list-—-列出项目的所有jar包" class="headerlink" title="1. mvn dependency:list —- 列出项目的所有jar包"></a>1. <code>mvn dependency:list</code> —- 列出项目的所有jar包</h2><p><code>mvn dependency:list -Dverbose</code><br>该命令可以列出项目依赖的所有jar包，-Dverbose参数会把被忽略的jar，即相同jar包的不同版本引入也列出来。<br>输出示例：</p><pre><code>[INFO]    org.springframework:spring-aop:jar:5.0.6.RELEASE:compile[INFO]    org.hibernate.validator:hibernate-validator:jar:6.0.9.Final:compile[INFO]    com.fasterxml.jackson.core:jackson-core:jar:2.9.5:compile[INFO]    com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.9.5:compile[INFO]    org.springframework:spring-expression:jar:5.0.6.RELEASE:compile[INFO]    org.springframework.boot:spring-boot-starter:jar:2.0.2.RELEASE:compile[INFO]    org.springframework.boot:spring-boot-starter-logging:jar:2.0.2.RELEASE:compile[INFO]    org.yaml:snakeyaml:jar:1.19:runtime[INFO]    org.springframework.boot:spring-boot:jar:2.0.2.RELEASE:compile[INFO]    junit:junit:jar:3.8.1:test</code></pre><h2 id="2-mvn-dependency-tree-—-列出项目的包依赖树"><a href="#2-mvn-dependency-tree-—-列出项目的包依赖树" class="headerlink" title="2. mvn dependency:tree —- 列出项目的包依赖树"></a>2. <code>mvn dependency:tree</code> —- 列出项目的包依赖树</h2><p><code>mvn dependency:tree -Dverbose</code><br>这个命令跟上一个命令的区别就是，这个命令的依赖，输出来是个树，更方便看依赖关系。<br>输出示例：</p><pre><code>[INFO] \- org.springframework.boot:spring-boot-starter-web:jar:2.0.2.RELEASE:compile[INFO]    +- org.springframework.boot:spring-boot-starter:jar:2.0.2.RELEASE:compile[INFO]    |  \- org.springframework:spring-core:jar:5.0.6.RELEASE:compile[INFO]    |     \- org.springframework:spring-jcl:jar:5.0.6.RELEASE:compile[INFO]    +- org.springframework:spring-web:jar:5.0.6.RELEASE:compile[INFO]    |  \- org.springframework:spring-beans:jar:5.0.6.RELEASE:compile[INFO]    \- org.springframework:spring-webmvc:jar:5.0.6.RELEASE:compile[INFO]       +- org.springframework:spring-aop:jar:5.0.6.RELEASE:compile[INFO]       +- org.springframework:spring-context:jar:5.0.6.RELEASE:compile[INFO]       \- org.springframework:spring-expression:jar:5.0.6.RELEASE:compile</code></pre><p><code>dependency:tree</code>有几个比较重要的参数，非常有用:</p><ul><li>includes <ul><li>说明：该参数可以列出指定要求的jar，其他的忽略</li><li>示例：<code>-Dincludes=velocity:velocity</code>，只列出velocity的依赖关系</li><li>参数值：<code>[groupId]:[artifactId]:[type]:[version]</code>，参数格式就是这样的，没有的值可以留空，举例<code>-Dincludes=:spring-aop</code>，<code>-Dincludes=:::5.0.6.RELEASE</code>，<code>-Dincludes=org.springframework</code></li><li>通配符：在参数中可以使用通配符，例如<code>org.apache.*</code>, <code>:::*-SNAPSHOT</code></li><li>多个参数值：参数后面可以跟多个参数值，以英文逗号分隔，举例<code>-Dincludes=org.apache.maven*,org.codehaus.plexus</code></li></ul></li><li>excludes<ul><li>说明：该参数的用法跟<code>includes</code>是一样的，不过这个参数的作用是排除指定的jar</li></ul></li></ul><h4 id="示例-查看包冲突"><a href="#示例-查看包冲突" class="headerlink" title="示例:查看包冲突"></a>示例:查看包冲突</h4><p>比如我们查看一下<code>commons-collections</code>包的冲突<br>命令:<br><code>mvn dependency:tree -Dverbose -Dincludes=commons-collections</code><br>输出:</p><pre><code>[INFO] [dependency:tree][INFO] org.apache.maven.plugins:maven-dependency-plugin:maven-plugin:2.0-alpha-5-SNAPSHOT[INFO] +- org.apache.maven.reporting:maven-reporting-impl:jar:2.0.4:compile[INFO] |  \- commons-validator:commons-validator:jar:1.2.0:compile[INFO] |     \- commons-digester:commons-digester:jar:1.6:compile[INFO] |        \- (commons-collections:commons-collections:jar:2.1:compile - omitted for conflict with 2.0)[INFO] \- org.apache.maven.doxia:doxia-site-renderer:jar:1.0-alpha-8:compile[INFO]    \- org.codehaus.plexus:plexus-velocity:jar:1.1.3:compile[INFO]       \- commons-collections:commons-collections:jar:2.0:compile</code></pre><p>我们可以看到，2.1版本的jar被忽略掉了，因为maven是根据路径最近原则来解析依赖，2.0版本路径更短，所以2.0版本被引入，2.1版本路径比2.0要长，所以被忽略。<br>使用这个命令可以轻松的查看包的引入路径，包的冲突情况。<br>此处一定不要省略<code>-Dverbose</code>参数，要不然是不会显示被忽略的包</p><h2 id="3-dependency-analyze-only-—-分析依赖"><a href="#3-dependency-analyze-only-—-分析依赖" class="headerlink" title="3. dependency:analyze-only —- 分析依赖"></a>3. <code>dependency:analyze-only</code> —- 分析依赖</h2><p><code>dependency:analyze-only</code>命令可以分析整个项目，并且找出项目中依赖有如下情况的：</p><ul><li>声明了并且使用了的依赖</li><li>没有声明但是使用了的依赖</li><li>声明了但是没有使用的依赖</li></ul><p>输出示例：</p><pre><code>[INFO] Used declared dependencies found:[INFO]    cn.hutool:hutool-all:jar:4.3.1:compile[INFO]    com.google.guava:guava:jar:27.0.1-jre:compile[WARNING] Used undeclared dependencies found:[WARNING]    org.slf4j:slf4j-api:jar:1.7.25:compile[WARNING]    org.springframework:spring-context:jar:4.3.22.RELEASE:compile[WARNING]    org.springframework.boot:spring-boot-autoconfigure:jar:1.5.19.RELEASE:compile[WARNING]    org.springframework.boot:spring-boot:jar:1.5.19.RELEASE:compile[WARNING]    org.springframework:spring-beans:jar:4.3.22.RELEASE:compile[WARNING]    junit:junit:jar:4.12:test[WARNING] Unused declared dependencies found:[WARNING]    org.springframework.boot:spring-boot-starter-test:jar:1.5.19.RELEASE:test[WARNING]    com.h2database:h2:jar:1.4.197:test[WARNING]    org.springframework.boot:spring-boot-starter:jar:1.5.19.RELEASE:compile[WARNING]    com.fasterxml.jackson.core:jackson-databind:jar:2.8.11.3:compile[WARNING]    org.projectlombok:lombok:jar:1.16.22:compile[WARNING]    com.alibaba:fastjson:jar:1.2.55:compile</code></pre><p>需要注意的是，如果你要查看声明了并且使用了的依赖，必须加上参数<code>-Dverbose</code>。</p><h2 id="4-dependency-analyze-duplicate-—-分析-and"><a href="#4-dependency-analyze-duplicate-—-分析-and" class="headerlink" title="4. dependency:analyze-duplicate —- 分析 and "></a>4. <code>dependency:analyze-duplicate</code> —- 分析<dependencies> and <dependencymanagement></dependencymanagement></dependencies></h2><p>这个命令会查找<code>&lt;dependencies/&gt; 和 &lt;dependencyManagement/&gt;</code>中重复声明的依赖</p><h2 id="5-dependency-list-repositories-—-列出所有的远程repositories"><a href="#5-dependency-list-repositories-—-列出所有的远程repositories" class="headerlink" title="5. dependency:list-repositories —- 列出所有的远程repositories"></a>5. <code>dependency:list-repositories</code> —- 列出所有的远程repositories</h2><p>命令:<br><code>mvn dependency:list-repositories</code></p><p>输出:</p><pre><code>[INFO]        id: sonatype-nexus-snapshots      url: https://oss.sonatype.org/content/repositories/snapshots   layout: defaultsnapshots: [enabled =&gt; true, update =&gt; daily] releases: [enabled =&gt; false, update =&gt; daily][INFO]        id: apache.snapshots      url: https://repository.apache.org/snapshots   layout: defaultsnapshots: [enabled =&gt; true, update =&gt; daily] releases: [enabled =&gt; false, update =&gt; daily][INFO]        id: central      url: https://repo.maven.apache.org/maven2   layout: defaultsnapshots: [enabled =&gt; false, update =&gt; daily] releases: [enabled =&gt; true, update =&gt; daily]</code></pre><h2 id="6-dependency-purge-local-repository-—-清理本地repository"><a href="#6-dependency-purge-local-repository-—-清理本地repository" class="headerlink" title="6. dependency:purge-local-repository —- 清理本地repository"></a>6. <code>dependency:purge-local-repository</code> —- 清理本地repository</h2><p>这个命令的会首先解析整个项目的依赖，然后从本地repository中清理这些依赖，重新从远程repository下载。</p><ul><li>直接依赖<br>有一点要说清楚，这个命令默认的对所有的依赖项进行操作。所以它会在清除操作之前，下载某些缺失的依赖来收集完整的依赖树信息。为了避免这些预下载的操作，你可以设置参数<code>-DactTransitively=false</code>，仅对项目的直接依赖进行操作。</li><li>指定/排除依赖<br>你也可以有针对性的只操作某些包，需要添加参数<code>-Dincludes</code>，明确的声明包，这个是可以传多个值的，用英文逗号分隔，举例:<code>dependency:purge-local-repository -Dincludes=org.slf4j:slf4j-api,org.slf4j:log4j-over-slf4j</code>。<code>-Dexcludes</code>也是一样的道理，只不过是排除某些依赖。</li><li>自定义清理<br>如果你想清理不在本项目中的依赖，也可以使用这个，不过参数是不一样的。<code>mvn dependency:purge-local-repository -DmanualIncludes=org.apache:apache</code>，参数<code>-DmanualInclude</code>可以让你清理不在本项目中的依赖，但是不会重新解析依赖了，因为本项目不需要这些依赖。这个对清理parent pom，导入的pom，maven插件非常有用</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> maven </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> maven </tag>
+            
+            <tag> dependency </tag>
+            
+            <tag> mvn </tag>
+            
+            <tag> 依赖 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-17-Sail命令之rm&amp;shell</title>
+      <link href="/2019/08/22/SailDocument-17-rm/"/>
+      <url>/2019/08/22/SailDocument-17-rm/</url>
+      
+        <content type="html"><![CDATA[<h1 id="17-Sail命令之rm"><a href="#17-Sail命令之rm" class="headerlink" title="17-Sail命令之rm"></a>17-Sail命令之rm</h1><pre><code>Usage: sail rm [flags] &lt;repo&gt;Remove a sail container from the system.This command allows for removing a single containeror all of the containers on a system with the -all flag.sail rm flags:    --all    Remove all sail containers.(false)</code></pre><p><code>rm</code>可以删除容器，<code>--all</code>参数可以删除所有容器。</p><h1 id="18-Sail命令之shell"><a href="#18-Sail命令之shell" class="headerlink" title="18-Sail命令之shell"></a>18-Sail命令之shell</h1><pre><code>Usage: sail shell &lt;repo&gt;shell drops you into the default shell of a repo container.</code></pre><p><code>shell</code>命令可以让你进入到容器的shell中。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-16-Sail命令之ls</title>
+      <link href="/2019/08/21/SailDocument-16-ls/"/>
+      <url>/2019/08/21/SailDocument-16-ls/</url>
+      
+        <content type="html"><![CDATA[<h1 id="16-Sail命令之ls"><a href="#16-Sail命令之ls" class="headerlink" title="16-Sail命令之ls"></a>16-Sail命令之ls</h1><pre><code>Usage: sail lsLists all containers with the com.coder.sail label.sail ls flags:    --all    Show stopped container.(false)</code></pre><p><code>ls</code> 命令会列出所有的容器，但是容器标签是com.coder.sail库的标签</p><p>示例输出:</p><pre><code>name                 hat   url                     statuscdr/sail                   http://127.0.0.1:8828   Up About an hourcdr/sshcode                http://127.0.0.1:8130   Up About an hourcdr/m                      http://127.0.0.1:8754   Up About an hourcdr/code-server            http://127.0.0.1:8828   Up About an hourcdr/sail-tmp-kEG58         http://127.0.0.1:8130   Up About an hour</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-15-Sail命令之edit</title>
+      <link href="/2019/08/20/SailDocument-15-edit/"/>
+      <url>/2019/08/20/SailDocument-15-edit/</url>
+      
+        <content type="html"><![CDATA[<h1 id="15-Sail命令之edit"><a href="#15-Sail命令之edit" class="headerlink" title="15-Sail命令之edit"></a>15-Sail命令之edit</h1><pre><code>Usage: sail edit [flags] &lt;repo&gt;# 这个命令让你在容器运行中就可以编辑项目的环境。根据你写的命令参数，``edit``命令会用编辑器打开相应的Dockerfile，编辑器你可以用``EDITOR``环境变量来指定。编辑器关闭之后，环境将会重新构建，并且在最短的时间内重新运行。# 如果没有写参数，就会在编辑器中打开项目的Dockerfile，如果参数是``-hat``，就会打开项目关联的hat的Dockerfile。如果参数是``-new-hat``，项目将会使用新的hat。# VS Code用户可以通过在编辑器中的``.sail/Dockerfile``文件来编辑环境。编辑完成点击&#39;rebuild&#39;按钮之后，VS Code会重新构建容器。sail edit flags:    --hat    Edit the hat associated with this project.    (false)    --new-hat    Path to new hat.</code></pre><p><code>edit</code>命令可以让你编辑开发环境。VS Code用户可以用<a href="https://sail.dev/docs/concepts/environment-editing/" target="_blank" rel="noopener">integrated editing</a>来代替。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-14-Sail命令之run</title>
+      <link href="/2019/08/19/SailDocument-14-run/"/>
+      <url>/2019/08/19/SailDocument-14-run/</url>
+      
+        <content type="html"><![CDATA[<h1 id="14-Sail命令之run"><a href="#14-Sail命令之run" class="headerlink" title="14-Sail命令之run"></a>14-Sail命令之run</h1><pre><code>Usage: sail run [flags] &lt;repo&gt;# 运行一个项目容器# 如果这个项目还没有创建或者没有运行，那么就会创建这个项目，并且会打开一个新的编辑器。如果这个项目已经启动了，那就不会再启动一个新的容器了，但是这个容器会重新启动并打开一个新的编辑器。# 如果没有提供模式和主机地址，Sail会通过SSH访问github，要修改的话，有好几种方法：1. Specify a host. See examples section2. Specify a schema and host. See examples section3. Edit the config to provide your preferred defaults.Examples:    Use default host and schema(模式) (github.com over SSH, editable in config)    - sail run cdr/code-server    #强制通过ssh访问Github仓库（假设默认使用git用户）    - sail run ssh://github.com/cdr/sshcode    - sail run --ssh github.com/cdr/sshcode    # 自定义一个ssh服务地址    - sail run ssh://colin@git.colin.com/super/secret-repo    - sail run --ssh colin@git.colin.com/super/secret-repo    # 强制使用HTTPS访问Gitlab仓库    - sail run https://gitlab.com/inkscape/inkscape    - sail run --https gitlab.com/inkscape/inkscape# 注意:# 如果是使用ssh://, http://, or https://,你必须声明主机地址# 这样是错误的:    - sail run ssh://cdr/code-server# 您应该添加flags参数来避免使用主机地址.# 这是正确的:    - sail run --ssh cdr/code-serversail run flags:    --hat    自定义要使用的hat.    --http    Clone repo over HTTP (false)    --https    Clone repo over HTTPS (false)    --image    Custom docker image to use.    --keep    Keep container when it fails to build. (false)    --no-open    Don&#39;t open an editor session (false)    --rm    Delete existing container (false)    --ssh    Clone repo over SSH    (false)    --test-cmd    A command to use in-place of starting code-server for testing purposes.</code></pre><blockquote><p><code>run</code>命令会启动一个容器，并且打开项目的浏览器窗口。</p></blockquote><h3 id="浏览器"><a href="#浏览器" class="headerlink" title="浏览器"></a>浏览器</h3><p>尽可能的使用Chrome浏览器，因为Sail在Chrome中有个<code>--app</code>模式，这个模式下code-server的使用体验就跟本地的VS Code的差不多。如果没有Chrome的话，Sail就会用系统默认的浏览器打开一个网址。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-13-在Sail中访问Docker</title>
+      <link href="/2019/08/18/SailDocument-13-AccessingDockerWithinSail/"/>
+      <url>/2019/08/18/SailDocument-13-AccessingDockerWithinSail/</url>
+      
+        <content type="html"><![CDATA[<h1 id="13-在Sail中访问Docker"><a href="#13-在Sail中访问Docker" class="headerlink" title="13-在Sail中访问Docker"></a>13-在Sail中访问Docker</h1><p>在Sail中访问Docker的话，你需要安装docker工具，还要将本地的docker socket用share挂载到Sail环境中。</p><p>为了在项目中添加docker支持，你的项目<code>.sail/Dockerfile</code>配置文件中，需要添加类似下面的配置项：</p><pre><code>FROM codercom/ubuntu-dev:latest# 将本地的docker socket通过share挂载到Sail项目中，你就可以使用dacker客户端访问它了LABEL share.docker_sock &quot;/var/run/docker.sock:/var/run/docker.sock&quot;# 查看在ubuntu中安装docker的文档https://docs.docker.com/install/linux/docker-ce/ubuntu/RUN sudo apt-get update &amp;&amp; sudo apt-get install -y \    apt-transport-https \    ca-certificates \    curl \    gnupg-agent \    software-properties-commonRUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -RUN sudo apt-key fingerprint 0EBFCD88RUN sudo add-apt-repository \   &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu \   $(lsb_release -cs) \   stable&quot;# 只需要安装docker客户端即可，因为我们使用运行在本地的dockerRUN sudo apt-get install -y docker-ce-cli</code></pre><p>注意：这会将本地的所有容器都暴露在Sail环境中，甚至是Sail环境本身所在的容器，所以千万不要把运行Sail环境的容器删除了。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-12-运行界面应用</title>
+      <link href="/2019/08/17/SailDocument-12-RunningGUIApplications/"/>
+      <url>/2019/08/17/SailDocument-12-RunningGUIApplications/</url>
+      
+        <content type="html"><![CDATA[<h1 id="12-运行界面应用"><a href="#12-运行界面应用" class="headerlink" title="12-运行界面应用"></a>12-运行界面应用</h1><p>如果Linux支持x11，Sail可以在上面运行界面应用。</p><p>如果运行Sail的Linux上配置了<code>$DISPLAY</code>环境变量，那么Sail将挂载x11 socket和xauthority文件，并在容器中配置好环境变量，用户就可以在容器中运行带界面的应用了。</p><p>例如，在Sail里运行火狐浏览器：</p><pre><code># 确保您已经安装了火狐浏览器，为了快速的尝试一下，从终端安装即可，但是如果项目依赖了火狐浏览器，那就需要在`.sail/Dockerfile`中配置依赖。$ sudo apt-get install -y firefox# 在新窗口中打开火狐浏览器$ /usr/bin/firefox</code></pre><p>如果您运行出了下面的错误：</p><pre><code>No protocol specifiedUnable to init server: Could not connect: Connection refusedError: cannot open display: :0</code></pre><p>当您尝试启动一个界面应用，您要确保您有权限访问Xserver服务。您可以通过命令<code>xhost si:localuser:${USER}</code>给你的本地用户赋予访问Xserver服务的权限。注意，这个命令的赋权在你重启系统或者重启Xserver后会失效，所以重启之后你需要再执行一遍。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-11-在你的项目中添加Sail</title>
+      <link href="/2019/08/16/SailDocument-11-AddSailToYourProject/"/>
+      <url>/2019/08/16/SailDocument-11-AddSailToYourProject/</url>
+      
+        <content type="html"><![CDATA[<h2 id="11-在你的项目中添加Sail"><a href="#11-在你的项目中添加Sail" class="headerlink" title="11-在你的项目中添加Sail"></a>11-在你的项目中添加Sail</h2><p>您可以通过添加一个Dockerfile来增加你的项目对Sail的支持。Dockerfile必须在你项目的根目录下的<code>.sail/Dockerfile</code>。</p><p>文件创建之后，你可以修改<code>FROM</code>子句，添加Sail支持的镜像。支持的镜像托管在codercom的docker hub中，命名格式为<code>codercom/ubuntu-dev*</code>。</p><h3 id="选择基础镜像"><a href="#选择基础镜像" class="headerlink" title="选择基础镜像"></a>选择基础镜像</h3><p>目前，这些镜像都是基于ubuntu 18.10构建的，其中一些包含了安装好和配置好的编程语言环境，你可以基于这些编程语言环境来构建自己的项目环境。</p><p>例如，你有一个python项目，你可能想根据你使用的python版本，把<code>FROM</code>子句改为<code>FROM codercom/ubuntu-dev-python3.7</code> 或者 <code>FROM codercom/ubuntu-dev-python2.7</code>。这可以确保帮您安装和配置好正确的python和pip版本，还有一些常用的python的VS Code插件。</p><h3 id="自定义项目环境"><a href="#自定义项目环境" class="headerlink" title="自定义项目环境"></a>自定义项目环境</h3><p>选好了基础环境之后，其他的项目依赖和配置都可以通过Dockerfile语法和Sail标签来配置。</p><p>例如：</p><pre><code># 使用预先定义好的编程语言基础镜像FROM codercom/ubuntu-dev-python3.7:latest# 安装一些监控系统和程序的开发工具RUN sudo apt-get update -y &amp;&amp; sudo apt-get install -y \    dstat \    wireshark# 为python项目安装setuptoolsRUN pip install -U setuptools# 添加需要的环境变量ENV PATH $PATH:/my/additional/bins# 为项目数据添加一个share目录LABEL share.app_cache &quot;~/app/cache:~/app/cache&quot;</code></pre><p>Sail将会使用这个Dockerfile来构建您的开发环境，您可以明确的声明项目的依赖和配置，这样，所有的开发者都可以使用一样的开发环境了。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-10-配置</title>
+      <link href="/2019/08/15/SailDocument-10-Configuration/"/>
+      <url>/2019/08/15/SailDocument-10-Configuration/</url>
+      
+        <content type="html"><![CDATA[<h1 id="10-配置"><a href="#10-配置" class="headerlink" title="10-配置"></a>10-配置</h1><p>Sail尽量都将配置放到了项目和hats中，所以它基本上配置很少。但是Sail仍然有一点全局配置，默认放在了</p><pre><code>~/.config/sail/sail.toml</code></pre><p>这是一个默认的配置文件，可以作为参考：</p><pre><code># 如果项目没有提供镜像配置，将会使用default_image配置的镜像作为默认镜像default_image = &quot;codercom/ubuntu-dev&quot;# project_root是项目挂载的基础目录。项目将会以&quot;&lt;root&gt;/&lt;org&gt;/&lt;repo.&quot;格式保存在目录中project_root = &quot;~/Projects&quot;# default_hat是配置一个hat的默认配置文件，它会自动执行。# default_hat = &quot;&quot;</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-09-环境编辑</title>
+      <link href="/2019/08/14/SailDocument-09-Environment-Editing/"/>
+      <url>/2019/08/14/SailDocument-09-Environment-Editing/</url>
+      
+        <content type="html"><![CDATA[<h2 id="09-环境编辑"><a href="#09-环境编辑" class="headerlink" title="09-环境编辑"></a>09-环境编辑</h2><p>VS Code在编辑Sail开发环境时，开箱即用。</p><ol><li>在你的编辑器中打开<code>.sail/Dockerfile</code></li><li>修改配置</li><li>点击rebuild按钮<br><img src="https://sail.dev/rebuild-button.png" alt="UI"><br>在容器重新构建的过程中，界面是冻结的。</li></ol><h3 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h3><ul><li>重新构建的快捷键是:Ctrl+Shift+r </li><li>将Dockerfile的变化部分移动到文件底部，不变的部分会有缓存。？？？？</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-08-Docker</title>
+      <link href="/2019/08/13/SailDocument-08-Docker/"/>
+      <url>/2019/08/13/SailDocument-08-Docker/</url>
+      
+        <content type="html"><![CDATA[<h1 id="08-Docker"><a href="#08-Docker" class="headerlink" title="08-Docker"></a>08-Docker</h1><p>Sail可以被认为是Docker工具链的包装器，它专门用来管理开发环境。<br>它以元数据和标签的形式将大部分状态存储在Docker守护程序中。</p><h3 id="不可变性"><a href="#不可变性" class="headerlink" title="不可变性"></a>不可变性</h3><p>Sail鼓励以易于共享和迭代的方式明确描述您的开发环境的工作流程。<br>如果要对环境进行更改，就应修改hat或项目的Dockerfile。</p><h2 id="定义项目开发环境"><a href="#定义项目开发环境" class="headerlink" title="定义项目开发环境"></a>定义项目开发环境</h2><p>项目可以通过一个<code>.sail/Dockerfile</code>配置文件来定义开发环境，如果在项目中没有找到<code>.sail/Dockerfile</code>，那么就会使用<code>codercom/ubuntu-dev</code>作为基础镜像。</p><p>在自定义项目环境时，dev容器必须是<code>codercom/ubuntu-dev</code>的祖先才能拥有正确的依赖关系设置。</p><p>构建项目的镜像时，将会把项目的根目录作为构建的根目录，实际上是调用了下面的构建命 令：</p><pre><code> docker build -f $project_root/&lt;org&gt;/&lt;repo&gt;/.sail/Dockerfile $project_root/&lt;org&gt;/&lt;repo&gt;</code></pre><h2 id="容器权限"><a href="#容器权限" class="headerlink" title="容器权限"></a>容器权限</h2><p>本地的当前用户将映射到开发环境中名为user的用户。这意味着容器内的文件跟您在本地环境具有相同的权限。<br>Sail在容器内使用<code>user</code>账户，不是<code>root</code>，因为:</p><ul><li>root账户对许多工具不太友好。</li><li>大多数开发人员习惯于非root用户和使用sudo</li></ul><h2 id="容器的命名"><a href="#容器的命名" class="headerlink" title="容器的命名"></a>容器的命名</h2><p>在Docker中容器被命名为<code>&lt;org&gt;_&lt;project&gt;</code>格式，但是在Sail中是<code>&lt;org&gt;/project</code></p><h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><p>为了尽量让您有本地开发的环境体验，Sail尽可能使用docker宿主机网络。这就是说，如果你在Sail中的网络服务绑定到了8080端口，那么在你本地的浏览器中可以直接访问<code>127.0.0.1:8080</code>。</p><p>在Mac上，Docker不支持使用宿主机网络，所以Sail在Mac上的宿主网络不好使。Sail计划在未来的版本中解决这个问题。</p><h2 id="Dockerfile-最佳实践"><a href="#Dockerfile-最佳实践" class="headerlink" title="Dockerfile 最佳实践"></a>Dockerfile 最佳实践</h2><p>在<a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/" target="_blank" rel="noopener">Dockerfile最佳实践</a>，你可以参考如何正确构建和编写项目以及Dockerfiles。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-07-标签</title>
+      <link href="/2019/08/12/SailDocument-07-Labels/"/>
+      <url>/2019/08/12/SailDocument-07-Labels/</url>
+      
+        <content type="html"><![CDATA[<h1 id="07-标签"><a href="#07-标签" class="headerlink" title="07-标签"></a>07-标签</h1><p>Sail广泛的使用Docker标签来维护状态，并允许用户完全配置他们的项目环境。</p><h2 id="配置标签"><a href="#配置标签" class="headerlink" title="配置标签"></a>配置标签</h2><p>项目的根标签<br>如《项目》中所述，您可以使用<code>project_root</code>标签来指定项目根的挂载目录。Sail默认的挂载目录是容器中的<code>~/&lt;repo&gt;</code>。</p><p>例如：</p><pre><code>LABEL project_root &quot;~/go/src/&quot;</code></pre><p>将会挂载本地的<code>$project_root/&lt;org&gt;/&lt;repo&gt;</code>目录到容器中的<code>~/go/src/&lt;repo&gt;</code>。</p><h3 id="Share-标签"><a href="#Share-标签" class="headerlink" title="Share 标签"></a>Share 标签</h3><p>Sail的share是一个你想跟容器分享的本地目录。项目或者是hat的Dockerfile中的share，将会把你指定的目录挂载到容器中的相应位置。</p><p>项目或者hat的Dockerfile可以使用如下形式的标签配置命令:</p><pre><code>share.&lt;share_name&gt;=&quot;host_path:guest_path&quot;.</code></pre><p>例如：如果你想跟容器共享本地的go模块缓存，你可以在项目或者hat的Dockerfile中添加如下命令：</p><pre><code>LABEL share.go_mod=&quot;~/go/pkg/mod:~/go/pkg/mod&quot;</code></pre><h4 id="以下情况推荐使用share："><a href="#以下情况推荐使用share：" class="headerlink" title="以下情况推荐使用share："></a>以下情况推荐使用share：</h4><ul><li>系统级的缓存<ul><li>go模块缓存</li><li>Yarn 缓存</li></ul></li><li>用户的个性化配置<ul><li>VS Code配置</li><li>SSH密钥</li><li>gitconfig</li></ul></li><li>工作数据<ul><li>项目文件</li><li>数据分析结果<br>需要注意的是：share会破坏开发环境的可重复性和一致性。小心一些比较坑的share，例如<code>~:~</code>。</li></ul></li></ul><h2 id="State-标签"><a href="#State-标签" class="headerlink" title="State 标签"></a>State 标签</h2><p>Sail使用以<code>com.coder.sail</code>开头的Docker标签来管理CLI可能需要的状态。 这些标签仅在Sail CLI中需要，对用户配置无用。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-06-Hats</title>
+      <link href="/2019/08/11/SailDocument-06-Hats/"/>
+      <url>/2019/08/11/SailDocument-06-Hats/</url>
+      
+        <content type="html"><![CDATA[<h1 id="06-Hats"><a href="#06-Hats" class="headerlink" title="06-Hats"></a>06-Hats</h1><p><strong><em>hat</em></strong> 是一个包含Dockerfile文件的构建目录，它可以让您使用个性化配置来拓展您的项目环境。hat可以将您自己的工具，配置和工作流加入到您的Sail项目中。</p><p>为了让Sail扩展项目的开发环境，hat的Dockerfile中的<code>FROM</code>子句被项目仓库中的<code>FROM</code>替换。</p><p>例如：</p><pre><code>FROM ubuntuRUN sudo apt install fishRUN chsh user -s $(which fish)</code></pre><p>这是一个hat配置，它会安装fish，并将其配置为默认的shell，不管仓库中的<code>FROM</code>镜像中使用的是什么shell。</p><p>在Sail构建您的开发环境的时候，<code>FROM ubuntu</code>将会被<code>FROM &lt;repo_image&gt;</code>替换。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-05-项目所需的插件</title>
+      <link href="/2019/08/10/SailDocument-05-Project-defined-Extensions/"/>
+      <url>/2019/08/10/SailDocument-05-Project-defined-Extensions/</url>
+      
+        <content type="html"><![CDATA[<h1 id="05-项目所需的插件"><a href="#05-项目所需的插件" class="headerlink" title="05-项目所需的插件"></a>05-项目所需的插件</h1><p>通过Dockerfile来安装VS Code插件是超级简单的。<br>在Dockerfile中，调用<code>installext &lt;extension ID&gt;</code>即可。</p><blockquote><p>提示：在插件市场的详细页面可以找到插件的id<br><img src="https://sail.dev/extension-id.png" alt="vscode"></p></blockquote><p>例如：</p><pre><code>FROM codercom/ubuntu-dev:latestRUN installext vscodevim.vim</code></pre><p>但是<code>installext</code>命令只在<code>ubuntu-dev</code> or <code>ubuntu-dev-*</code>镜像中是可用的。</p><h2 id="其实"><a href="#其实" class="headerlink" title="其实"></a>其实</h2><p><code>code-server</code>的两个拓展目录是:</p><ul><li><code>~/.vscode/extensions</code>这个目录包含环境中特需的插件</li><li><code>~/.vscode/host-extensions</code>这个目录挂载的是你本地主机中<code>~/.vscode/extensions</code>目录。</li></ul><p>这就确保了，项目既可以使用特需的插件，同时用户也可以继续使用你本地的VS Code插件。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-04-项目</title>
+      <link href="/2019/08/09/SailDocument-04-Projects/"/>
+      <url>/2019/08/09/SailDocument-04-Projects/</url>
+      
+        <content type="html"><![CDATA[<h1 id="04-项目"><a href="#04-项目" class="headerlink" title="04-项目"></a>04-项目</h1><h2 id="project"><a href="#project" class="headerlink" title="project"></a>project</h2><p>Sail的核心概念之一是project。每个Sail项目就像是独自占有一个机器，这个机器上只有该项目的依赖和配置。每个Sail项目的开发环境都事先被项目所有者配置好了，因此，你可以更快速的开始贡献代码。</p><p>就像是项目的核心开发给您配置了一个全新的Linux机器一样，他们给你安装好了编程语言和依赖，项目所需的配置也帮您设置好。VSCode也帮您安装了，并且需要的VSCode插件也有。源代码也clone下来了。so，你可以立刻愉快的贡献代码了。</p><p>一个Sail项目就是一个已经配置好的干净的开发环境。除此之外还有一个好处，这个开发环境可以随时丢弃不用，你完全可以重新创建一个一样的环境。</p><h2 id="依赖和配置"><a href="#依赖和配置" class="headerlink" title="依赖和配置"></a>依赖和配置</h2><p>您需要在源码仓库的根目录下创建一个<code>.sail/Dockerfile</code>文件，来明确项目需要哪些依赖。Sail会根据您的配置文件创建一个容器，然后在容器中运行您的开发环境。</p><p>如果一个项目没有<code>.sail/Dockerfile</code>文件，Sail会尝试推断项目使用的语言，如果能推断出项目的语言，就会从<a href="https://hub.docker.com/r/codercom" target="_blank" rel="noopener">codercom docker hub</a>中拉取该语言的Docker基础镜像。如果无法推断出项目语言，或者镜像库中没有该语言的基础镜像，那么<br>就使用<a href="https://hub.docker.com/r/codercom/ubuntu-dev" target="_blank" rel="noopener">codercom/ubuntu-dev</a>镜像作为项目的环境来运行该项目。</p><h2 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h2><p>由于容器中的文件系统是临时的，Sail会把clone下来的项目仓库放在本地主机中Sail的<code>$project_root</code>下，并把它挂载到容器中。<br>因为项目是挂载到容器中的，所以删除容器不会删除项目文件，同时您可以随意操作容器外部的项目文件。</p><h3 id="本地主机"><a href="#本地主机" class="headerlink" title="本地主机"></a>本地主机</h3><p><code>$project_root</code>是一个环境变量，配置在Sail的全局配置文件中，配置文件默认放在<code>~/Projects</code>。项目通常放在<code>$project_root</code>下，目录结构如下：</p><pre><code>$project_root/&lt;org&gt;/&lt;repo&gt;</code></pre><p>例如，你要使用一个新的Sail环境，</p><pre><code>sail run cdr/sail</code></pre><p>它将被clone到<code>$project_root/cdr/sail</code>。</p><h3 id="容器内"><a href="#容器内" class="headerlink" title="容器内"></a>容器内</h3><p>默认的，项目会被挂载到容器的<code>~/&lt;repo&gt;</code>下。为了支持一些特殊的语言，比如Go，挂载目录是可以通过项目下配置文件<code>.sail/Dockerfile</code>的<code>project_root</code>标签配置的。<br>例如:</p><pre><code>LABEL project_root &quot;~/go/src/&quot;</code></pre><p>这将会把本地主机的<code>$project_root/&lt;org&gt;/&lt;repo&gt;</code>目录挂载到容器的<code>~/go/src/&lt;repo&gt;</code>目录下。</p><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>项目的配置是通过<a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="noopener">Dockerfile</a>的命令来完成的。</p><p>例如，如果您的项目将autotools作为依赖项，你可以通过<code>.sail/Dockerfile</code>配置来安装到环境中，如下：</p><pre><code>FROM codercom/ubuntu-dev:latestRUN apt-get update &amp;&amp; apt-get install -y \    autoconf \    automake \    libtool</code></pre><p>为了明确像挂载目录等等配置，Sail拓展了Dockerfile语法，我们将在《标签》中详细介绍这些内容。</p><p>作为一个开发者，你可以想在项目中引入自己的配置和工具。你可以通过hat Dockerfile轻松的拓展项目的开发环境<br>。</p><h2 id="支持的版本管理系统"><a href="#支持的版本管理系统" class="headerlink" title="支持的版本管理系统"></a>支持的版本管理系统</h2><p>当前只支持git</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-03-浏览器插件</title>
+      <link href="/2019/08/08/SailDocument-03-BrowserExtension/"/>
+      <url>/2019/08/08/SailDocument-03-BrowserExtension/</url>
+      
+        <content type="html"><![CDATA[<h1 id="03-浏览器插件"><a href="#03-浏览器插件" class="headerlink" title="03-浏览器插件"></a>03-浏览器插件</h1><h2 id="浏览器插件"><a href="#浏览器插件" class="headerlink" title="浏览器插件"></a>浏览器插件</h2><p>Sail的浏览器插件可以让您在Github或者Gitlab中，只需要点击一下就可以打开项目了。</p><video width="751" height="452" src="https://sail.dev/github-open.mp4" controls="controls"><br>Your browser does not support the video tag.<br></video><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><ol><li>您可以使用命令<code>sail install-for-chrome-ext</code>来安装Chrome插件manifest.json</li><li>您也可以从<a href="https://chrome.google.com/webstore/detail/sail/deeepphleikpinikcbjplcgojfhkcmna" target="_blank" rel="noopener">Chrome Marketplace</a>安装</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail中文文档:一个开发环境快速部署工具-02-安装</title>
+      <link href="/2019/08/07/SailDocument-02-Installation/"/>
+      <url>/2019/08/07/SailDocument-02-Installation/</url>
+      
+        <content type="html"><![CDATA[<h1 id="02-安装"><a href="#02-安装" class="headerlink" title="02-安装"></a>02-安装</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="支持的平台"><a href="#支持的平台" class="headerlink" title="支持的平台"></a>支持的平台</h3><p>当前的Sail只支持Linux和MacOS，Windows将在未来的版本中得到支持。</p><h3 id="本地依赖"><a href="#本地依赖" class="headerlink" title="本地依赖"></a>本地依赖</h3><p>在使用Sail之前，必须安装几个依赖的组件：</p><ol><li>Docker</li><li>Git</li><li>Chrome 或 Chromium - 这不是必需的，但是强烈推荐您使用code-server。如果没有安装Chrome，那么Sail就会使用默认的浏览器。</li></ol><h3 id="安装-1"><a href="#安装-1" class="headerlink" title="安装"></a>安装</h3><p>为了简单、安全和快速起见，下面的命令将会在您的系统中安装最新的Sail到<code>/usr/local/bin</code>中。同时您需要将<code>/usr/local/bin</code>添加到<code>$PATH</code>环境变量中。</p><pre><code>curl https://sail.dev/install.sh | bash</code></pre><h4 id="稳定版的发布"><a href="#稳定版的发布" class="headerlink" title="稳定版的发布"></a>稳定版的发布</h4><p>您也可以自己从github的releases页面下载，将二进制文件放在您想安装的位置。</p><h4 id="从源码安装"><a href="#从源码安装" class="headerlink" title="从源码安装"></a>从源码安装</h4><p>对高级用户来说，您可以从源码安装。<br>您需要在您的机器上安装和配置好go编程语言，并在您的PATH中添加<code>$ GOPATH / bin</code>。</p><p>Sail使用go模块来构建项目，因此将其安装到系统的最简单方法是将其<code>git clone</code>到GOPATH之外的目录中</p><pre><code>mkdir $HOME/srccd $HOME/srcgit clone https://github.com/cdr/sail.gitcd sailgo install</code></pre><h3 id="验证安装"><a href="#验证安装" class="headerlink" title="验证安装"></a>验证安装</h3><p>您可以使用命令<code>sail --help</code>来验证Sail是否已经安装好。</p><h3 id="浏览插件"><a href="#浏览插件" class="headerlink" title="浏览插件"></a>浏览插件</h3><p>为了在使用Sail时获得最佳体验，我们推荐您安装浏览器插件</p><h3 id="升级"><a href="#升级" class="headerlink" title="升级"></a>升级</h3><p>您只需要按照上面的方法，重新安装Sail即可。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+            <tag> Docker </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Sail:一个开发环境快速部署工具-01-简介</title>
+      <link href="/2019/08/06/SailDocument-01-Introduction/"/>
+      <url>/2019/08/06/SailDocument-01-Introduction/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Sail-一个开发环境快速部署工具-01-简介"><a href="#Sail-一个开发环境快速部署工具-01-简介" class="headerlink" title="Sail:一个开发环境快速部署工具-01-简介"></a>Sail:一个开发环境快速部署工具-01-简介</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="什么是Sail"><a href="#什么是Sail" class="headerlink" title="什么是Sail?"></a>什么是Sail?</h3><p>Sail是一个用来管理docker化的开发环境的CLI工具。它使用docker工具链和<a href="https://github.com/cdr/code-server" target="_blank" rel="noopener">code-server</a>来创建预配置，不可变和源代码控制的开发环境。</p><blockquote><p><strong>译注</strong>：Sail是一个开发环境快速部署工具，它只需要一个命令，就可以快速在Docker中部署出项目的开发环境，并且打开VS Code编辑器，让你快速的可以贡献代码。开发人员不需要再关心项目的依赖和配置，这些Sail都会帮你搞定。<br>一些示例项目:<br><a href="https://github.com/cdr/sail" target="_blank" rel="noopener">https://github.com/cdr/sail</a><br><a href="https://github.com/linux-china/sail-demo" target="_blank" rel="noopener">https://github.com/linux-china/sail-demo</a></p></blockquote><blockquote><p>Sail主页<a href="https://sail.dev/" target="_blank" rel="noopener">Sail</a></p></blockquote><h3 id="为什么使用Sail？"><a href="#为什么使用Sail？" class="headerlink" title="为什么使用Sail？"></a>为什么使用Sail？</h3><p>Sail 是一种全新的开发方式，使用Sail的主要优势如下:</p><ol><li><p>源代码控制 - 开发环境的所有项目依赖和配置都明确的配置在<code>.sail/Dockerfile</code>文件中。</p></li><li><p>环境不可变 - 项目是运行在<code>.sail/Dockerfile</code>配置文件创建的docker容器中，所以，所有的开发者的基础开发环境都是一样。如果你的开发环境因为某种原因乱套了，只需要删除它，然后重新创建一个就可以了。</p></li><li><p>快速的贡献代码 - 使用Sail配置的项目可以很容易的让开发者参与进来，他们不用再操心应该怎么配置项目的开发环境，需要哪些依赖等等。</p></li><li><p>使用你自己的配置文件(dotfiles) - 使用<a href="https://sail.dev/docs/concepts/hats/" target="_blank" rel="noopener">hat</a>，你可以在任何项目中添加自己的环境配置，这样，你可以用你自己喜欢的shell或者vim配置。</p></li><li><p>没有本地垃圾困扰 - 你可以轻松的尝试一些新项目，不必担心项目的依赖会给你本地系统带来垃圾，Sail项目的所有依赖都包含在docker镜像中，这也可以解决你的项目依赖不兼容的问题。</p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Sail </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Sail </tag>
+            
+            <tag> 开发环境 </tag>
+            
+            <tag> 文档 </tag>
+            
+            <tag> 中文文档 </tag>
+            
+            <tag> 部署 </tag>
+            
+            <tag> 快速 </tag>
+            
+            <tag> code-server </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hikari:Apparent connection leak detected连接泄露分析</title>
+      <link href="/2019/05/28/hikari-leak/"/>
+      <url>/2019/05/28/hikari-leak/</url>
+      
+        <content type="html"><![CDATA[<p>部分报错日志如下:</p><pre><code>16-05-2019 13:25:46.494 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.ProxyLeakTask.run - Connection leak detection triggered for com.mysql.jdbc.JDBC4Connection@7c3beffb, stack trace followsjava.lang.Exception: Apparent connection leak detected    at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:111)    at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:77)    at org.mybatis.spring.transaction.SpringManagedTransaction.openConnection(SpringManagedTransaction.java:84)    at org.mybatis.spring.transaction.SpringManagedTransaction.getConnection(SpringManagedTransaction.java:70)    at org.apache.ibatis.executor.BaseExecutor.getConnection(BaseExecutor.java:336)    at org.apache.ibatis.executor.SimpleExecutor.prepareStatement(SimpleExecutor.java:84)    at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:62)    at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:324)    at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156)    at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109)    at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83)    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:148)    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:141)    at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:77)    at sun.reflect.GeneratedMethodAccessor148.invoke(Unknown Source)    at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)    at java.lang.reflect.Method.invoke(Method.java:498)    at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:434)    at com.sun.proxy.$Proxy107.selectOne(Unknown Source)    at org.mybatis.spring.SqlSessionTemplate.selectOne(SqlSessionTemplate.java:167)</code></pre><p>日志显示，检测到了连接泄露<br>Hikari配置如下：</p><pre><code>hikari:      maximum-pool-size: 100      minimum-idle: 0      leak-detection-threshold: 180000      connection-timeout: 180000      validation-timeout: 180000      idle-timeout: 180000</code></pre><p>leak-detection-threshold:用来设置连接被占用的超时时间，单位为毫秒，默认为0，表示禁用连接泄露检测。<br>connection-timeout:从连接池获取连接的超时时间。</p><p>分析源代码发现，该错误的原因是从连接池获取连接超时，触发了连接泄露检测。<br>此处spring调用了doGetConnection从hikari中获取连接，<br>在org.springframework.jdbc.datasource.DataSourceUtils#doGetConnection中，<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/HDMj2V.jpg" alt="hikari-1.jpg"><br>我们看看hikari中的实现，，进入该方法继续看，<br>com.zaxxer.hikari.HikariDataSource#getConnection()<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/ATRITV.jpg" alt="hikari-2.jpg"><br>在com.zaxxer.hikari.pool.HikariPool#getConnection(long)中，<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/7vMFW0.jpg" alt="hikari-3.jpg"><br>com.zaxxer.hikari.pool.ProxyLeakTask#ProxyLeakTask(com.zaxxer.hikari.pool.ProxyLeakTask, com.zaxxer.hikari.pool.PoolEntry)中<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/OG3tGc.jpg" alt="hikari-4.jpg"><br>这个地方是真正的获取连接的实现了，<br>分析上面的代码会发现，在获取Connection的时候，创建了一个ProxyLeakTask，这个task是一个定时任务，在leakDetectionThreshold毫秒后调用run()方法抛出Apparent connection leak detected异常。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/S4ah4I.jpg" alt="hikari-5.jpg"><br>也就是说，获取连接的时间+使用连接的时间+还回连接的时间，超出了leakDetectionThreshold毫秒，就抛出检测到连接泄露的异常。结合我们的业务发现，此处是获取连接的时间超出了leakDetectionThreshold毫秒，但是，connection-timeout设置的跟leakDetectionThreshold一样，这样在获取连接超时的时候，大概率会先触发leakDetectionThreshold的异常，导致异常不准确，所以建议leakDetectionThreshold要设置的比connection-timeout长，不能是一样的。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 问题排查 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Hikari </tag>
+            
+            <tag> 中间件 </tag>
+            
+            <tag> 数据库 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
