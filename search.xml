@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Hikari:electron 项目构建, 打包实践及避坑</title>
+      <link href="/2020/05/17/electron-package/"/>
+      <url>/2020/05/17/electron-package/</url>
+      
+        <content type="html"><![CDATA[<p>项目架构是React + electron，可以直接使用普通的 react 项目，然后加上electron配置。electron 配置可以从项目<code>https://github.com/electron/electron-quick-start.git</code>    中获取。</p><p>打包配置：</p><ul><li>首先在 package.json中添加打包工具依赖</li></ul><pre><code class="shell">&quot;devDependencies&quot;: {    &quot;electron-packager&quot;: &quot;^14.2.1&quot;  }</code></pre><ul><li>再添加如下配置</li></ul><p><code>&quot;homepage&quot;: &quot;.&quot;</code></p><ul><li>在package.json中的scripts添加如下打包命令</li></ul><pre><code class="shell">&quot;package&quot;: &quot;electron-packager . demo --platform=darwin --arch=x64 --out=/Users/test/build --electron-version=8.2.3 --overwrite&quot;</code></pre><p>注意事项：</p><ol><li><p>–platform 最好指定要打包的平台，不建议指定 all</p></li><li><p>–out 不用指定为 build，会出现打包之后没有 build 目录的问题，另外此处要使用绝对路径</p></li></ol><ul><li>配置 main.js</li></ul><p>好多博客中，贴出的加载应用的方式是，这样的</p><pre><code class="javascript">// 加载应用的 index.html  mainWindow.loadURL(&#39;file://&#39; + __dirname + &#39;/index.html&#39;)；</code></pre><p>或者是使用了 path 拼接等等，都可能会找不到文件，或者报错如下</p><pre><code class="javascript">electron Not allowed to load local resource</code></pre><p>使用如下方式即可：</p><pre><code class="javascript">mainWindow.loadFile(`./build/index.html`)</code></pre><p>另外，main.js 中如果有这个独立的方法，</p><pre><code class="javascript">app.on(&#39;activate&#39;, function () {    log.info(&quot;activate&quot;);    // On macOS it&#39;s common to re-create a window in the app when the    // dock icon is clicked and there are no other windows open.    if (BrowserWindow.getAllWindows().length === 0) {        createWindow();    }})</code></pre><p>建议注释掉，这个地方有个 bug，在应用启动过程中点击会报错，</p><pre><code class="javascript">Uncaught Exception:Error: Cannot create BrowserWindow before app is ready    at createWindow (/Users/test/Documents/wsWP/react-cn-mirrot/build/CN-Mirror-darwin-x64/CN-Mirror.app/Contents/Resources/app/main.js:11:24)    at App.&lt;anonymous&gt; (/Users/test/Documents/wsWP/react-cn-mirrot/build/CN-Mirror-darwin-x64/CN-Mirror.app/Contents/Resources/app/main.js:98:9)    at App.emit (events.js:210:5)</code></pre><p>我已经跟 electron 提了 issue，回复说会修复。</p><p>如果要使用这个方法，要放在app.whenReady()中。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 问题排查 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> electron </tag>
+            
+            <tag> 打包 </tag>
+            
+            <tag> 避坑 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>HttpServletBean解析-02</title>
       <link href="/2020/04/01/HttpServletBean-02/"/>
       <url>/2020/04/01/HttpServletBean-02/</url>
