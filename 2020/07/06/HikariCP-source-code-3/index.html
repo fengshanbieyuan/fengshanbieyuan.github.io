@@ -14,10 +14,13 @@
     <meta charset="utf-8">
     <meta name="google-site-verification" content="tW1RD83KSuf9lr73Vi76x7_5A1UdOy12mdLqpHWY5Mc">
     <meta name="keywords" content="HikariCP获取连接流程源码分析三, 枫山别院,博客,Java,框架,架构">
-    <meta name="description" content="话接上篇，我们继续分析HikariCP获取连接的过程。
+    <meta name="description" content="
+源代码版本2.4.5-SNAPSHOT
+
+话接上篇，我们继续分析HikariCP获取连接的过程。
 ③拿到一个连接//③
 //获取连接的时候, 判断连接是否已经被标记移除
-if (poolEntry.isMarkedEvicted() || (clockSource.elapsedM">
+if (poolEntry.isMarkedEvicted() ||">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -378,7 +381,10 @@ if (poolEntry.isMarkedEvicted() || (clockSource.elapsedM">
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>话接上篇，我们继续分析HikariCP获取连接的过程。</p>
+                <blockquote>
+<p>源代码版本2.4.5-SNAPSHOT</p>
+</blockquote>
+<p>话接上篇，我们继续分析HikariCP获取连接的过程。</p>
 <h3 id="③拿到一个连接"><a href="#③拿到一个连接" class="headerlink" title="③拿到一个连接"></a>③拿到一个连接</h3><pre><code class="java">//③
 //获取连接的时候, 判断连接是否已经被标记移除
 if (poolEntry.isMarkedEvicted() || (clockSource.elapsedMillis(poolEntry.lastAccessed, now) &gt; ALIVE_BYPASS_WINDOW_MS &amp;&amp; !isConnectionAlive(poolEntry.connection))) {
@@ -692,10 +698,13 @@ return poolEntry.createProxyConnection(leakTask.schedule(poolEntry), now);
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            话接上篇，我们继续分析HikariCP获取连接的过程。
+                            
+源代码版本2.4.5-SNAPSHOT
+
+话接上篇，我们继续分析HikariCP获取连接的过程。
 ③拿到一个连接//③
 //获取连接的时候, 判断连接是否已经被标记移除
-if (poolEntry.isMarkedEvicted() || (clockSource.elapsedM
+if (poolEntry.isMarkedEvicted() ||
                         
                     </div>
                     <div class="publish-info">
@@ -761,7 +770,10 @@ if (poolEntry.isMarkedEvicted() || (clockSource.elapsedM
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的getConnection()方法，而这个方法，其实详细的实现细节都是在HikariP
+                            
+源代码版本2.4.5-SNAPSHOT
+
+HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的getConnection()方法，而这个
                         
                     </div>
                     <div class="publish-info">
@@ -957,7 +969,7 @@ if (poolEntry.isMarkedEvicted() || (clockSource.elapsedM
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">23.5k</span>
+                <span class="white-color">27.1k</span>
             
 
             

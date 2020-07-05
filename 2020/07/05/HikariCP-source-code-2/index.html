@@ -14,7 +14,10 @@
     <meta charset="utf-8">
     <meta name="google-site-verification" content="tW1RD83KSuf9lr73Vi76x7_5A1UdOy12mdLqpHWY5Mc">
     <meta name="keywords" content="HikariCP获取连接流程源码分析二, 枫山别院,博客,Java,框架,架构">
-    <meta name="description" content="HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的getConnection()方法，而这个方法，其实详细的实现细节都是在HikariP">
+    <meta name="description" content="
+源代码版本2.4.5-SNAPSHOT
+
+HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的getConnection()方法，而这个">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -375,7 +378,10 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="HikariPool的getConnection-方法"><a href="#HikariPool的getConnection-方法" class="headerlink" title="HikariPool的getConnection()方法"></a>HikariPool的getConnection()方法</h2><p>在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的<code>getConnection()</code>方法，而这个方法，其实详细的实现细节都是在HikariPool的getConnection()方法中，我们来分析下HikariPool的getConnection()方法。</p>
+                <blockquote>
+<p>源代码版本2.4.5-SNAPSHOT</p>
+</blockquote>
+<h2 id="HikariPool的getConnection-方法"><a href="#HikariPool的getConnection-方法" class="headerlink" title="HikariPool的getConnection()方法"></a>HikariPool的getConnection()方法</h2><p>在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的<code>getConnection()</code>方法，而这个方法，其实详细的实现细节都是在HikariPool的getConnection()方法中，我们来分析下HikariPool的getConnection()方法。</p>
 <p>代码如下:</p>
 <pre><code class="java">public final Connection getConnection() throws SQLException {
       return getConnection(connectionTimeout);
@@ -719,10 +725,13 @@ if (poolEntry == null) {
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            话接上篇，我们继续分析HikariCP获取连接的过程。
+                            
+源代码版本2.4.5-SNAPSHOT
+
+话接上篇，我们继续分析HikariCP获取连接的过程。
 ③拿到一个连接//③
 //获取连接的时候, 判断连接是否已经被标记移除
-if (poolEntry.isMarkedEvicted() || (clockSource.elapsedM
+if (poolEntry.isMarkedEvicted() ||
                         
                     </div>
                     <div class="publish-info">
@@ -775,24 +784,28 @@ if (poolEntry.isMarkedEvicted() || (clockSource.elapsedM
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/07/04/HikariCP-source-code-1/">
+                <a href="/2020/07/05/HikariCP-source-code-4/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析一">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
                         
-                        <span class="card-title">HikariCP获取连接流程源码分析一</span>
+                        <span class="card-title">HikariCP源码分析之初始化分析一</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            HikariDataSource的getConnection()方法HikariCP获取连接的方法是com.zaxxer.hikari.HikariDataSource#getConnection()， 这个方法在HikariDataSou
+                            
+源代码版本2.4.5-SNAPSHOT
+
+HikariDataSource的初始化
+HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-04
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-05
                             </span>
                         <span class="publish-author">
                             
@@ -983,7 +996,7 @@ if (poolEntry.isMarkedEvicted() || (clockSource.elapsedM
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">23.5k</span>
+                <span class="white-color">27.1k</span>
             
 
             

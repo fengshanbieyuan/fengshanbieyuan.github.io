@@ -14,7 +14,10 @@
     <meta charset="utf-8">
     <meta name="google-site-verification" content="tW1RD83KSuf9lr73Vi76x7_5A1UdOy12mdLqpHWY5Mc">
     <meta name="keywords" content="HikariCP获取连接流程源码分析一, 枫山别院,博客,Java,框架,架构">
-    <meta name="description" content="HikariDataSource的getConnection()方法HikariCP获取连接的方法是com.zaxxer.hikari.HikariDataSource#getConnection()， 这个方法在HikariDataSou">
+    <meta name="description" content="
+源代码版本2.4.5-SNAPSHOT
+
+HikariDataSource的getConnection()方法HikariCP获取连接的方法是com.zaxxer.hikari.HikariDataSource#getConnection">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -375,7 +378,10 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="HikariDataSource的getConnection-方法"><a href="#HikariDataSource的getConnection-方法" class="headerlink" title="HikariDataSource的getConnection()方法"></a>HikariDataSource的getConnection()方法</h2><p>HikariCP获取连接的方法是<code>com.zaxxer.hikari.HikariDataSource#getConnection()</code>， 这个方法在<code>HikariDataSource</code>类中。<code>HikariDataSource</code>类中是 HikariCP 提供用户使用的主要类，有获取连接，关闭连接池，剔除连接等方法。我们主要看一下<code>getConnection()</code>, 这是对外暴露的获取连接的方法，不管是Spring获取连接还是我们自己手工调用 HikariCP，都是调用这个方法从连接池中取连接。</p>
+                <blockquote>
+<p>源代码版本2.4.5-SNAPSHOT</p>
+</blockquote>
+<h2 id="HikariDataSource的getConnection-方法"><a href="#HikariDataSource的getConnection-方法" class="headerlink" title="HikariDataSource的getConnection()方法"></a>HikariDataSource的getConnection()方法</h2><p>HikariCP获取连接的方法是<code>com.zaxxer.hikari.HikariDataSource#getConnection()</code>， 这个方法在<code>HikariDataSource</code>类中。<code>HikariDataSource</code>类中是 HikariCP 提供用户使用的主要类，有获取连接，关闭连接池，剔除连接等方法。我们主要看一下<code>getConnection()</code>, 这是对外暴露的获取连接的方法，不管是Spring获取连接还是我们自己手工调用 HikariCP，都是调用这个方法从连接池中取连接。</p>
 <p>代码如下：</p>
 <pre><code class="java">public Connection getConnection() throws SQLException {
       //①
@@ -696,19 +702,22 @@ return result.getConnection();
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/07/05/HikariCP-source-code-2/">
+                <a href="/2020/07/05/HikariCP-source-code-5/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析二">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析二">
                         
-                        <span class="card-title">HikariCP获取连接流程源码分析二</span>
+                        <span class="card-title">HikariCP源码分析之初始化分析二</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的getConnection()方法，而这个方法，其实详细的实现细节都是在HikariP
+                            
+源代码版本2.4.5-SNAPSHOT
+
+HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：
                         
                     </div>
                     <div class="publish-info">
@@ -961,7 +970,7 @@ return result.getConnection();
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">23.5k</span>
+                <span class="white-color">27.1k</span>
             
 
             

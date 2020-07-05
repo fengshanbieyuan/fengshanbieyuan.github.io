@@ -13,9 +13,11 @@
     </script>
     <meta charset="utf-8">
     <meta name="google-site-verification" content="tW1RD83KSuf9lr73Vi76x7_5A1UdOy12mdLqpHWY5Mc">
-    <meta name="keywords" content="Sail中文文档:一个开发环境快速部署工具-06-Hats, 枫山别院,博客,Java,框架,架构">
-    <meta name="description" content="06-Hatshat 是一个包含Dockerfile文件的构建目录，它可以让您使用个性化配置来拓展您的项目环境。hat可以将您自己的工具，配置和工作流加入到您的Sail项目中。
-为了让Sail扩展项目的开发环境，hat的Dockerfile">
+    <meta name="keywords" content="HikariCP源码分析之初始化分析二, 枫山别院,博客,Java,框架,架构">
+    <meta name="description" content="
+源代码版本2.4.5-SNAPSHOT
+
+HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -23,7 +25,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Sail中文文档:一个开发环境快速部署工具-06-Hats | 枫山别院</title>
+    <title>HikariCP源码分析之初始化分析二 | 枫山别院</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -189,13 +191,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Sail中文文档:一个开发环境快速部署工具-06-Hats
+                        HikariCP源码分析之初始化分析二
                     </div>
                 </div>
             </div>
@@ -306,36 +308,24 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Sail/" target="_blank">
-                                <span class="chip bg-color">Sail</span>
+                            <a href="/tags/Hikari/" target="_blank">
+                                <span class="chip bg-color">Hikari</span>
                             </a>
                         
-                            <a href="/tags/开发环境/" target="_blank">
-                                <span class="chip bg-color">开发环境</span>
+                            <a href="/tags/中间件/" target="_blank">
+                                <span class="chip bg-color">中间件</span>
                             </a>
                         
-                            <a href="/tags/文档/" target="_blank">
-                                <span class="chip bg-color">文档</span>
+                            <a href="/tags/数据库/" target="_blank">
+                                <span class="chip bg-color">数据库</span>
                             </a>
                         
-                            <a href="/tags/中文文档/" target="_blank">
-                                <span class="chip bg-color">中文文档</span>
+                            <a href="/tags/源码解析/" target="_blank">
+                                <span class="chip bg-color">源码解析</span>
                             </a>
                         
-                            <a href="/tags/部署/" target="_blank">
-                                <span class="chip bg-color">部署</span>
-                            </a>
-                        
-                            <a href="/tags/快速/" target="_blank">
-                                <span class="chip bg-color">快速</span>
-                            </a>
-                        
-                            <a href="/tags/code-server/" target="_blank">
-                                <span class="chip bg-color">code-server</span>
-                            </a>
-                        
-                            <a href="/tags/Docker/" target="_blank">
-                                <span class="chip bg-color">Docker</span>
+                            <a href="/tags/源代码/" target="_blank">
+                                <span class="chip bg-color">源代码</span>
                             </a>
                         
                     </div>
@@ -346,8 +336,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Sail/" class="post-category" target="_blank">
-                                Sail
+                            <a href="/categories/HikariCP源码解析/" class="post-category" target="_blank">
+                                HikariCP源码解析
                             </a>
                         
                     </div>
@@ -358,21 +348,21 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-11
+                    2020-07-05
                 </div>
 
                 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        165
+                        2.3k
                     </div>
                     
 
                     
                     <div class="info-break-policy">
                         <i class="fa fa-clock-o fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                        1 分
+                        8 分
                     </div>
                     
                 
@@ -388,15 +378,109 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="06-Hats"><a href="#06-Hats" class="headerlink" title="06-Hats"></a>06-Hats</h1><p><strong><em>hat</em></strong> 是一个包含Dockerfile文件的构建目录，它可以让您使用个性化配置来拓展您的项目环境。hat可以将您自己的工具，配置和工作流加入到您的Sail项目中。</p>
-<p>为了让Sail扩展项目的开发环境，hat的Dockerfile中的<code>FROM</code>子句被项目仓库中的<code>FROM</code>替换。</p>
-<p>例如：</p>
-<pre><code>FROM ubuntu
+                <blockquote>
+<p>源代码版本2.4.5-SNAPSHOT</p>
+</blockquote>
+<h2 id="HikariPool的初始化"><a href="#HikariPool的初始化" class="headerlink" title="HikariPool的初始化"></a>HikariPool的初始化</h2><p>在上一节，我们说到了<code>pool = fastPathPool = new HikariPool(this);</code>中的<code>new HikariPool(this)</code>。我们来看下代码：</p>
+<pre><code class="java">public HikariPool(final HikariConfig config) {
+  //①
+  //PoolBase
+  super(config);
+  //②
+  // 构建一个connectionBag用于保存连接, connectionBag是连接池的核心
+  this.connectionBag = new ConcurrentBag&lt;&gt;(this);
+  //初始化连接计数器, 用于统计连接池中的连接数量
+  this.totalConnections = new AtomicInteger();
+  //根据是否允许挂起连接池, 初始化锁
+  this.suspendResumeLock = config.isAllowPoolSuspension() ? new SuspendResumeLock() : SuspendResumeLock.FAUX_LOCK;
+  //③
+  //连接池统计
+  if (config.getMetricsTrackerFactory() != null) {
+     setMetricsTrackerFactory(config.getMetricsTrackerFactory());
+  } else {
+     setMetricRegistry(config.getMetricRegistry());
+  }
 
-RUN sudo apt install fish
-RUN chsh user -s $(which fish)
-</code></pre><p>这是一个hat配置，它会安装fish，并将其配置为默认的shell，不管仓库中的<code>FROM</code>镜像中使用的是什么shell。</p>
-<p>在Sail构建您的开发环境的时候，<code>FROM ubuntu</code>将会被<code>FROM &lt;repo_image&gt;</code>替换。</p>
+  setHealthCheckRegistry(config.getHealthCheckRegistry());
+  //注册 JMX 相关的 bean
+  registerMBeans(this);
+  //④
+  checkFailFast();
+  //⑤
+  ThreadFactory threadFactory = config.getThreadFactory();
+  this.addConnectionExecutor = createThreadPoolExecutor(config.getMaximumPoolSize(), poolName + &quot; connection adder&quot;, threadFactory, new ThreadPoolExecutor.DiscardPolicy());
+  this.closeConnectionExecutor = createThreadPoolExecutor(config.getMaximumPoolSize(), poolName + &quot; connection closer&quot;, threadFactory, new ThreadPoolExecutor.CallerRunsPolicy());
+
+  if (config.getScheduledExecutorService() == null) {
+     threadFactory = threadFactory != null ? threadFactory : new DefaultThreadFactory(poolName + &quot; housekeeper&quot;, true);
+     this.houseKeepingExecutorService = new ScheduledThreadPoolExecutor(1, threadFactory, new ThreadPoolExecutor.DiscardPolicy());
+     this.houseKeepingExecutorService.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+     this.houseKeepingExecutorService.setRemoveOnCancelPolicy(true);
+  } else {
+     this.houseKeepingExecutorService = config.getScheduledExecutorService();
+  }
+  //⑥
+  //默认 30s 运行一次
+  this.houseKeepingExecutorService.scheduleWithFixedDelay(new HouseKeeper(), 0L, HOUSEKEEPING_PERIOD_MS, MILLISECONDS);
+  //⑦
+  this.leakTask = new ProxyLeakTask(config.getLeakDetectionThreshold(), houseKeepingExecutorService);
+}
+</code></pre>
+<p>可以看到代码非常的长，也比较复杂，不要紧，我们慢慢分析。</p>
+<h3 id="①初始化父类"><a href="#①初始化父类" class="headerlink" title="①初始化父类"></a>①初始化父类</h3><p><code>super(config);</code>中的 <code>super</code>代表的是<code>com.zaxxer.hikari.pool.PoolBase</code>。<code>PoolBase</code>是一个更接近底层的一个连接池抽象。它里面定义了一些数据库连接相关的配置，比如：是否自动提交事务，是否连接只读，是否使用 JDBC4，网络请求超时时间等。一些比较重要的方法：初始化 JDBC 的dataSource，验证连接是否存活，重置连接默认配置等等。调用<code>super(config);</code>的目的，就是初始化<code>PoolBase</code>中的这些数据库配置。</p>
+<p>通过这个<code>super</code>我们可以发现，HikariCP的初始化是逐层传递的，假如某个子类继承了父类，父类又继承了它的父类，那么初始化的时候，是用同一个配置类，先传递到子类，再到父类，再到祖父类，每一层都使用<code>HikariConfig</code>来初始化跟自己相关的配置，我们可以学习这种初始化方式，非常优雅。</p>
+<p>具体的<code>PoolBase</code>初始化过程，我们不深入了，不是很复杂，大家可以结合我的代码注释来看一下，注释的非常明白。</p>
+<h3 id="②初始化ConcurrentBag"><a href="#②初始化ConcurrentBag" class="headerlink" title="②初始化ConcurrentBag"></a>②初始化ConcurrentBag</h3><p><code>ConcurrentBag</code>是一个通用的池模型的容器，是整个 HikariCP 的核心，我们要单独章节分析，此处大家只是明白这里初始化了用于保存数据库连接的容器，它的内部是一个<code>CopyOnWriteArrayList</code>，用于保存连接。</p>
+<p><code>totalConnections</code>呢，从字面就可以理解，是一个连接的计数器，用于记录连接池中的连接数量。它的类型是<code>AtomicInteger</code>，关于<code>Atomic</code>开头的原子类，我们在《HikariCP源码分析之获取连接流程一》中详细分析过<code>AtomicBoolean</code>的原理，这个是差不多的，大家可以看前面的文章。<code>totalConnections</code>这个计数器，会在向连接池中添加新连接的时候加1，连接池中的连接被关闭之后会减 1。</p>
+<p><code>suspendResumeLock</code>是我们在《HikariCP源码分析之获取连接流程二》中分析的重点，此处不赘述了。这里是创建一个连接池挂起的锁，或者说令牌桶，用于连接池挂起的时候，控制用户不能从连接池获取连接的。如果用户没有开启连接池挂起功能，就创建一个空的锁实现<code>FAUX_LOCK</code>，方便 JIT 将它优化掉。</p>
+<h3 id="③监控初始化"><a href="#③监控初始化" class="headerlink" title="③监控初始化"></a>③监控初始化</h3><p>我们在之前的获取连接的分析文章中提到过，获取连接的时候，会向监控平台上报自己的状态，这里就是初始化监控平台的相关配置。用户可以自定义监控平台的实现，将它注册到 HikariCP 中，就可以被 HikariCP 调用。</p>
+<p>值得一提的是<code>registerMBeans(this);</code>这一句代码。这里是注册 JMX 相关的 MBean，只有配置了数据库的<code>isRegisterMbeans</code>配置项，HikariCP 才会注册MBean，我们才能使用 JMX 在运行期间修改连接池的配置。如果不配置<code>isRegisterMbeans</code>，那么使用 JMX 修改配置会报错。对 JMX 感兴趣的同学，可以自行学习下相关内容。</p>
+<h3 id="④快速失败"><a href="#④快速失败" class="headerlink" title="④快速失败"></a>④快速失败</h3><p>这里只有一行代码<code>checkFailFast();</code>，但是我们单独拿出来了，这说明这里有点意思。</p>
+<p>直接看看代码：</p>
+<pre><code class="java">private void checkFailFast() {
+  if (config.isInitializationFailFast()) {
+     try {
+        newConnection().close();
+     } catch (Throwable e) {
+        try {
+           shutdown();
+        } catch (Throwable ex) {
+           e.addSuppressed(ex);
+        }
+        throw new PoolInitializationException(e);
+     }
+  }
+}
+</code></pre>
+<p>代码看着不少，其实关键的没有多少。<code>isInitializationFailFast</code>是一个 HikariCP的配置项，它的默认值是 true。老规矩，先从字面意思猜测一下，好像是：初始化的时候快速失败的意思。再看一下下面的代码<code>newConnection().close();</code>，这是创建了一个连接，然后立即关闭了呀！综合以上线索，这是什么意思？其实非常好理解。就是在初始化 HikariCP 的时候，建立一个连接，然后立即关闭，如果有报错建立不了，就关闭整个连接池，抛错。</p>
+<p>目的就是在启动期间，创建连接来验证关键参数是否有错误，如果不能建立连接，立即抛出错误,方便用户及时发现问题。比如：我们的数据库密码写错了。如果没有这个立即失败的验证，等你上线部署成功之后，第一次获取连接才能发现问题，这不就悲催了嘛，搞不好要挨骂的。</p>
+<h3 id="⑤初始化线程池"><a href="#⑤初始化线程池" class="headerlink" title="⑤初始化线程池"></a>⑤初始化线程池</h3><p>HikariCP 中有几个线程池：</p>
+<ul>
+<li><p>closeConnectionExecutor ：用于执行关闭底层连接的线程池，只有一个线程，线程任务队列最大是连接池最大连接数，超出队列的任务，会不断重试添加。</p>
+</li>
+<li><p>addConnectionExecutor：用于执行添加新连接的线程池，只有一个线程，线程任务队列最大是连接池最大连接数，超出队列的任务，直接抛弃。</p>
+</li>
+<li><p>houseKeepingExecutorService：这是一个定时线程池，默认只有一个线程，它的作用比较多：用于执行检测连接泄露、关闭生存时间到期的连接、回收空闲连接、检测时间回拨。</p>
+</li>
+</ul>
+<p><code>closeConnectionExecutor</code>的队列任务抛弃策略有点不一样，它会不断重试，是基于连接必须关闭的考虑，其他的任务直接抛弃是影响不大。</p>
+<p>这里有两项配置可以影响线程池，一个是<code>scheduledExecutor</code>：用于提供给<code>houseKeepingExecutorService</code>用的线程池，如果用户不自定义，就使用默认的 1 个线程的线程池。另一个是<code>threadFactory</code>：用于生成线程池中的线程，HikariCP 会在生成线程池的时候，调用该线程工厂获取线程。</p>
+<h3 id="⑥启动连接管理任务"><a href="#⑥启动连接管理任务" class="headerlink" title="⑥启动连接管理任务"></a>⑥启动连接管理任务</h3><p>看代码：</p>
+<p><code>this.houseKeepingExecutorService.scheduleWithFixedDelay(new HouseKeeper(), 0L, HOUSEKEEPING_PERIOD_MS, MILLISECONDS);</code></p>
+<p>这里向<code>houseKeepingExecutorService</code>线程池里提交了一个任务：每隔 30 秒，就执行一次<code>HouseKeeper</code>任务。这个任务的功能主要是：检测时间回拨，调整连接池里的连接。什么是时间回拨？比如服务器的系统时间不准，后来用户修改了服务器的系统时间，因为 HikariCP 是对时间敏感的框架，它靠定时任务来管理连接，如果系统时间变了，那么定时任务就不准确了。</p>
+<p>有两种情况：</p>
+<ul>
+<li><p>一是用户调快了时间，这个时候，HikariCP 什么都不做，因为时间快了，只是加快了定时任务的执行，使连接更早过期，这个对连接池影响不大，因为连接池会自动添加新连接。</p>
+</li>
+<li><p>二是用户调慢了时间，也就是回退了时间。回退时间对 HikariCP 是有极大影响的，比如原来还差 1 秒执行的任务，现在可能要过 15秒之后才能执行了，这可能引发本来该存活时间到期的连接，不会过期了。所以，这个时候，HikariCP 会把连接池中所以的连接都软驱逐掉，使所有的连接都不可用，然后重新创建新连接。</p>
+</li>
+</ul>
+<p>由于<code>HouseKeeper</code>任务比较复杂，我们单独的章节分析。</p>
+<h3 id="⑦创建连接泄露检测任务的父任务"><a href="#⑦创建连接泄露检测任务的父任务" class="headerlink" title="⑦创建连接泄露检测任务的父任务"></a>⑦创建连接泄露检测任务的父任务</h3><p>看代码：</p>
+<p> <code>this.leakTask = new ProxyLeakTask(config.getLeakDetectionThreshold(), houseKeepingExecutorService);</code></p>
+<p>我们在《HikariCP源码分析之获取连接流程三》中分析连接泄露检测时候，提到过，用户获取到每个连接的时候，都会为该连接创建一个连接泄露检测的定时任务，在指定的时间内，抛出连接泄露警告。</p>
+<p>在创建连接泄露检测任务的时候，会使用一个父任务的参数，从这个父任务中拿连接泄露的最大时间和用于执行任务的线程池，然后使用这两个参数创建任务。这个父任务，就是在这里创建的，创建的时候就是传了这两个参数：连接泄露的最大时间和用于执行任务的线程池。</p>
+<p>至此，HikariDataSource初始化就分析完成了。大家有任何问题，可以提出来，我们一起讨论学习。</p>
 
             </div>
             <hr>
@@ -550,7 +634,7 @@ RUN chsh user -s $(which fish)
                     <img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png"></a>
             </div>
             <br>
-            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">《Sail中文文档:一个开发环境快速部署工具-06-Hats》</span> 由 <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/11/SailDocument-06-Hats/" property="cc:attributionName" rel="cc:attributionURL">枫山别院</a> 采用
+            <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">《HikariCP源码分析之初始化分析二》</span> 由 <a xmlns:cc="http://creativecommons.org/ns#" href="/2020/07/05/HikariCP-source-code-5/" property="cc:attributionName" rel="cc:attributionURL">枫山别院</a> 采用
             <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh">
                 知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议
             </a>进行许可。
@@ -591,32 +675,35 @@ RUN chsh user -s $(which fish)
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/08/12/SailDocument-07-Labels/">
+                <a href="/2020/07/05/HikariCP-source-code-4/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="Sail中文文档:一个开发环境快速部署工具-07-标签">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
                         
-                        <span class="card-title">Sail中文文档:一个开发环境快速部署工具-07-标签</span>
+                        <span class="card-title">HikariCP源码分析之初始化分析一</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            07-标签Sail广泛的使用Docker标签来维护状态，并允许用户完全配置他们的项目环境。
-配置标签项目的根标签如《项目》中所述，您可以使用project_root标签来指定项目根的挂载目录。Sail默认的挂载目录是容器中的~/&lt;re
+                            
+源代码版本2.4.5-SNAPSHOT
+
+HikariDataSource的初始化
+HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-12
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-05
                         </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Sail/" class="post-category" target="_blank">
-                                    Sail
+                            <a href="/categories/HikariCP源码解析/" class="post-category" target="_blank">
+                                    HikariCP源码解析
                                 </a>
                             
                             
@@ -626,36 +713,24 @@ RUN chsh user -s $(which fish)
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Sail/" target="_blank">
-                        <span class="chip bg-color">Sail</span>
+                    <a href="/tags/Hikari/" target="_blank">
+                        <span class="chip bg-color">Hikari</span>
                     </a>
                     
-                    <a href="/tags/开发环境/" target="_blank">
-                        <span class="chip bg-color">开发环境</span>
+                    <a href="/tags/中间件/" target="_blank">
+                        <span class="chip bg-color">中间件</span>
                     </a>
                     
-                    <a href="/tags/文档/" target="_blank">
-                        <span class="chip bg-color">文档</span>
+                    <a href="/tags/数据库/" target="_blank">
+                        <span class="chip bg-color">数据库</span>
                     </a>
                     
-                    <a href="/tags/中文文档/" target="_blank">
-                        <span class="chip bg-color">中文文档</span>
+                    <a href="/tags/源码解析/" target="_blank">
+                        <span class="chip bg-color">源码解析</span>
                     </a>
                     
-                    <a href="/tags/部署/" target="_blank">
-                        <span class="chip bg-color">部署</span>
-                    </a>
-                    
-                    <a href="/tags/快速/" target="_blank">
-                        <span class="chip bg-color">快速</span>
-                    </a>
-                    
-                    <a href="/tags/code-server/" target="_blank">
-                        <span class="chip bg-color">code-server</span>
-                    </a>
-                    
-                    <a href="/tags/Docker/" target="_blank">
-                        <span class="chip bg-color">Docker</span>
+                    <a href="/tags/源代码/" target="_blank">
+                        <span class="chip bg-color">源代码</span>
                     </a>
                     
                 </div>
@@ -669,36 +744,34 @@ RUN chsh user -s $(which fish)
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/08/10/SailDocument-05-Project-defined-Extensions/">
+                <a href="/2020/07/04/HikariCP-source-code-1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="Sail中文文档:一个开发环境快速部署工具-05-项目所需的插件">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析一">
                         
-                        <span class="card-title">Sail中文文档:一个开发环境快速部署工具-05-项目所需的插件</span>
+                        <span class="card-title">HikariCP获取连接流程源码分析一</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            05-项目所需的插件通过Dockerfile来安装VS Code插件是超级简单的。在Dockerfile中，调用installext &lt;extension ID&gt;即可。
+                            
+源代码版本2.4.5-SNAPSHOT
 
-提示：在插件市场的详细页面可以找到插件的id
-
-例如：
-
+HikariDataSource的getConnection()方法HikariCP获取连接的方法是com.zaxxer.hikari.HikariDataSource#getConnection
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-10
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-04
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Sail/" class="post-category" target="_blank">
-                                    Sail
+                            <a href="/categories/HikariCP源码解析/" class="post-category" target="_blank">
+                                    HikariCP源码解析
                                 </a>
                             
                             
@@ -708,36 +781,24 @@ RUN chsh user -s $(which fish)
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Sail/" target="_blank">
-                        <span class="chip bg-color">Sail</span>
+                    <a href="/tags/Hikari/" target="_blank">
+                        <span class="chip bg-color">Hikari</span>
                     </a>
                     
-                    <a href="/tags/开发环境/" target="_blank">
-                        <span class="chip bg-color">开发环境</span>
+                    <a href="/tags/中间件/" target="_blank">
+                        <span class="chip bg-color">中间件</span>
                     </a>
                     
-                    <a href="/tags/文档/" target="_blank">
-                        <span class="chip bg-color">文档</span>
+                    <a href="/tags/数据库/" target="_blank">
+                        <span class="chip bg-color">数据库</span>
                     </a>
                     
-                    <a href="/tags/中文文档/" target="_blank">
-                        <span class="chip bg-color">中文文档</span>
+                    <a href="/tags/源码解析/" target="_blank">
+                        <span class="chip bg-color">源码解析</span>
                     </a>
                     
-                    <a href="/tags/部署/" target="_blank">
-                        <span class="chip bg-color">部署</span>
-                    </a>
-                    
-                    <a href="/tags/快速/" target="_blank">
-                        <span class="chip bg-color">快速</span>
-                    </a>
-                    
-                    <a href="/tags/code-server/" target="_blank">
-                        <span class="chip bg-color">code-server</span>
-                    </a>
-                    
-                    <a href="/tags/Docker/" target="_blank">
-                        <span class="chip bg-color">Docker</span>
+                    <a href="/tags/源代码/" target="_blank">
+                        <span class="chip bg-color">源代码</span>
                     </a>
                     
                 </div>
