@@ -345,7 +345,7 @@
                     
                     <div class="info-break-policy">
                         <i class="fa fa-file-word-o fa-fw"></i>文章字数:&nbsp;&nbsp;
-                        622
+                        624
                     </div>
                     
 
@@ -400,7 +400,7 @@ java.lang.Exception: Apparent connection leak detected
       validation-timeout: 180000
       idle-timeout: 180000
 </code></pre><p>leak-detection-threshold:用来设置连接被占用的超时时间，单位为毫秒，默认为0，表示禁用连接泄露检测。<br>connection-timeout:从连接池获取连接的超时时间。</p>
-<p>分析源代码发现，该错误的原因是从连接池获取连接超时，触发了连接泄露检测。<br>此处spring调用了doGetConnection从hikari中获取连接，<br>在org.springframework.jdbc.datasource.DataSourceUtils#doGetConnection中，<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/HDMj2V.jpg" alt="hikari-1.jpg"><br>我们看看hikari中的实现，，进入该方法继续看，<br>com.zaxxer.hikari.HikariDataSource#getConnection()<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/ATRITV.jpg" alt="hikari-2.jpg"><br>在com.zaxxer.hikari.pool.HikariPool#getConnection(long)中，<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/7vMFW0.jpg" alt="hikari-3.jpg"><br>com.zaxxer.hikari.pool.ProxyLeakTask#ProxyLeakTask(com.zaxxer.hikari.pool.ProxyLeakTask, com.zaxxer.hikari.pool.PoolEntry)中<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/OG3tGc.jpg" alt="hikari-4.jpg"><br>这个地方是真正的获取连接的实现了，<br>分析上面的代码会发现，在获取Connection的时候，创建了一个ProxyLeakTask，这个task是一个定时任务，在leakDetectionThreshold毫秒后调用run()方法抛出Apparent connection leak detected异常。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/S4ah4I.jpg" alt="hikari-5.jpg"><br>也就是说，获取连接的时间+使用连接的时间+还回连接的时间，超出了leakDetectionThreshold毫秒，就抛出检测到连接泄露的异常。结合我们的业务发现，此处是获取连接的时间超出了leakDetectionThreshold毫秒，但是，connection-timeout设置的跟leakDetectionThreshold一样，这样在获取连接超时的时候，大概率会先触发leakDetectionThreshold的异常，导致异常不准确，所以建议leakDetectionThreshold要设置的比connection-timeout长，不能是一样的。</p>
+<p>分析源代码发现，该错误的原因是从连接池获取连接超时，触发了连接泄露检测。<br>此处spring调用了doGetConnection从hikari中获取连接，<br>在org.springframework.jdbc.datasource.DataSourceUtils#doGetConnection中，<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/HDMj2V.jpg" alt="hikari-1.jpg"><br>我们看看hikari中的实现，，进入该方法继续看，<br>com.zaxxer.hikari.HikariDataSource#getConnection()<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/ATRITV.jpg" alt="hikari-2.jpg"><br>在com.zaxxer.hikari.pool.HikariPool#getConnection(long)中，<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/7vMFW0.jpg" alt="hikari-3.jpg"><br>com.zaxxer.hikari.pool.ProxyLeakTask#ProxyLeakTask(com.zaxxer.hikari.pool.ProxyLeakTask, com.zaxxer.hikari.pool.PoolEntry)中<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/OG3tGc.jpg" alt="hikari-4.jpg"><br>这个地方是真正的获取连接的实现了，<br>分析上面的代码会发现，在获取Connection的时候，创建了一个ProxyLeakTask，这个task是一个定时任务，在leakDetectionThreshold毫秒后调用run()方法抛出Apparent connection leak detected异常。<br><img src="https://gitee.com/yifeng0898/picbed/raw/master/uPic/2020/04/01/S4ah4I.jpg" alt="hikari-5.jpg"><br>也就是说，获取到连接之后使用之前的时间+使用连接的时间+使用之后还回连接之前的时间，超出了leakDetectionThreshold毫秒，就抛出检测到连接泄露的异常。结合我们的业务发现，此处确实是使用连接的时间超出了leakDetectionThreshold毫秒，是因为执行了慢 sql，同时慢 sql 耗尽了连接池的连接，导致新线程获取连接超时，又导致了获取连接超时的报错。</p>
 
             </div>
             <hr>
@@ -872,7 +872,7 @@ java.lang.Exception: Apparent connection leak detected
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">18.3k</span>
+                <span class="white-color">23.5k</span>
             
 
             

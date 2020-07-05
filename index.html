@@ -447,6 +447,135 @@ $(function () {
             
             <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
                 <div class="card">
+                    <a href="/2020/07/06/HikariCP-source-code-3/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析三">
+                            
+                            <span class="card-title">HikariCP获取连接流程源码分析三</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                话接上篇，我们继续分析HikariCP获取连接的过程。
+③拿到一个连接//③
+//获取连接的时候, 判断连接是否已经被标记移除
+if (poolEntry.isMarkedEvicted() || (clockSource.elapsedM
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-06
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/HikariCP源码解析/" class="post-category" target="_blank">
+                                    HikariCP源码解析
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Hikari/" target="_blank">
+                            <span class="chip bg-color">Hikari</span>
+                        </a>
+                        
+                        <a href="/tags/中间件/" target="_blank">
+                            <span class="chip bg-color">中间件</span>
+                        </a>
+                        
+                        <a href="/tags/数据库/" target="_blank">
+                            <span class="chip bg-color">数据库</span>
+                        </a>
+                        
+                        <a href="/tags/源码解析/" target="_blank">
+                            <span class="chip bg-color">源码解析</span>
+                        </a>
+                        
+                        <a href="/tags/源代码/" target="_blank">
+                            <span class="chip bg-color">源代码</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2020/07/05/HikariCP-source-code-2/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析二">
+                            
+                            <span class="card-title">HikariCP获取连接流程源码分析二</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的getConnection()方法，而这个方法，其实详细的实现细节都是在HikariP
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-05
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/HikariCP源码解析/" class="post-category" target="_blank">
+                                    HikariCP源码解析
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Hikari/" target="_blank">
+                            <span class="chip bg-color">Hikari</span>
+                        </a>
+                        
+                        <a href="/tags/中间件/" target="_blank">
+                            <span class="chip bg-color">中间件</span>
+                        </a>
+                        
+                        <a href="/tags/数据库/" target="_blank">
+                            <span class="chip bg-color">数据库</span>
+                        </a>
+                        
+                        <a href="/tags/源码解析/" target="_blank">
+                            <span class="chip bg-color">源码解析</span>
+                        </a>
+                        
+                        <a href="/tags/源代码/" target="_blank">
+                            <span class="chip bg-color">源代码</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
+                <div class="card">
                     <a href="/2020/07/04/HikariCP-source-code-1/">
                         <div class="card-image">
                             
@@ -1120,160 +1249,6 @@ sail ls flags:
                 </div>
             </div>
             
-            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2019/08/19/SailDocument-14-run/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Sail中文文档:一个开发环境快速部署工具-14-Sail命令之run">
-                            
-                            <span class="card-title">Sail中文文档:一个开发环境快速部署工具-14-Sail命令之run</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                14-Sail命令之runUsage: sail run [flags] &lt;repo&gt;
-
-# 运行一个项目容器
-# 如果这个项目还没有创建或者没有运行，那么就会创建这个项目，并且会打开一个新的编辑器。如果这个项目已经启动了，那就
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-19
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Sail/" class="post-category" target="_blank">
-                                    Sail
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/Sail/" target="_blank">
-                            <span class="chip bg-color">Sail</span>
-                        </a>
-                        
-                        <a href="/tags/开发环境/" target="_blank">
-                            <span class="chip bg-color">开发环境</span>
-                        </a>
-                        
-                        <a href="/tags/文档/" target="_blank">
-                            <span class="chip bg-color">文档</span>
-                        </a>
-                        
-                        <a href="/tags/中文文档/" target="_blank">
-                            <span class="chip bg-color">中文文档</span>
-                        </a>
-                        
-                        <a href="/tags/部署/" target="_blank">
-                            <span class="chip bg-color">部署</span>
-                        </a>
-                        
-                        <a href="/tags/快速/" target="_blank">
-                            <span class="chip bg-color">快速</span>
-                        </a>
-                        
-                        <a href="/tags/code-server/" target="_blank">
-                            <span class="chip bg-color">code-server</span>
-                        </a>
-                        
-                        <a href="/tags/Docker/" target="_blank">
-                            <span class="chip bg-color">Docker</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2019/08/18/SailDocument-13-AccessingDockerWithinSail/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="Sail中文文档:一个开发环境快速部署工具-13-在Sail中访问Docker">
-                            
-                            <span class="card-title">Sail中文文档:一个开发环境快速部署工具-13-在Sail中访问Docker</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                13-在Sail中访问Docker在Sail中访问Docker的话，你需要安装docker工具，还要将本地的docker socket用share挂载到Sail环境中。
-为了在项目中添加docker支持，你的项目.sail/Dockerfi
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-18
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Sail/" class="post-category" target="_blank">
-                                    Sail
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/Sail/" target="_blank">
-                            <span class="chip bg-color">Sail</span>
-                        </a>
-                        
-                        <a href="/tags/开发环境/" target="_blank">
-                            <span class="chip bg-color">开发环境</span>
-                        </a>
-                        
-                        <a href="/tags/文档/" target="_blank">
-                            <span class="chip bg-color">文档</span>
-                        </a>
-                        
-                        <a href="/tags/中文文档/" target="_blank">
-                            <span class="chip bg-color">中文文档</span>
-                        </a>
-                        
-                        <a href="/tags/部署/" target="_blank">
-                            <span class="chip bg-color">部署</span>
-                        </a>
-                        
-                        <a href="/tags/快速/" target="_blank">
-                            <span class="chip bg-color">快速</span>
-                        </a>
-                        
-                        <a href="/tags/code-server/" target="_blank">
-                            <span class="chip bg-color">code-server</span>
-                        </a>
-                        
-                        <a href="/tags/Docker/" target="_blank">
-                            <span class="chip bg-color">Docker</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
         </div>
     </article>
 
@@ -1312,7 +1287,7 @@ sail ls flags:
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">18.3k</span>
+                <span class="white-color">23.5k</span>
             
 
             
