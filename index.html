@@ -450,6 +450,142 @@ HikariDataSource的getConnection()方法HikariCP获取连接的方法是com.zaxx
             
             <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
                 <div class="card">
+                    <a href="/2020/07/12/HikariCP-source-code-6/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="HikariConfig的配置解析">
+                            
+                            <span class="card-title">HikariConfig的配置解析</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                
+源代码版本2.4.5-SNAPSHOT
+
+使用HikariConfig初始化 HikariCP在《HikariCP源码分析之初始化分析一》中，我们解析了 HikariCP 的两种初始化方式，其中提到了使用HikariConfig的方式：
+
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-12
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/HikariCP源码解析/" class="post-category" target="_blank">
+                                    HikariCP源码解析
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Hikari/" target="_blank">
+                            <span class="chip bg-color">Hikari</span>
+                        </a>
+                        
+                        <a href="/tags/中间件/" target="_blank">
+                            <span class="chip bg-color">中间件</span>
+                        </a>
+                        
+                        <a href="/tags/数据库/" target="_blank">
+                            <span class="chip bg-color">数据库</span>
+                        </a>
+                        
+                        <a href="/tags/源码解析/" target="_blank">
+                            <span class="chip bg-color">源码解析</span>
+                        </a>
+                        
+                        <a href="/tags/源代码/" target="_blank">
+                            <span class="chip bg-color">源代码</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2020/07/12/HikariCP-source-code-7/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariConfig初始化分析">
+                            
+                            <span class="card-title">HikariConfig初始化分析</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                
+源代码版本2.4.5-SNAPSHOT
+
+HikariConfig有 3 个构造方法，这三个构造方法其实都差不多，无我们逐个看一下：
+无参构造第一个无参的构造，代码如下：
+public HikariConfig() {
+      dat
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-12
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/HikariCP源码解析/" class="post-category" target="_blank">
+                                    HikariCP源码解析
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Hikari/" target="_blank">
+                            <span class="chip bg-color">Hikari</span>
+                        </a>
+                        
+                        <a href="/tags/中间件/" target="_blank">
+                            <span class="chip bg-color">中间件</span>
+                        </a>
+                        
+                        <a href="/tags/数据库/" target="_blank">
+                            <span class="chip bg-color">数据库</span>
+                        </a>
+                        
+                        <a href="/tags/源码解析/" target="_blank">
+                            <span class="chip bg-color">源码解析</span>
+                        </a>
+                        
+                        <a href="/tags/源代码/" target="_blank">
+                            <span class="chip bg-color">源代码</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
+                <div class="card">
                     <a href="/2020/07/06/HikariCP-source-code-3/">
                         <div class="card-image">
                             
@@ -1097,146 +1233,6 @@ public class Test {
                 </div>
             </div>
             
-            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2019/09/28/mvn-dependency/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="maven的mvn dependency依赖分析和常用命令介绍">
-                            
-                            <span class="card-title">maven的mvn dependency依赖分析和常用命令介绍</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                
-在项目开发过程中，我们经常会有分析项目依赖的需要，查找jar依赖路径，查找jar冲突等等。这时候，dependency命令会非常的有用，在此我们介绍下关于maven的dependency命令的一些用法。
-
-1. mvn dependenc
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-09-28
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/maven/" class="post-category" target="_blank">
-                                    maven
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/maven/" target="_blank">
-                            <span class="chip bg-color">maven</span>
-                        </a>
-                        
-                        <a href="/tags/dependency/" target="_blank">
-                            <span class="chip bg-color">dependency</span>
-                        </a>
-                        
-                        <a href="/tags/mvn/" target="_blank">
-                            <span class="chip bg-color">mvn</span>
-                        </a>
-                        
-                        <a href="/tags/依赖/" target="_blank">
-                            <span class="chip bg-color">依赖</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2019/08/22/SailDocument-17-rm/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="Sail中文文档:一个开发环境快速部署工具-17-Sail命令之rm&shell">
-                            
-                            <span class="card-title">Sail中文文档:一个开发环境快速部署工具-17-Sail命令之rm&shell</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                17-Sail命令之rmUsage: sail rm [flags] &lt;repo&gt;
-
-Remove a sail container from the system.
-This command allows for removi
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-22
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Sail/" class="post-category" target="_blank">
-                                    Sail
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/Sail/" target="_blank">
-                            <span class="chip bg-color">Sail</span>
-                        </a>
-                        
-                        <a href="/tags/开发环境/" target="_blank">
-                            <span class="chip bg-color">开发环境</span>
-                        </a>
-                        
-                        <a href="/tags/文档/" target="_blank">
-                            <span class="chip bg-color">文档</span>
-                        </a>
-                        
-                        <a href="/tags/中文文档/" target="_blank">
-                            <span class="chip bg-color">中文文档</span>
-                        </a>
-                        
-                        <a href="/tags/部署/" target="_blank">
-                            <span class="chip bg-color">部署</span>
-                        </a>
-                        
-                        <a href="/tags/快速/" target="_blank">
-                            <span class="chip bg-color">快速</span>
-                        </a>
-                        
-                        <a href="/tags/code-server/" target="_blank">
-                            <span class="chip bg-color">code-server</span>
-                        </a>
-                        
-                        <a href="/tags/Docker/" target="_blank">
-                            <span class="chip bg-color">Docker</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
         </div>
     </article>
 
@@ -1275,7 +1271,7 @@ This command allows for removi
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">27.1k</span>
+                <span class="white-color">29.5k</span>
             
 
             
