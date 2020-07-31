@@ -598,16 +598,15 @@ HikariCP获取连接流程源码分析三 | 枫">
         
         <div class="article col s12 m6 overflow-policy" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
-            </div>
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/07/30/HikariCP-source-code-0/">
+                <a href="/2020/07/31/HikariCP-source-code-9/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="HikariCP源码解析系列目录">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="HikariCP源码分析之ConcurrentBag二">
                         
-                        <span class="card-title">HikariCP源码解析系列目录</span>
+                        <span class="card-title">HikariCP源码分析之ConcurrentBag二</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -616,19 +615,15 @@ HikariCP获取连接流程源码分析三 | 枫">
                             
 源代码版本2.4.5-SNAPSHOT
 
-阅读顺序推荐大家按照以下顺序阅读：
-
-HikariCP获取连接流程源码分析一 | 枫山别院
-
-HikariCP获取连接流程源码分析二 | 枫山别院
-
-HikariCP获取连接流程源码分析三 | 枫
+②检查本地保存的连接//②
+//如果ThreadLocal中有连接的话, 就遍历, 尝试获取
+//从后往前反向遍历是有好处的, 因为最后一次使用的连接, 空闲的可能性比较大, 之前的连接可能会被其
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-30
-                            </span>
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-31
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -641,7 +636,6 @@ HikariCP获取连接流程源码分析三 | 枫
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -887,7 +881,7 @@ HikariCP获取连接流程源码分析三 | 枫
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">32.9k</span>
+                <span class="white-color">35.9k</span>
             
 
             
