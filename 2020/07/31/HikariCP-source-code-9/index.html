@@ -395,11 +395,9 @@ for (int i = list.size() - 1; i &gt;= 0; i--) {
 }
 </code></pre>
 <p>OK，我们继续。这里遍历的 list 变量，是<code>threadList</code>，是当前线程使用过的连接，保存在本地线程的引用。</p>
-<pre><code>    可以看到这个遍历的顺序，是倒序遍历的。list 里的连接，肯定是最后一个是最后放进去的，也就是最近使用过的，这个连接还可以继续使用的可能极大，时间越早的连接，就越可能被其他线程借用走了，所以这就是为什么要倒序遍历，我们要先检查能使用的可能性最大的连接。说到这里，我们在平时的业务代码中，要用 if 检查一些条件，这时候我们要有意识的先检查可能性最大的条件，这有利于减少判断的次数，提高程序的性能。
-
-    在从 list 中获取连接的时候，使用的是`remove`方法，也就是说，无论如何，这个连接的引用我们不在本地保存了，如果它可以用，那么用完之后它又会加入到本地的`threadList`，如果不能使用了，那么我们就删除了这个无用的连接引用。
-
-    下面第 三句代码其实就是类型的强转，忽略之。有意思的是接下来第四句的判断，直接在 if 中就执行修改连接状态的操作。每个连接都有一个状态，它的类型是`AtomicInteger`，是个数字，并且是原子操作，线程安全。`compareAndSet`方法执行的时候，将`STATE_NOT_IN_USE`状态跟连接的当前状态对比，一样的时候才将它修改成`STATE_IN_USE`，既保证了线程安全，又保证了只有在连接是空闲状态才能使用线程，不会错误使用了其他状态的连接。此时，如果状态修改成功了，那么直接将该连接返回给用户使用。
+<p>可以看到这个遍历的顺序，是倒序遍历的。list 里的连接，肯定是最后一个是最后放进去的，也就是最近使用过的，这个连接还可以继续使用的可能极大，时间越早的连接，就越可能被其他线程借用走了，所以这就是为什么要倒序遍历，我们要先检查能使用的可能性最大的连接。说到这里，我们在平时的业务代码中，要用 if 检查一些条件，这时候我们要有意识的先检查可能性最大的条件，这有利于减少判断的次数，提高程序的性能。</p>
+<p>在从 list 中获取连接的时候，使用的是<code>remove</code>方法，也就是说，无论如何，这个连接的引用我们不在本地保存了，如果它可以用，那么用完之后它又会加入到本地的<code>threadList</code>，如果不能使用了，那么我们就删除了这个无用的连接引用。</p>
+<pre><code>    下面第 三句代码其实就是类型的强转，忽略之。有意思的是接下来第四句的判断，直接在 if 中就执行修改连接状态的操作。每个连接都有一个状态，它的类型是`AtomicInteger`，是个数字，并且是原子操作，线程安全。`compareAndSet`方法执行的时候，将`STATE_NOT_IN_USE`状态跟连接的当前状态对比，一样的时候才将它修改成`STATE_IN_USE`，既保证了线程安全，又保证了只有在连接是空闲状态才能使用线程，不会错误使用了其他状态的连接。此时，如果状态修改成功了，那么直接将该连接返回给用户使用。
 
     说到这里，应该说一下连接有哪些状态。
 </code></pre><h5 id="连接的状态"><a href="#连接的状态" class="headerlink" title="连接的状态"></a>连接的状态</h5><ul>
@@ -426,8 +424,8 @@ long startSeq;
 //将等待连接的线程计数器加 1
 waiters.incrementAndGet();
 </code></pre>
-<pre><code>    上面说到了从本地的`threadList`中获取连接，如果拿不到的话，那么就要走到这里了。这里是获取连接前的准备工作。
-</code></pre><ul>
+<p>上面说到了从本地的<code>threadList</code>中获取连接，如果拿不到的话，那么就要走到这里了。这里是获取连接前的准备工作。</p>
+<ul>
 <li><p><code>timeout</code>是获取连接的超时时间，这个是作为参数传入的，转换为纳秒可以提高精度。</p>
 </li>
 <li><p><code>startScan</code>是记录开始获取连接的起始时间，用于后面计算还剩下多少时间的。</p>
@@ -440,9 +438,8 @@ waiters.incrementAndGet();
 </li>
 </ul>
 <p>其实上面代码都是一些用于记录原始值的，没什么好说的。</p>
-<pre><code>    我们稍微说说`System.nanoTime()`吧，跟`System.currentTimeMillis()`非常像的方法，都是获取时间的。但是`System.currentTimeMillis()`获取的是系统时间的毫秒数，而`System.nanoTime()`获取的并不是系统时间的纳秒数，这个很多同学可能一直误会了这个方法。
-
-    JDK 提供的`System.currentTimeMillis()`方法其实获取的时间并不准确，因为可能会受到时间校准的影响，而`System.nanoTime()`返回当前JVM的高精度时间，该方法只能用来测量时段而和系统时间无关，它的返回值可能是从某个时间点开始计算的，可能是负数，只能用于计算时间差，不能用于系统时间相关的逻辑。
+<p>我们稍微说说<code>System.nanoTime()</code>吧，跟<code>System.currentTimeMillis()</code>非常像的方法，都是获取时间的。但是<code>System.currentTimeMillis()</code>获取的是系统时间的毫秒数，而<code>System.nanoTime()</code>获取的并不是系统时间的纳秒数，这个很多同学可能一直误会了这个方法。</p>
+<pre><code>    JDK 提供的`System.currentTimeMillis()`方法其实获取的时间并不准确，因为可能会受到时间校准的影响，而`System.nanoTime()`返回当前JVM的高精度时间，该方法只能用来测量时段而和系统时间无关，它的返回值可能是从某个时间点开始计算的，可能是负数，只能用于计算时间差，不能用于系统时间相关的逻辑。
 
     所以，在做性能测试的时候，统计时间，使用`System.nanoTime()`比较好。Netty 中的时间轮就是使用这个，调系统时间不会导致触发任务。
 </code></pre><h4 id="④⑤添加连接任务"><a href="#④⑤添加连接任务" class="headerlink" title="④⑤添加连接任务"></a>④⑤添加连接任务</h4><pre><code class="java">do {
@@ -466,9 +463,8 @@ for (T bagEntry : sharedList) {
 </code></pre>
 <p>④和⑤我们还是一起分析比较好。上面我们已经说过了<code>startSeq</code>，略。</p>
 <p><code>sharedList</code>是整个 HikariCP 的连接池，里面保存了所有的连接，终于，在这里进入主题了。</p>
-<pre><code>    我们遍历整个连接池，尝试获取连接，在if 的`compareAndSet`中一个一个尝试修改它的状态，如果修改成功了，说明我们拿到了这个连接的使用权，Good！本来应该直接 return这个连接给用户就可以了吧？为什么还要判断？？？
-
-    在上面一篇文章中，我们举例租车的时候，提到过，线程间的连接是会相互窃取的，其实那个窃取不算是真的窃取，因为虽然你本地保存了连接的引用，但是连接又不是你创建的，其他线程也可以从连接池里拿，没有毛病。
+<p>我们遍历整个连接池，尝试获取连接，在if 的<code>compareAndSet</code>中一个一个尝试修改它的状态，如果修改成功了，说明我们拿到了这个连接的使用权，Good！本来应该直接 return这个连接给用户就可以了吧？为什么还要判断？？？</p>
+<pre><code>    在上面一篇文章中，我们举例租车的时候，提到过，线程间的连接是会相互窃取的，其实那个窃取不算是真的窃取，因为虽然你本地保存了连接的引用，但是连接又不是你创建的，其他线程也可以从连接池里拿，没有毛病。
 
     但是这里是真的窃取。我们判断`waiters.get() &gt; 1 &amp;&amp; addItemFuture == null`，`waiters`是当前正在等待获取连接的线程数，这个我们说过了。它大于 1，说明除了当前线程自己在等之外，还有别的线程也在等连接呢；`addItemFuture`代表创建连接的任务，它是 null 的话，说明当前线程自己没有创建过创建新连接的任务。但是呢，我居然拿到连接了，你说运气好不好！巧了呀！既然这个连接不是我们创建的，那肯定是别的线程创建的呀，我们偷来了，这咋整呢，要不我们补偿一个给它吧。于是，我们执行`listener.addBagItem();`请求创建一个新连接补偿给别的线程，别让人一直等了！
 
@@ -486,9 +482,8 @@ addItemFuture = listener.addBagItem();
 timeout = originTimeout - (System.nanoTime() - startScan);
 } while (timeout &gt; 10_000L &amp;&amp; synchronizer.waitUntilSequenceExceeded(startSeq, timeout)); //③
 </code></pre>
-<pre><code>    上面的代码是不完整的，少了一个 do，在最外层，不影响我们分析。此处的循环是一个三层的嵌套，两个 do-while，里面再嵌套一个 for 循环，很绕。
-
-    上面我们说到了，遍历完整个连接池之后，也没有新连接加入连接池，for 循环和里层的 do-while 就执行完了。此时是真的没有连接可用了，怎么办，创建一个连接呗，然后执行如下的 if判断`addItemFuture == null || addItemFuture.isDone()`，`addItemFuture == null`说明没有创建过创建连接的任务，那么`addItemFuture.isDone()`是啥？这是说明它创建过创建连接的任务，任务执行完了，悲催的是，我们还是没有拿到创建的连接，肯定是让哪个天杀的线程偷了，没有天理了呀！没办法，我们执行`addItemFuture = listener.addBagItem();`再创建一个连接。
+<p>上面的代码是不完整的，少了一个 do，在最外层，不影响我们分析。此处的循环是一个三层的嵌套，两个 do-while，里面再嵌套一个 for 循环，很绕。</p>
+<pre><code>    上面我们说到了，遍历完整个连接池之后，也没有新连接加入连接池，for 循环和里层的 do-while 就执行完了。此时是真的没有连接可用了，怎么办，创建一个连接呗，然后执行如下的 if判断`addItemFuture == null || addItemFuture.isDone()`，`addItemFuture == null`说明没有创建过创建连接的任务，那么`addItemFuture.isDone()`是啥？这是说明它创建过创建连接的任务，任务执行完了，悲催的是，我们还是没有拿到创建的连接，肯定是让哪个天杀的线程偷了，没有天理了呀！没办法，我们执行`addItemFuture = listener.addBagItem();`再创建一个连接。
 
     此时，还有最外层的一个 do-while 循环，它的判断条件是什么？我们好像还一直没有检查超时时间吧？没错，就是这个了。`timeout = originTimeout - (System.nanoTime() - startScan);`计算一下，我们获取连接还剩余多少时间了。
 </code></pre><p><code>timeout &gt; 10_000L &amp;&amp; synchronizer.waitUntilSequenceExceeded(startSeq, timeout)</code>这个条件有点小复杂。</p>

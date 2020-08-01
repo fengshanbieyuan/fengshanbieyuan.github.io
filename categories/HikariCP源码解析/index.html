@@ -487,13 +487,13 @@ HikariCP获取连接流程源码分析三 | 枫
             
             <div class="article tag-post col s12 m6 l4 overflow-policy" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/12/HikariCP-source-code-6/">
+                    <a href="/2020/07/12/HikariCP-source-code-7/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="HikariConfig的配置解析">
+                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariConfig初始化分析">
                             
-                            <span class="card-title">HikariConfig的配置解析</span>
+                            <span class="card-title">HikariConfig初始化分析</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
@@ -502,8 +502,10 @@ HikariCP获取连接流程源码分析三 | 枫
                                 
 源代码版本2.4.5-SNAPSHOT
 
-使用HikariConfig初始化 HikariCP在《HikariCP源码分析之初始化分析一》中，我们解析了 HikariCP 的两种初始化方式，其中提到了使用HikariConfig的方式：
-
+HikariConfig有 3 个构造方法，这三个构造方法其实都差不多，无我们逐个看一下：
+无参构造第一个无参的构造，代码如下：
+public HikariConfig() {
+      dat
                             
                         </div>
                         <div class="publish-info">
@@ -553,13 +555,13 @@ HikariCP获取连接流程源码分析三 | 枫
             
             <div class="article tag-post col s12 m6 l4 overflow-policy" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/12/HikariCP-source-code-7/">
+                    <a href="/2020/07/12/HikariCP-source-code-6/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariConfig初始化分析">
+                            <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="HikariConfig的配置解析">
                             
-                            <span class="card-title">HikariConfig初始化分析</span>
+                            <span class="card-title">HikariConfig的配置解析</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
@@ -568,10 +570,8 @@ HikariCP获取连接流程源码分析三 | 枫
                                 
 源代码版本2.4.5-SNAPSHOT
 
-HikariConfig有 3 个构造方法，这三个构造方法其实都差不多，无我们逐个看一下：
-无参构造第一个无参的构造，代码如下：
-public HikariConfig() {
-      dat
+使用HikariConfig初始化 HikariCP在《HikariCP源码分析之初始化分析一》中，我们解析了 HikariCP 的两种初始化方式，其中提到了使用HikariConfig的方式：
+
                             
                         </div>
                         <div class="publish-info">
