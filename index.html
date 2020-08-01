@@ -454,6 +454,72 @@ HikariCP获取连接流程源码</p>
             
             <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
                 <div class="card">
+                    <a href="/2020/08/01/HikariCP-source-code-11/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="HikariCP源码分析之HouseKeeper">
+                            
+                            <span class="card-title">HikariCP源码分析之HouseKeeper</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                
+源代码版本2.4.5-SNAPSHOT
+
+HouseKeeper是一个HikariPool的内部类，它实现了Runnable接口，也就是一个线程任务。这个任务是由ScheduledThreadPoolExecutor类型的线程池执行的，也
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-08-01
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/HikariCP源码解析/" class="post-category" target="_blank">
+                                    HikariCP源码解析
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Hikari/" target="_blank">
+                            <span class="chip bg-color">Hikari</span>
+                        </a>
+                        
+                        <a href="/tags/中间件/" target="_blank">
+                            <span class="chip bg-color">中间件</span>
+                        </a>
+                        
+                        <a href="/tags/数据库/" target="_blank">
+                            <span class="chip bg-color">数据库</span>
+                        </a>
+                        
+                        <a href="/tags/源码解析/" target="_blank">
+                            <span class="chip bg-color">源码解析</span>
+                        </a>
+                        
+                        <a href="/tags/源代码/" target="_blank">
+                            <span class="chip bg-color">源代码</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
+                <div class="card">
                     <a href="/2020/08/01/HikariCP-source-code-10/">
                         <div class="card-image">
                             
@@ -732,13 +798,13 @@ HikariCP获取连接流程源码分析三 | 枫
             
             <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/12/HikariCP-source-code-7/">
+                    <a href="/2020/07/12/HikariCP-source-code-6/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariConfig初始化分析">
+                            <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="HikariConfig的配置解析">
                             
-                            <span class="card-title">HikariConfig初始化分析</span>
+                            <span class="card-title">HikariConfig的配置解析</span>
                         </div>
                     </a>
 
@@ -748,10 +814,8 @@ HikariCP获取连接流程源码分析三 | 枫
                                 
 源代码版本2.4.5-SNAPSHOT
 
-HikariConfig有 3 个构造方法，这三个构造方法其实都差不多，无我们逐个看一下：
-无参构造第一个无参的构造，代码如下：
-public HikariConfig() {
-      dat
+使用HikariConfig初始化 HikariCP在《HikariCP源码分析之初始化分析一》中，我们解析了 HikariCP 的两种初始化方式，其中提到了使用HikariConfig的方式：
+
                             
                         </div>
                         <div class="publish-info">
@@ -801,13 +865,13 @@ public HikariConfig() {
             
             <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/12/HikariCP-source-code-6/">
+                    <a href="/2020/07/12/HikariCP-source-code-7/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="HikariConfig的配置解析">
+                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariConfig初始化分析">
                             
-                            <span class="card-title">HikariConfig的配置解析</span>
+                            <span class="card-title">HikariConfig初始化分析</span>
                         </div>
                     </a>
 
@@ -817,8 +881,10 @@ public HikariConfig() {
                                 
 源代码版本2.4.5-SNAPSHOT
 
-使用HikariConfig初始化 HikariCP在《HikariCP源码分析之初始化分析一》中，我们解析了 HikariCP 的两种初始化方式，其中提到了使用HikariConfig的方式：
-
+HikariConfig有 3 个构造方法，这三个构造方法其实都差不多，无我们逐个看一下：
+无参构造第一个无参的构造，代码如下：
+public HikariConfig() {
+      dat
                             
                         </div>
                         <div class="publish-info">
@@ -1003,13 +1069,13 @@ HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源�
             
             <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/05/HikariCP-source-code-5/">
+                    <a href="/2020/07/05/HikariCP-source-code-4/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析二">
+                            <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
                             
-                            <span class="card-title">HikariCP源码分析之初始化分析二</span>
+                            <span class="card-title">HikariCP源码分析之初始化分析一</span>
                         </div>
                     </a>
 
@@ -1019,7 +1085,8 @@ HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源�
                                 
 源代码版本2.4.5-SNAPSHOT
 
-HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：
+HikariDataSource的初始化
+HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
                             
                         </div>
                         <div class="publish-info">
@@ -1069,13 +1136,13 @@ HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new Hi
             
             <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/05/HikariCP-source-code-4/">
+                    <a href="/2020/07/05/HikariCP-source-code-5/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
+                            <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析二">
                             
-                            <span class="card-title">HikariCP源码分析之初始化分析一</span>
+                            <span class="card-title">HikariCP源码分析之初始化分析二</span>
                         </div>
                     </a>
 
@@ -1085,8 +1152,7 @@ HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new Hi
                                 
 源代码版本2.4.5-SNAPSHOT
 
-HikariDataSource的初始化
-HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
+HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：
                             
                         </div>
                         <div class="publish-info">
@@ -1200,61 +1266,6 @@ HikariDataSource的getConnection()方法HikariCP获取连接的方法是com.zaxx
                 </div>
             </div>
             
-            <div class="article col s12 m6 l4 overflow-policy" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2020/05/17/electron-package/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="electron 项目构建, 打包实践及避坑">
-                            
-                            <span class="card-title">electron 项目构建, 打包实践及避坑</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                项目架构是React + electron，可以直接使用普通的 react 项目，然后加上electron配置。electron 配置可以从项目https://github.com/electron/electron-quick-start
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-05-17
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/问题排查/" class="post-category" target="_blank">
-                                    问题排查
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/electron/" target="_blank">
-                            <span class="chip bg-color">electron</span>
-                        </a>
-                        
-                        <a href="/tags/打包/" target="_blank">
-                            <span class="chip bg-color">打包</span>
-                        </a>
-                        
-                        <a href="/tags/避坑/" target="_blank">
-                            <span class="chip bg-color">避坑</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
         </div>
     </article>
 
@@ -1293,7 +1304,7 @@ HikariDataSource的getConnection()方法HikariCP获取连接的方法是com.zaxx
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">37.2k</span>
+                <span class="white-color">39.6k</span>
             
 
             

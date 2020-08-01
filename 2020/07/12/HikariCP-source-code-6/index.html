@@ -744,13 +744,13 @@ Connection connection = dataSource.getConnection();
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/07/12/HikariCP-source-code-7/">
+                <a href="/2020/07/30/HikariCP-source-code-8/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariConfig初始化分析">
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="HikariCP源码分析之ConcurrentBag一">
                         
-                        <span class="card-title">HikariConfig初始化分析</span>
+                        <span class="card-title">HikariCP源码分析之ConcurrentBag一</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -759,15 +759,12 @@ Connection connection = dataSource.getConnection();
                             
 源代码版本2.4.5-SNAPSHOT
 
-HikariConfig有 3 个构造方法，这三个构造方法其实都差不多，无我们逐个看一下：
-无参构造第一个无参的构造，代码如下：
-public HikariConfig() {
-      dat
+大家好，今天我们一起分析下 HikariCP 的核心ConcurrentBag，它是管理连接池的最重要的核心类。从它的名字大家可以看得出来，它是一个并发管理类，性能非常好，这是它性能甩其他连接池十
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-12
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-30
                         </span>
                         <span class="publish-author">
                             
@@ -815,13 +812,13 @@ public HikariConfig() {
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/07/06/HikariCP-source-code-3/">
+                <a href="/2020/07/12/HikariCP-source-code-7/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析三">
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariConfig初始化分析">
                         
-                        <span class="card-title">HikariCP获取连接流程源码分析三</span>
+                        <span class="card-title">HikariConfig初始化分析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -830,15 +827,15 @@ public HikariConfig() {
                             
 源代码版本2.4.5-SNAPSHOT
 
-话接上篇，我们继续分析HikariCP获取连接的过程。
-③拿到一个连接//③
-//获取连接的时候, 判断连接是否已经被标记移除
-if (poolEntry.isMarkedEvicted() ||
+HikariConfig有 3 个构造方法，这三个构造方法其实都差不多，无我们逐个看一下：
+无参构造第一个无参的构造，代码如下：
+public HikariConfig() {
+      dat
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-06
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-12
                             </span>
                         <span class="publish-author">
                             
@@ -1029,7 +1026,7 @@ if (poolEntry.isMarkedEvicted() ||
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">37.2k</span>
+                <span class="white-color">39.6k</span>
             
 
             

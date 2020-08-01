@@ -645,16 +645,15 @@ public void requite(final T bagEntry) {
         
         <div class="article col s12 m6 overflow-policy" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
-            </div>
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/08/01/HikariCP-source-code-10/">
+                <a href="/2020/08/01/HikariCP-source-code-11/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="HikariCP源码分析之ConcurrentBag三">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="HikariCP源码分析之HouseKeeper">
                         
-                        <span class="card-title">HikariCP源码分析之ConcurrentBag三</span>
+                        <span class="card-title">HikariCP源码分析之HouseKeeper</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -663,19 +662,13 @@ public void requite(final T bagEntry) {
                             
 源代码版本2.4.5-SNAPSHOT
 
-⑧还回连接这节我们要分析一下将数据库连接还回到连接池的方法requite。
-请看代码：
-/**
- * 该方法将借出去的连接还回到连接池中
- * 不通过该方法还回的连接会造成内存泄露
- *
- * @
+HouseKeeper是一个HikariPool的内部类，它实现了Runnable接口，也就是一个线程任务。这个任务是由ScheduledThreadPoolExecutor类型的线程池执行的，也
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-08-01
-                            </span>
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-08-01
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -688,7 +681,6 @@ public void requite(final T bagEntry) {
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -936,7 +928,7 @@ public void requite(final T bagEntry) {
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">37.2k</span>
+                <span class="white-color">39.6k</span>
             
 
             

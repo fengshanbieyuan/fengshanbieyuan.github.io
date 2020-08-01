@@ -460,7 +460,7 @@ HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new Hi
 </li>
 <li><p>addConnectionExecutor：用于执行添加新连接的线程池，只有一个线程，线程任务队列最大是连接池最大连接数，超出队列的任务，直接抛弃。</p>
 </li>
-<li><p>houseKeepingExecutorService：这是一个定时线程池，默认只有一个线程，它的作用比较多：用于执行检测连接泄露、关闭生存时间到期的连接、回收空闲连接、检测时间回拨。</p>
+<li><p>houseKeepingExecutorService：这是一个定时线程池，默认只有一个线程，它的作用比较多：用于执行检测连接泄露、关闭空闲时间超期的连接、回收空闲连接、检测时间回拨。</p>
 </li>
 </ul>
 <p><code>closeConnectionExecutor</code>的队列任务抛弃策略有点不一样，它会不断重试，是基于连接必须关闭的考虑，其他的任务直接抛弃是影响不大。</p>
@@ -676,13 +676,13 @@ HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new Hi
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/07/05/HikariCP-source-code-2/">
+                <a href="/2020/07/05/HikariCP-source-code-4/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析二">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
                         
-                        <span class="card-title">HikariCP获取连接流程源码分析二</span>
+                        <span class="card-title">HikariCP源码分析之初始化分析一</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -691,7 +691,8 @@ HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new Hi
                             
 源代码版本2.4.5-SNAPSHOT
 
-HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的getConnection()方法，而这个
+HikariDataSource的初始化
+HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
                         
                     </div>
                     <div class="publish-info">
@@ -744,13 +745,13 @@ HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源�
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/07/05/HikariCP-source-code-4/">
+                <a href="/2020/07/04/HikariCP-source-code-1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析一">
                         
-                        <span class="card-title">HikariCP源码分析之初始化分析一</span>
+                        <span class="card-title">HikariCP获取连接流程源码分析一</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -759,13 +760,12 @@ HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源�
                             
 源代码版本2.4.5-SNAPSHOT
 
-HikariDataSource的初始化
-HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
+HikariDataSource的getConnection()方法HikariCP获取连接的方法是com.zaxxer.hikari.HikariDataSource#getConnection
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-05
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-04
                             </span>
                         <span class="publish-author">
                             
@@ -956,7 +956,7 @@ HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">37.2k</span>
+                <span class="white-color">39.6k</span>
             
 
             
