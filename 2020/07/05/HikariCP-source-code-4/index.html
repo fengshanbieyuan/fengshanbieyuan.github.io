@@ -691,13 +691,13 @@ pool = fastPathPool = new HikariPool(this);
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/07/05/HikariCP-source-code-2/">
+                <a href="/2020/07/05/HikariCP-source-code-5/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析二">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析二">
                         
-                        <span class="card-title">HikariCP获取连接流程源码分析二</span>
+                        <span class="card-title">HikariCP源码分析之初始化分析二</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -706,7 +706,7 @@ pool = fastPathPool = new HikariPool(this);
                             
 源代码版本2.4.5-SNAPSHOT
 
-HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源码分析一》中，我们分析了HikariDataSource的getConnection()方法，而这个
+HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：
                         
                     </div>
                     <div class="publish-info">
@@ -759,13 +759,13 @@ HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源�
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/07/05/HikariCP-source-code-5/">
+                <a href="/2020/07/04/HikariCP-source-code-1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析二">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="HikariCP获取连接流程源码分析一">
                         
-                        <span class="card-title">HikariCP源码分析之初始化分析二</span>
+                        <span class="card-title">HikariCP获取连接流程源码分析一</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -774,12 +774,12 @@ HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源�
                             
 源代码版本2.4.5-SNAPSHOT
 
-HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：
+HikariDataSource的getConnection()方法HikariCP获取连接的方法是com.zaxxer.hikari.HikariDataSource#getConnection
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-05
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-07-04
                             </span>
                         <span class="publish-author">
                             
@@ -970,7 +970,7 @@ HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new Hi
             &copy;2020枫山别院 
             
                 &nbsp;<i class="fa fa-area-chart"></i>&nbsp;站点总字数:&nbsp;
-                <span class="white-color">35.9k</span>
+                <span class="white-color">37.2k</span>
             
 
             

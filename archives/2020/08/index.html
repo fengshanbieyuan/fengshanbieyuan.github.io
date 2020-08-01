@@ -13,8 +13,8 @@
     </script>
     <meta charset="utf-8">
     <meta name="google-site-verification" content="tW1RD83KSuf9lr73Vi76x7_5A1UdOy12mdLqpHWY5Mc">
-    <meta name="keywords" content="归档: 2020, 枫山别院,博客,Java,框架,架构">
-    <meta name="description" content="归档: 2020 | 枫山别院">
+    <meta name="keywords" content="归档: 2020/8, 枫山别院,博客,Java,框架,架构">
+    <meta name="description" content="归档: 2020/8 | 枫山别院">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -22,7 +22,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>归档: 2020 | 枫山别院</title>
+    <title>归档: 2020/8 | 枫山别院</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -314,7 +314,7 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
             
             
             <div class="cd-timeline-img month" data-aos="zoom-in-up">
-                <a href="/archives/2020/04">04</a>
+                <a href="/archives/2020/08">08</a>
             </div>
             
 
@@ -325,32 +325,40 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
             <article class="cd-timeline-content" data-aos="fade-up">
                 <div class="article col s12 m6 overflow-policy">
                     <div class="card">
-                        <a href="/2020/04/01/HttpServletBean-02/">
+                        <a href="/2020/08/01/HikariCP-source-code-10/">
                             <div class="card-image">
                                 
                                 
-                                <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="HttpServletBean解析-02">
+                                <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="HikariCP源码分析之ConcurrentBag三">
                                 
-                                <span class="card-title">HttpServletBean解析-02</span>
+                                <span class="card-title">HikariCP源码分析之ConcurrentBag三</span>
                             </div>
                         </a>
                         <div class="card-content article-content">
                             <div class="summary block-with-text">
                                 
-                                    有一句名言：“计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决（Any problem in computer science can be solved by anther layer of indirection）” 。
-这
+                                    
+源代码版本2.4.5-SNAPSHOT
+
+⑧还回连接这节我们要分析一下将数据库连接还回到连接池的方法requite。
+请看代码：
+/**
+ * 该方法将借出去的连接还回到连接池中
+ * 不通过该方法还回的连接会造成内存泄露
+ *
+ * @
                                 
                             </div>
                             <div class="publish-info">
                                 <span class="publish-date">
-                                    <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-01
+                                    <i class="fa fa-clock-o fa-fw icon-date"></i>2020-08-01
                                 </span>
                                 <span class="publish-author">
                                     
                                     <i class="fa fa-bookmark fa-fw icon-category"></i>
                                     
-                                    <a href="/categories/Java/" class="post-category" target="_blank">
-                                    Java
+                                    <a href="/categories/HikariCP源码解析/" class="post-category" target="_blank">
+                                    HikariCP源码解析
                                     </a>
                                     
                                     
@@ -361,82 +369,15 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                         
                         <div class="card-action article-tags">
                             
-                            <a href="/tags/Java/"><span class="chip bg-color">Java</span></a>
+                            <a href="/tags/Hikari/"><span class="chip bg-color">Hikari</span></a>
                             
-                            <a href="/tags/servlet/"><span class="chip bg-color">servlet</span></a>
+                            <a href="/tags/中间件/"><span class="chip bg-color">中间件</span></a>
                             
-                            <a href="/tags/Spring/"><span class="chip bg-color">Spring</span></a>
+                            <a href="/tags/数据库/"><span class="chip bg-color">数据库</span></a>
                             
-                            <a href="/tags/mvc/"><span class="chip bg-color">mvc</span></a>
+                            <a href="/tags/源码解析/"><span class="chip bg-color">源码解析</span></a>
                             
-                            <a href="/tags/源码/"><span class="chip bg-color">源码</span></a>
-                            
-                        </div>
-                        
-                    </div>
-                </div>
-            </article>
-        </div>
-        
-        <div class="cd-timeline-block">
-
-            
-            
-
-            
-            
-
-            
-            <div class="cd-timeline-img day" data-aos="zoom-in-up">
-                <span>01</span>
-            </div>
-            <article class="cd-timeline-content" data-aos="fade-up">
-                <div class="article col s12 m6 overflow-policy">
-                    <div class="card">
-                        <a href="/2020/04/01/Servlet-HttpServlet-01/">
-                            <div class="card-image">
-                                
-                                
-                                <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="Servlet和HttpServlet解析-01">
-                                
-                                <span class="card-title">Servlet和HttpServlet解析-01</span>
-                            </div>
-                        </a>
-                        <div class="card-content article-content">
-                            <div class="summary block-with-text">
-                                
-                                    一个servlet应用，通常会包括两部分：容器和servlet应用。既然在研究SpringMVC源码，那么大家肯定知道servlet容器了，常见的就是tomcat；servlet应用呢，就是我们写的代码。我们需要把自己的代码部署到tomca
-                                
-                            </div>
-                            <div class="publish-info">
-                                <span class="publish-date">
-                                    <i class="fa fa-clock-o fa-fw icon-date"></i>2020-04-01
-                                </span>
-                                <span class="publish-author">
-                                    
-                                    <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                    
-                                    <a href="/categories/Java/" class="post-category" target="_blank">
-                                    Java
-                                    </a>
-                                    
-                                    
-                                </span>
-                            </div>
-                        </div>
-
-                        
-                        <div class="card-action article-tags">
-                            
-                            <a href="/tags/Java/"><span class="chip bg-color">Java</span></a>
-                            
-                            <a href="/tags/servlet/"><span class="chip bg-color">servlet</span></a>
-                            
-                            <a href="/tags/Spring/"><span class="chip bg-color">Spring</span></a>
-                            
-                            <a href="/tags/mvc/"><span class="chip bg-color">mvc</span></a>
-                            
-                            <a href="/tags/源码/"><span class="chip bg-color">源码</span></a>
+                            <a href="/tags/源代码/"><span class="chip bg-color">源代码</span></a>
                             
                         </div>
                         
@@ -448,29 +389,6 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
     </div>
 
 </main>
-
-
-<div class="container paging">
-    <div class="row">
-        <div class="col s6 m4 l4">
-            
-            <a href="/archives/2020/" class="left btn-floating btn-large waves-effect waves-light bg-color">
-                <i class="fa fa-angle-left"></i>
-            </a>
-            
-        </div>
-        <div class="page-info col m4 l4 hide-on-small-only">
-            <div class="center-align b-text-gray">2 / 2</div>
-        </div>
-        <div class="col s6 m4 l4">
-            
-            <a class="right btn-floating btn-large disabled">
-                <i class="fa fa-angle-right"></i>
-            </a>
-            
-        </div>
-    </div>
-</div>
 
 
 <footer class="page-footer bg-color">
