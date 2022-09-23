@@ -1,0 +1,1535 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Swift快速入门, 枫山别院,博客,Java,框架,架构,hikari,hikariCP">
+    <meta name="description" content="逆水行舟用力撑，一篙松劲退千寻">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D51WXCP58N"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-D51WXCP58N');
+</script>
+
+
+    <title>Swift快速入门 | 枫山别院</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">枫山别院</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">枫山别院</div>
+        <div class="logo-desc">
+            
+            逆水行舟用力撑，一篙松劲退千寻
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Swift快速入门</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Swift/">
+                                <span class="chip bg-color">Swift</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">学习</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%85%A5%E9%97%A8/">
+                                <span class="chip bg-color">入门</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+                                <span class="chip bg-color">快速入门</span>
+                            </a>
+                        
+                            <a href="/tags/Mac/">
+                                <span class="chip bg-color">Mac</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Swift/" class="post-category">
+                                Swift
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2022-06-12
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    1.1k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    6 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="Swift-快速入门"><a href="#Swift-快速入门" class="headerlink" title="Swift 快速入门"></a>Swift 快速入门</h2><h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">let</span> apple <span class="token operator">=</span> <span class="token number">3</span>    <span class="token comment">//不可变变量</span>
+<span class="token keyword">var</span> orange <span class="token operator">=</span> <span class="token number">5</span>   <span class="token comment">//可变变量</span></code></pre>
+
+
+<h3 id="显式类型声明和类型转换"><a href="#显式类型声明和类型转换" class="headerlink" title="显式类型声明和类型转换"></a>显式类型声明和类型转换</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">let</span> num<span class="token punctuation">:</span><span class="token class-name">Float</span> <span class="token operator">=</span> <span class="token number">4</span>
+<span class="token keyword">let</span> hello<span class="token punctuation">:</span><span class="token class-name">String</span> <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"hello"</span></span>
+<span class="token function">print</span><span class="token punctuation">(</span>hello <span class="token operator">+</span> num<span class="token punctuation">)</span>     <span class="token comment">//报错，不同类型</span>
+<span class="token function">print</span><span class="token punctuation">(</span>hello <span class="token operator">+</span> <span class="token class-name">String</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment">//正确方式</span>
+<span class="token function">print</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"</span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">hello</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">, </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">num</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">"</span></span><span class="token punctuation">)</span>   <span class="token comment">//字符插值方式</span></code></pre>
+
+
+<h3 id="List和Map"><a href="#List和Map" class="headerlink" title="List和Map"></a>List和Map</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token comment">//空数组和空map</span>
+<span class="token keyword">let</span> emptyArray <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token class-name">String</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">let</span> emptyDictionary <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token class-name">String</span><span class="token punctuation">:</span> <span class="token class-name">Float</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">var</span> shoppingList <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string-literal"><span class="token string">"catfish"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"water"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"tulips"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"blue paint"</span></span><span class="token punctuation">]</span>
+shoppingList<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"bottle of water"</span></span>
+ 
+<span class="token keyword">var</span> occupations <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token string-literal"><span class="token string">"Malcolm"</span></span><span class="token punctuation">:</span> <span class="token string-literal"><span class="token string">"Captain"</span></span><span class="token punctuation">,</span>
+    <span class="token string-literal"><span class="token string">"Kaylee"</span></span><span class="token punctuation">:</span> <span class="token string-literal"><span class="token string">"Mechanic"</span></span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span>
+occupations<span class="token punctuation">[</span><span class="token string-literal"><span class="token string">"Jayne"</span></span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"Public Relations"</span></span></code></pre>
+
+
+<h3 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">let</span> scores <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">75</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">34</span><span class="token punctuation">,</span> <span class="token number">33</span><span class="token punctuation">,</span> <span class="token number">56</span><span class="token punctuation">,</span> <span class="token number">74</span><span class="token punctuation">,</span> <span class="token number">66</span><span class="token punctuation">]</span>
+<span class="token keyword">var</span> sum <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token keyword">for</span> score <span class="token keyword">in</span> scores <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> score <span class="token operator">></span> <span class="token number">60</span> <span class="token punctuation">&#123;</span>
+        sum <span class="token operator">+=</span> <span class="token number">1</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        sum <span class="token operator">-=</span> <span class="token number">1</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token function">print</span><span class="token punctuation">(</span>sum<span class="token punctuation">)</span></code></pre>
+
+
+<h3 id="可选值"><a href="#可选值" class="headerlink" title="可选值"></a>可选值</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">var</span> optionalString<span class="token punctuation">:</span> <span class="token class-name">String</span><span class="token operator">?</span> <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"Hello"</span></span>
+<span class="token function">print</span><span class="token punctuation">(</span>optionalString <span class="token operator">==</span> <span class="token nil constant">nil</span><span class="token punctuation">)</span>
+ 
+<span class="token keyword">var</span> optionalName<span class="token punctuation">:</span> <span class="token class-name">String</span><span class="token operator">?</span> <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"John Appleseed"</span></span>
+<span class="token keyword">var</span> greeting <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"Hello!"</span></span>
+<span class="token keyword">if</span> <span class="token keyword">let</span> name <span class="token operator">=</span> optionalName <span class="token punctuation">&#123;</span>
+    greeting <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"Hello, </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">name</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">"</span></span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+
+<h3 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">let</span> nickName<span class="token punctuation">:</span> <span class="token class-name">String</span><span class="token operator">?</span> <span class="token operator">=</span> <span class="token nil constant">nil</span>
+<span class="token keyword">let</span> fullName<span class="token punctuation">:</span> <span class="token class-name">String</span> <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"John Appleseed"</span></span>
+<span class="token keyword">let</span> informalGreeting <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"Hi </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">nickName <span class="token operator">??</span> fullName</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">"</span></span></code></pre>
+
+
+<h3 id="switch语句"><a href="#switch语句" class="headerlink" title="switch语句"></a>switch语句</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">let</span> vegetable <span class="token operator">=</span> <span class="token string-literal"><span class="token string">"red pepper"</span></span>
+<span class="token keyword">switch</span> vegetable <span class="token punctuation">&#123;</span>
+<span class="token keyword">case</span> <span class="token string-literal"><span class="token string">"celery"</span></span><span class="token punctuation">:</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"Add some raisins and make ants on a log."</span></span><span class="token punctuation">)</span>
+<span class="token keyword">case</span> <span class="token string-literal"><span class="token string">"cucumber"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"watercress"</span></span><span class="token punctuation">:</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"That would make a good tea sandwich."</span></span><span class="token punctuation">)</span>
+<span class="token keyword">case</span> <span class="token keyword">let</span> x <span class="token keyword">where</span> x<span class="token punctuation">.</span><span class="token function">hasSuffix</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"pepper"</span></span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"Is it a spicy </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">x</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">?"</span></span><span class="token punctuation">)</span>
+<span class="token keyword">default</span><span class="token punctuation">:</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"Everything tastes good in soup."</span></span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+
+<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token comment">//for</span>
+<span class="token keyword">let</span> interestingNumbers <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token string-literal"><span class="token string">"Prime"</span></span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">11</span><span class="token punctuation">,</span> <span class="token number">13</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string-literal"><span class="token string">"Fibonacci"</span></span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token string-literal"><span class="token string">"Square"</span></span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">]</span>
+<span class="token keyword">var</span> largest <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span>kind<span class="token punctuation">,</span> numbers<span class="token punctuation">)</span> <span class="token keyword">in</span> interestingNumbers <span class="token punctuation">&#123;</span>
+    <span class="token keyword">for</span> number <span class="token keyword">in</span> numbers <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> number <span class="token operator">></span> largest <span class="token punctuation">&#123;</span>
+            largest <span class="token operator">=</span> number
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token function">print</span><span class="token punctuation">(</span>largest<span class="token punctuation">)</span>
+
+
+<span class="token comment">//while</span>
+<span class="token keyword">var</span> n <span class="token operator">=</span> <span class="token number">2</span>
+<span class="token keyword">while</span> n <span class="token operator">&lt;</span> <span class="token number">100</span> <span class="token punctuation">&#123;</span>
+    n <span class="token operator">=</span> n <span class="token operator">*</span> <span class="token number">2</span>
+<span class="token punctuation">&#125;</span>
+<span class="token function">print</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span>
+ 
+<span class="token comment">//repeat</span>
+<span class="token keyword">var</span> m <span class="token operator">=</span> <span class="token number">2</span>
+<span class="token keyword">repeat</span> <span class="token punctuation">&#123;</span>
+    m <span class="token operator">=</span> m <span class="token operator">*</span> <span class="token number">2</span>
+<span class="token punctuation">&#125;</span> <span class="token keyword">while</span> m <span class="token operator">&lt;</span> <span class="token number">100</span>
+<span class="token function">print</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span></code></pre>
+
+
+<h3 id="区间"><a href="#区间" class="headerlink" title="区间"></a>区间</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">var</span> total <span class="token operator">=</span> <span class="token number">0</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token number">0</span><span class="token operator">..&lt;</span><span class="token number">4</span> <span class="token punctuation">&#123;</span><span class="token comment">//4次</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token number">1</span><span class="token operator">...</span><span class="token number">5</span> <span class="token punctuation">&#123;</span><span class="token comment">//5次</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">func</span> <span class="token function-definition function">greet</span><span class="token punctuation">(</span>person<span class="token punctuation">:</span> <span class="token class-name">String</span><span class="token punctuation">,</span> day<span class="token punctuation">:</span> <span class="token class-name">String</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">String</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"Hello </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">person</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">, today is </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">day</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">."</span></span>
+<span class="token punctuation">&#125;</span>
+<span class="token function">greet</span><span class="token punctuation">(</span>person<span class="token punctuation">:</span> <span class="token string-literal"><span class="token string">"Bob"</span></span><span class="token punctuation">,</span> day<span class="token punctuation">:</span> <span class="token string-literal"><span class="token string">"Tuesday"</span></span><span class="token punctuation">)</span>
+<span class="token comment">//可变参数</span>
+<span class="token keyword">func</span> <span class="token function-definition function">sumOf</span><span class="token punctuation">(</span>numbers<span class="token punctuation">:</span> <span class="token class-name">Int</span><span class="token operator">...</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">Int</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> sum <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> number <span class="token keyword">in</span> numbers <span class="token punctuation">&#123;</span>
+        sum <span class="token operator">+=</span> number
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> sum
+<span class="token punctuation">&#125;</span>
+<span class="token function">sumOf</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token function">sumOf</span><span class="token punctuation">(</span>numbers<span class="token punctuation">:</span> <span class="token number">42</span><span class="token punctuation">,</span> <span class="token number">597</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">)</span></code></pre>
+
+
+<h3 id="元组"><a href="#元组" class="headerlink" title="元组"></a>元组</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">func</span> <span class="token function-definition function">calculateStatistics</span><span class="token punctuation">(</span>scores<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token class-name">Int</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token punctuation">(</span>min<span class="token punctuation">:</span> <span class="token class-name">Int</span><span class="token punctuation">,</span> max<span class="token punctuation">:</span> <span class="token class-name">Int</span><span class="token punctuation">,</span> sum<span class="token punctuation">:</span> <span class="token class-name">Int</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> min <span class="token operator">=</span> scores<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    <span class="token keyword">var</span> max <span class="token operator">=</span> scores<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    <span class="token keyword">var</span> sum <span class="token operator">=</span> <span class="token number">0</span>
+    
+    <span class="token keyword">for</span> score <span class="token keyword">in</span> scores <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> score <span class="token operator">></span> max <span class="token punctuation">&#123;</span>
+            max <span class="token operator">=</span> score
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token keyword">if</span> score <span class="token operator">&lt;</span> min <span class="token punctuation">&#123;</span>
+            min <span class="token operator">=</span> score
+        <span class="token punctuation">&#125;</span>
+        sum <span class="token operator">+=</span> score
+    <span class="token punctuation">&#125;</span>
+    
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>min<span class="token punctuation">,</span> max<span class="token punctuation">,</span> sum<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">let</span> statistics <span class="token operator">=</span> <span class="token function">calculateStatistics</span><span class="token punctuation">(</span>scores<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token function">print</span><span class="token punctuation">(</span>statistics<span class="token punctuation">.</span>sum<span class="token punctuation">)</span>
+<span class="token function">print</span><span class="token punctuation">(</span>statistics<span class="token punctuation">.</span><span class="token number">2</span><span class="token punctuation">)</span></code></pre>
+
+
+<h3 id="嵌套函数"><a href="#嵌套函数" class="headerlink" title="嵌套函数"></a>嵌套函数</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">func</span> <span class="token function-definition function">returnFifteen</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">Int</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> y <span class="token operator">=</span> <span class="token number">10</span>
+    <span class="token keyword">func</span> <span class="token function-definition function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        y <span class="token operator">+=</span> <span class="token number">5</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> y
+<span class="token punctuation">&#125;</span>
+<span class="token function">returnFifteen</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment">//函数类型返回值</span>
+<span class="token keyword">func</span> <span class="token function-definition function">makeIncrementer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">Int</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">Int</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">func</span> <span class="token function-definition function">addOne</span><span class="token punctuation">(</span>number<span class="token punctuation">:</span> <span class="token class-name">Int</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">Int</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token number">1</span> <span class="token operator">+</span> number
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> addOne
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">var</span> increment <span class="token operator">=</span> <span class="token function">makeIncrementer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token function">increment</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span>
+<span class="token comment">//函数参数</span>
+<span class="token keyword">func</span> <span class="token function-definition function">hasAnyMatches</span><span class="token punctuation">(</span>list<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token class-name">Int</span><span class="token punctuation">]</span><span class="token punctuation">,</span> condition<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token class-name">Int</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">Bool</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">Bool</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">for</span> item <span class="token keyword">in</span> list <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token function">condition</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token boolean">true</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> <span class="token boolean">false</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">func</span> <span class="token function-definition function">lessThanTen</span><span class="token punctuation">(</span>number<span class="token punctuation">:</span> <span class="token class-name">Int</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">Bool</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> number <span class="token operator">&lt;</span> <span class="token number">10</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">var</span> numbers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">]</span>
+<span class="token function">hasAnyMatches</span><span class="token punctuation">(</span>list<span class="token punctuation">:</span> numbers<span class="token punctuation">,</span> condition<span class="token punctuation">:</span> lessThanTen<span class="token punctuation">)</span></code></pre>
+
+
+<h3 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h3><pre class="language-swift" data-language="swift"><code class="language-swift">numbers<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+    <span class="token punctuation">(</span>number<span class="token punctuation">:</span> <span class="token class-name">Int</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">Int</span> <span class="token keyword">in</span>
+    <span class="token keyword">let</span> result <span class="token operator">=</span> <span class="token number">3</span> <span class="token operator">*</span> number
+    <span class="token keyword">return</span> result
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+
+<span class="token comment">//单语句闭包</span>
+<span class="token keyword">let</span> mappedNumbers <span class="token operator">=</span> numbers<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> number <span class="token keyword">in</span> <span class="token number">3</span> <span class="token operator">*</span> number <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<span class="token function">print</span><span class="token punctuation">(</span>mappedNumbers<span class="token punctuation">)</span></code></pre>
+
+
+<h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">class</span> <span class="token class-name">Shape</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> numberOfSides <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">func</span> <span class="token function-definition function">simpleDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">String</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"A shape with </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">numberOfSides</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string"> sides."</span></span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">//创建对象</span>
+<span class="token keyword">var</span> shape <span class="token operator">=</span> <span class="token class-name">Shape</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+shape<span class="token punctuation">.</span>numberOfSides <span class="token operator">=</span> <span class="token number">7</span>
+<span class="token keyword">var</span> shapeDescription <span class="token operator">=</span> shape<span class="token punctuation">.</span><span class="token function">simpleDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token comment">//继承</span>
+<span class="token keyword">class</span> <span class="token class-name">Square</span><span class="token punctuation">:</span> <span class="token class-name">NamedShape</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> sideLength<span class="token punctuation">:</span> <span class="token class-name">Double</span>
+    <span class="token comment">//构造函数</span>
+    <span class="token keyword">init</span><span class="token punctuation">(</span>sideLength<span class="token punctuation">:</span> <span class="token class-name">Double</span><span class="token punctuation">,</span> name<span class="token punctuation">:</span> <span class="token class-name">String</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">self</span><span class="token punctuation">.</span>sideLength <span class="token operator">=</span> sideLength
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token keyword">init</span><span class="token punctuation">(</span>name<span class="token punctuation">:</span> name<span class="token punctuation">)</span>
+        numberOfSides <span class="token operator">=</span> <span class="token number">4</span>
+    <span class="token punctuation">&#125;</span>
+    
+    <span class="token keyword">func</span> <span class="token function-definition function">area</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span>  <span class="token class-name">Double</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> sideLength <span class="token operator">*</span> sideLength
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">//重写父类方法</span>
+    <span class="token keyword">override</span> <span class="token keyword">func</span> <span class="token function-definition function">simpleDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">String</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"A square with sides of length </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">sideLength</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">."</span></span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">//带getter和setter的属性</span>
+    <span class="token keyword">var</span> perimeter<span class="token punctuation">:</span> <span class="token class-name">Double</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">get</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token number">3.0</span> <span class="token operator">*</span> sideLength
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">set</span> <span class="token punctuation">&#123;</span>
+            sideLength <span class="token operator">=</span> newValue <span class="token operator">/</span> <span class="token number">3.0</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">let</span> test <span class="token operator">=</span> <span class="token class-name">Square</span><span class="token punctuation">(</span>sideLength<span class="token punctuation">:</span> <span class="token number">5.2</span><span class="token punctuation">,</span> name<span class="token punctuation">:</span> <span class="token string-literal"><span class="token string">"my test square"</span></span><span class="token punctuation">)</span>
+test<span class="token punctuation">.</span><span class="token function">area</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+test<span class="token punctuation">.</span><span class="token function">simpleDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+
+
+<h3 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">enum</span> <span class="token class-name">Rank</span><span class="token punctuation">:</span> <span class="token class-name">Int</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">case</span> ace <span class="token operator">=</span> <span class="token number">1</span>
+    <span class="token keyword">case</span> two<span class="token punctuation">,</span> three<span class="token punctuation">,</span> four<span class="token punctuation">,</span> five<span class="token punctuation">,</span> six<span class="token punctuation">,</span> seven<span class="token punctuation">,</span> eight<span class="token punctuation">,</span> nine<span class="token punctuation">,</span> ten
+    <span class="token keyword">case</span> jack<span class="token punctuation">,</span> queen<span class="token punctuation">,</span> king
+    <span class="token keyword">func</span> <span class="token function-definition function">simpleDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">String</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">switch</span> <span class="token keyword">self</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">case</span> <span class="token punctuation">.</span>ace<span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"ace"</span></span>
+        <span class="token keyword">case</span> <span class="token punctuation">.</span>jack<span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"jack"</span></span>
+        <span class="token keyword">case</span> <span class="token punctuation">.</span>queen<span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"queen"</span></span>
+        <span class="token keyword">case</span> <span class="token punctuation">.</span>king<span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"king"</span></span>
+        <span class="token keyword">default</span><span class="token punctuation">:</span>
+            <span class="token keyword">return</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>rawValue<span class="token punctuation">)</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">let</span> ace <span class="token operator">=</span> <span class="token class-name">Rank</span><span class="token punctuation">.</span>ace
+<span class="token keyword">let</span> aceRawValue <span class="token operator">=</span> ace<span class="token punctuation">.</span>rawValue
+
+<span class="token comment">//带属性的枚举</span>
+<span class="token keyword">enum</span> <span class="token class-name">ServerResponse</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">case</span> <span class="token function">result</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">)</span>
+    <span class="token keyword">case</span> <span class="token function">failure</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+ 
+<span class="token keyword">let</span> success <span class="token operator">=</span> <span class="token class-name">ServerResponse</span><span class="token punctuation">.</span><span class="token function">result</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"6:00 am"</span></span><span class="token punctuation">,</span> <span class="token string-literal"><span class="token string">"8:09 pm"</span></span><span class="token punctuation">)</span>
+<span class="token keyword">let</span> failure <span class="token operator">=</span> <span class="token class-name">ServerResponse</span><span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"Out of cheese."</span></span><span class="token punctuation">)</span>
+ 
+<span class="token keyword">switch</span> success <span class="token punctuation">&#123;</span>
+<span class="token keyword">case</span> <span class="token keyword">let</span> <span class="token punctuation">.</span><span class="token function">result</span><span class="token punctuation">(</span>sunrise<span class="token punctuation">,</span> sunset<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"Sunrise is at </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">sunrise</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string"> and sunset is at </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">sunset</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">."</span></span><span class="token punctuation">)</span>
+<span class="token keyword">case</span> <span class="token keyword">let</span> <span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"Failure...  </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">message</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">"</span></span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+
+<h3 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token class-name">Card</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> rank<span class="token punctuation">:</span> <span class="token class-name">Rank</span>
+    <span class="token keyword">var</span> suit<span class="token punctuation">:</span> <span class="token class-name">Suit</span>
+    <span class="token keyword">func</span> <span class="token function-definition function">simpleDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token class-name">String</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"The </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">rank<span class="token punctuation">.</span><span class="token function">simpleDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span></span><span class="token interpolation-punctuation punctuation">)</span><span class="token string"> of </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">suit<span class="token punctuation">.</span><span class="token function">simpleDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span></span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">"</span></span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">let</span> threeOfSpades <span class="token operator">=</span> <span class="token class-name">Card</span><span class="token punctuation">(</span>rank<span class="token punctuation">:</span> <span class="token punctuation">.</span>three<span class="token punctuation">,</span> suit<span class="token punctuation">:</span> <span class="token punctuation">.</span>spades<span class="token punctuation">)</span>
+<span class="token keyword">let</span> threeOfSpadesDescription <span class="token operator">=</span> threeOfSpades<span class="token punctuation">.</span><span class="token function">simpleDescription</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+
+<p>结构体跟类几乎一样，区别就是结构体在传递的时候是复制自身，类是传递引用</p>
+<h3 id="协议-接口"><a href="#协议-接口" class="headerlink" title="协议(接口)"></a>协议(接口)</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">protocol</span> <span class="token class-name">ExampleProtocol</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> simpleDescription<span class="token punctuation">:</span> <span class="token class-name">String</span> <span class="token punctuation">&#123;</span> <span class="token keyword">get</span> <span class="token punctuation">&#125;</span>
+    <span class="token keyword">mutating</span> <span class="token keyword">func</span> <span class="token function-definition function">adjust</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>类，枚举以及结构体都可以使用协议，<code>mutating</code>关键字的作用是在enum和struct中可以让协议方法修改对象的属性，类中不需要，可以直接修改</p>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">extension</span> <span class="token class-name">Int</span><span class="token punctuation">:</span> <span class="token class-name">ExampleProtocol</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> simpleDescription<span class="token punctuation">:</span> <span class="token class-name">String</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"The number </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation"><span class="token keyword">self</span></span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">"</span></span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">mutating</span> <span class="token keyword">func</span> <span class="token function-definition function">adjust</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">self</span> <span class="token operator">+=</span> <span class="token number">42</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token function">print</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">.</span>simpleDescription<span class="token punctuation">)</span></code></pre>
+
+<p>给已有的类型添加新功能</p>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">enum</span> <span class="token class-name">PrinterError</span><span class="token punctuation">:</span> <span class="token class-name">Error</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">case</span> outOfPaper
+    <span class="token keyword">case</span> noToner
+    <span class="token keyword">case</span> onFire
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">func</span> <span class="token function-definition function">send</span><span class="token punctuation">(</span>job<span class="token punctuation">:</span> <span class="token class-name">Int</span><span class="token punctuation">,</span> toPrinter printerName<span class="token punctuation">:</span> <span class="token class-name">String</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token operator">-></span> <span class="token class-name">String</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> printerName <span class="token operator">==</span> <span class="token string-literal"><span class="token string">"Never Has Toner"</span></span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">throw</span> <span class="token class-name">PrinterError</span><span class="token punctuation">.</span>noToner
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> <span class="token string-literal"><span class="token string">"Job sent"</span></span>
+<span class="token punctuation">&#125;</span>
+
+
+<span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> printerResponse <span class="token operator">=</span> <span class="token keyword">try</span> <span class="token function">send</span><span class="token punctuation">(</span>job<span class="token punctuation">:</span> <span class="token number">1440</span><span class="token punctuation">,</span> toPrinter<span class="token punctuation">:</span> <span class="token string-literal"><span class="token string">"Gutenberg"</span></span><span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>printerResponse<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token class-name">PrinterError</span><span class="token punctuation">.</span>onFire <span class="token punctuation">&#123;</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"I'll just put this over here, with the rest of the fire."</span></span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token keyword">let</span> printerError <span class="token keyword">as</span> <span class="token class-name">PrinterError</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string-literal"><span class="token string">"Printer error: </span><span class="token interpolation-punctuation punctuation">\(</span><span class="token interpolation">printerError</span><span class="token interpolation-punctuation punctuation">)</span><span class="token string">."</span></span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+
+<h3 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h3><pre class="language-swift" data-language="swift"><code class="language-swift"><span class="token keyword">func</span> <span class="token function-definition function">makeArray</span><span class="token operator">&lt;</span><span class="token class-name">Item</span><span class="token operator">></span><span class="token punctuation">(</span>repeating item<span class="token punctuation">:</span> <span class="token class-name">Item</span><span class="token punctuation">,</span> numberOfTimes<span class="token punctuation">:</span> <span class="token class-name">Int</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token punctuation">[</span><span class="token class-name">Item</span><span class="token punctuation">]</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">var</span> result <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token class-name">Item</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> <span class="token omit keyword">_</span> <span class="token keyword">in</span> <span class="token number">0</span><span class="token operator">..&lt;</span>numberOfTimes <span class="token punctuation">&#123;</span>
+        result<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>item<span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">return</span> result
+<span class="token punctuation">&#125;</span>
+<span class="token function">makeArray</span><span class="token punctuation">(</span>repeating<span class="token punctuation">:</span> <span class="token string-literal"><span class="token string">"knock"</span></span><span class="token punctuation">,</span> numberOfTimes<span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">)</span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">枫山别院</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.fsby.fun/2022/06/12/swift-learn-quickly/">https://www.fsby.fun/2022/06/12/swift-learn-quickly/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">枫山别院</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Swift/">
+                                    <span class="chip bg-color">Swift</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">学习</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%85%A5%E9%97%A8/">
+                                    <span class="chip bg-color">入门</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+                                    <span class="chip bg-color">快速入门</span>
+                                </a>
+                            
+                                <a href="/tags/Mac/">
+                                    <span class="chip bg-color">Mac</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2022/06/12/terminal-tools/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Linux/Mac终端工具插件推荐">
+                        
+                        <span class="card-title">Linux/Mac终端工具插件推荐</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-06-12
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%BB%88%E7%AB%AF/" class="post-category">
+                                    终端
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Mac/">
+                        <span class="chip bg-color">Mac</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BB%88%E7%AB%AF/">
+                        <span class="chip bg-color">终端</span>
+                    </a>
+                    
+                    <a href="/tags/Linux/">
+                        <span class="chip bg-color">Linux</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%8F%92%E4%BB%B6/">
+                        <span class="chip bg-color">插件</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%B7%A5%E5%85%B7/">
+                        <span class="chip bg-color">工具</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/08/01/HikariCP-source-code-11/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="HikariCP源码分析之HouseKeeper">
+                        
+                        <span class="card-title">HikariCP源码分析之HouseKeeper</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-01
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/HikariCP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="post-category">
+                                    HikariCP源码解析
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Hikari/">
+                        <span class="chip bg-color">Hikari</span>
+                    </a>
+                    
+                    <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+                        <span class="chip bg-color">中间件</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                        <span class="chip bg-color">数据库</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
+                        <span class="chip bg-color">源码解析</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BA%90%E4%BB%A3%E7%A0%81/">
+                        <span class="chip bg-color">源代码</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 枫山别院<br />'
+            + '文章作者: 枫山别院<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2022</span>
+            
+            
+            <a href="/about" target="_blank">枫山别院</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">42.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+	
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

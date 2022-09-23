@@ -1,0 +1,1428 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Spring Boot Jar 是怎么启动的--FatJar启动流程分析, 枫山别院,博客,Java,框架,架构,hikari,hikariCP">
+    <meta name="description" content="逆水行舟用力撑，一篙松劲退千寻">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D51WXCP58N"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-D51WXCP58N');
+</script>
+
+
+    <title>Spring Boot Jar 是怎么启动的--FatJar启动流程分析 | 枫山别院</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">枫山别院</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">枫山别院</div>
+        <div class="logo-desc">
+            
+            逆水行舟用力撑，一篙松劲退千寻
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Spring Boot Jar 是怎么启动的--FatJar启动流程分析</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Spring/">
+                                <span class="chip bg-color">Spring</span>
+                            </a>
+                        
+                            <a href="/tags/Boot/">
+                                <span class="chip bg-color">Boot</span>
+                            </a>
+                        
+                            <a href="/tags/Jar/">
+                                <span class="chip bg-color">Jar</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%90%AF%E5%8A%A8/">
+                                <span class="chip bg-color">启动</span>
+                            </a>
+                        
+                            <a href="/tags/FatJar/">
+                                <span class="chip bg-color">FatJar</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%88%86%E6%9E%90/">
+                                <span class="chip bg-color">分析</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Spring-Boot/" class="post-category">
+                                Spring-Boot
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2019-09-29
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.5k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    11 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>首先搭建一个Spring Boot工程，非常简单，在<a target="_blank" rel="noopener" href="https://start.spring.io/">Spring Initializr</a>上快速生成一个项目就可以了，使用Java语言，其他的可以根据需要自己选择。<br>如果你没有什么特殊需要，可以参照我下面的设置。<br><img src="https://i.loli.net/2019/10/29/hjXWMCVKm7cT3qO.png" alt="initializr.png"><br>点击Generate之后，下载生成的工程。<br>在工程目录下，执行<code>mvn package -Dmaven.test.skip=true</code>命令，打包。<br><img src="https://i.loli.net/2019/10/29/pWK9iku4hdEmBcq.png" alt="jar-file.png"><br>在target目录下，会生成一个jar，名字是demo-0.0.1-SNAPSHOT.jar，这就是我们要分析的jar，如下图:</p>
+<p>然后我们解压这个jar，看看跟普通的jar有什么区别。<br>解压之后，目录是这样的，只展开了2级目录(详细的请看附录):</p>
+<pre class="language-none"><code class="language-none">├── BOOT-INF
+│   ├── classes
+│   └── lib
+├── META-INF
+│   ├── MANIFEST.MF
+│   └── maven
+└── org
+    └── springframework</code></pre>
+<p>再看一个普通的jar，也就是非Spring Boot的jar是什么样子的</p>
+<pre class="language-none"><code class="language-none">├── META-INF
+│   ├── MANIFEST.MF
+│   └── maven
+└── com
+    └── guofeng</code></pre>
+<p>大家对比一下，Spring Boot的jar只比普通的jar多出了一个BOOT-INF目录，其他的东西在结构上是一样的。也就是说，首先Spring Boot的jar肯定是兼容普通的jar，普通jar有的东西，它都有，这样，它才能用<code>java -jar</code>运行。普通的jar，依赖都是在外部的，Spring Boot的fatjar，依赖都在Jar包内，还有就是把工程代码换了下位置。</p>
+<p>我们知道在jar运行之前，会首先从MANIFEST.MF文件中，查找jar的相关信息。我们看看这个文件里的内容</p>
+<pre class="language-none"><code class="language-none">Manifest-Version: 1.0
+Created-By: Maven Archiver 3.4.0
+Build-Jdk-Spec: 12
+Implementation-Title: demo
+Implementation-Version: 0.0.1-SNAPSHOT
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: com.example.demo.DemoApplication
+Spring-Boot-Version: 2.2.0.M6
+Spring-Boot-Classes: BOOT-INF&#x2F;classes&#x2F;
+Spring-Boot-Lib: BOOT-INF&#x2F;lib&#x2F;</code></pre>
+<p>上面有几个参数是需要我们关注的：</p>
+<ol>
+<li>Main-Class<br>这个是jar的入口函数main方法的类路径，这里可以看到，这个是spring的方法，不是我们工程中写的方法。</li>
+<li>Start-Class<br>这个参数是 Spring Boot定义的，可以看到，这个类是我们工程里的了。这个是我们工程的main方法的类路径。</li>
+<li>Spring-Boot-Classes<br>这个很明显，是工程代码在jar中的路径</li>
+<li>Spring-Boot-Lib<br>这个是工程中引入的依赖jar。Spring Boot把工程依赖的所有jar都打包在了项目的jar中，这就是为什么它是个fatjar。</li>
+</ol>
+<p>好的， 我们跟踪着普通jar启动的脚步，先看看jar的入口函数org.springframework.boot.loader.JarLauncher。<br>这个类在工程中是找不到的，因为是jar启动需要的，在打包阶段由maven打进去的，工程是不需要的。<br>它在包spring-boot-loader中，GAV是:</p>
+<pre class="language-none"><code class="language-none">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;
+    &lt;artifactId&gt;spring-boot-loader&lt;&#x2F;artifactId&gt;
+    &lt;version&gt;2.0.2.RELEASE&lt;&#x2F;version&gt;
+    &lt;scope&gt;provided&lt;&#x2F;scope&gt;
+&lt;&#x2F;dependency&gt;</code></pre>
+<p>你可以在<a target="_blank" rel="noopener" href="https://github.com/spring-projects/spring-boot/blob/8a9c60a29a81a0abdc145cf85c037daae8defbf0/spring-boot-project/spring-boot-tools/spring-boot-loader/src/main/java/org/springframework/boot/loader/JarLauncher.java">JarLauncher</a>中找到这个类的源代码。<br>我们看下它的main方法:</p>
+<pre class="language-none"><code class="language-none">public static void main(String[] args) throws Exception&#123;
+		new JarLauncher().launch(args);
+	&#125;</code></pre>
+<p>非常的简单，它调用了<code>JarLauncher</code>的<code>launch</code>方法，并且把参数都传递进去了。但是在<code>JarLauncher</code>中并没有<code>launch</code>这个方法，这个方法是<code>JarLauncher</code>的祖父类<code>Launcher</code>的方法，继承关系是这样的<code>JarLauncher---&gt;ExecutableArchiveLauncher---&gt;Launcher</code>。<br>我们看一下<code>launch</code>方法的实现:</p>
+<pre class="language-none"><code class="language-none">protected void launch(String[] args) throws Exception &#123;
+		JarFile.registerUrlProtocolHandler();
+		ClassLoader classLoader &#x3D; createClassLoader(getClassPathArchives());
+		launch(args, getMainClass(), classLoader);
+	&#125;</code></pre>
+<p>这是一个<code>protected</code>方法，只能在它的子类中使用。<br>首先看第一句代码:<code>JarFile.registerUrlProtocolHandler();</code>，它的实现是:</p>
+<pre class="language-none"><code class="language-none">public static void registerUrlProtocolHandler() &#123;
+        &#x2F;&#x2F;PROTOCOL_HANDLER &#x3D; &quot;java.protocol.handler.pkgs&quot;;
+		String handlers &#x3D; System.getProperty(PROTOCOL_HANDLER, &quot;&quot;);
+		&#x2F;&#x2F;HANDLERS_PACKAGE &#x3D; &quot;org.springframework.boot.loader&quot;
+		System.setProperty(PROTOCOL_HANDLER, (&quot;&quot;.equals(handlers) ? HANDLERS_PACKAGE : handlers + &quot;|&quot; + HANDLERS_PACKAGE));
+		resetCachedUrlHandlers();
+	&#125;</code></pre>
+<p>这几句代码非常简单，就是重新设置了一个属性值，叫做<code>java.protocol.handler.pkgs</code>。<br>那么这个属性值是干什么用的呢，从属性名字上我们能大体猜测一下，跟protocol有关，也就是协议。什么是协议？http，https这是最常见的协议吧？对的，这个属性值是存放的一个路径，这个路径下面对应的是各种协议的处理逻辑。除了http和https，还有jar，file，ftp等等协议。这个属性值默认是<code>sun.net.www.protocol.jar.Handler</code>，这是Java的默认实现，大家可以去这个路径下看一下。</p>
+<p>Spring Boot重新将这个路径设置了一下，添加了<code>org.springframework.boot.loader</code>路径，这个路径下有Spring Boot提供的Jar协议处理逻辑，也就是覆盖了原来的Jar处理逻辑。Spring Boot的Jar跟普通的Jar是有区别的，依赖是打包在Jar中的，引导类是Spring提供的实现，但是我们最后的目的肯定是启动我们自己的工程。所以在这个地方覆盖了默认的Jar启动逻辑，按照Spring的Jar启动逻辑来走，其目的就是自定义Jar包依赖的查找逻辑，从Jar内部找依赖，最终启动用户的工程。</p>
+<p>我们再看第二句代码：</p>
+<pre class="language-none"><code class="language-none">ClassLoader classLoader &#x3D; createClassLoader(getClassPathArchives());</code></pre>
+<p>简略一看，大家都能懂的，是创建了一个ClassLoader。我们仔细研究下<code>getClassPathArchives</code>方法，它的实现是：</p>
+<pre class="language-none"><code class="language-none">@Override
+	protected List&lt;Archive&gt; getClassPathArchives() throws Exception &#123;
+		List&lt;Archive&gt; archives &#x3D; new ArrayList&lt;&gt;(
+				this.archive.getNestedArchives(this::isNestedArchive));
+		postProcessClassPathArchives(archives);
+		return archives;
+	&#125;</code></pre>
+<p>最主要就是方法的第一句代码，它是获取用户工程代码和依赖的。拆分一下，我们先看<code>isNestedArchive</code>方法，它在JarLauncher和WarLauncher中，一共两种实现，我们看下JarLauncher中的实现：</p>
+<pre class="language-none"><code class="language-none">@Override
+	protected boolean isNestedArchive(Archive.Entry entry) &#123;
+		if (entry.isDirectory()) &#123;
+			return entry.getName().equals(BOOT_INF_CLASSES);
+		&#125;
+		return entry.getName().startsWith(BOOT_INF_LIB);
+	&#125;</code></pre>
+<p>这个方法是一个过滤器，它把<code>BOOT-INF/classes/</code>和<code>BOOT-INF/lib/</code>中的类和jar过滤了出来。然后再回到<code>getClassPathArchives</code>方法中，在<code>getNestedArchives</code>方法中：</p>
+<pre class="language-none"><code class="language-none">@Override
+	public List&lt;Archive&gt; getNestedArchives(EntryFilter filter) throws IOException &#123;
+		List&lt;Archive&gt; nestedArchives &#x3D; new ArrayList&lt;&gt;();
+		for (Entry entry : this) &#123;
+			if (filter.matches(entry)) &#123;
+				nestedArchives.add(getNestedArchive(entry));
+			&#125;
+		&#125;
+		return Collections.unmodifiableList(nestedArchives);
+	&#125;</code></pre>
+<p>在这里，把所有符合过滤条件的文件，都放到了nestedArchives中，然后返回给调用者。<br>现在，在代码<code>ClassLoader classLoader = createClassLoader(getClassPathArchives());</code>中，我们就好理解了，<code>getClassPathArchives</code>方法获取到了工程代码和工程的依赖jar，然后根据这些东西，创建了<code>ClassLoader</code>。</p>
+<p>好的，还有最后一句代码:</p>
+<pre class="language-none"><code class="language-none">launch(args, getMainClass(), classLoader);</code></pre>
+<p>这个毫无疑问，就是最后的启动过程了。同样的，先分析参数<code>getMainClass</code>方法：</p>
+<pre class="language-none"><code class="language-none">@Override
+	protected String getMainClass() throws Exception &#123;
+		Manifest manifest &#x3D; this.archive.getManifest();
+		String mainClass &#x3D; null;
+		if (manifest !&#x3D; null) &#123;
+			mainClass &#x3D; manifest.getMainAttributes().getValue(&quot;Start-Class&quot;);
+		&#125;
+		if (mainClass &#x3D;&#x3D; null) &#123;
+			throw new IllegalStateException(
+					&quot;No &#39;Start-Class&#39; manifest entry specified in &quot; + this);
+		&#125;
+		return mainClass;
+	&#125;</code></pre>
+<p>首先代码上来是获取Manifest，这个文件对应的就是Jar包中的MANIFEST.MF文件，我们说过，这个文件中定义了Jar包的信息。然后，注意后面的代码，从文件中获取了<code>Start-Class</code>的值。我们在看这个文件的时候，<code>Start-Class</code>是定义了我们工程的启动类，对吧？终于，这个地方要运行我们自己的main方法了，现在我们拿到了用户的main方法的所在类。</p>
+<p>然后看launch方法，是怎么启动的：</p>
+<pre class="language-none"><code class="language-none">protected void launch(String[] args, String mainClass, ClassLoader classLoader)
+			throws Exception &#123;
+		Thread.currentThread().setContextClassLoader(classLoader);
+		createMainMethodRunner(mainClass, args, classLoader).run();
+	&#125;</code></pre>
+<p>首先把我们刚刚创建的classLoader放到了当前线程中。这个classLoader中带着我们工程代码和工程依赖，没忘吧？OK。<br>继续继续，敲黑板，重点来了，createMainMethodRunner方法的实现如下：</p>
+<pre class="language-none"><code class="language-none">public void run() throws Exception &#123;
+		Class&lt;?&gt; mainClass &#x3D; Thread.currentThread().getContextClassLoader()
+				.loadClass(this.mainClassName);
+		Method mainMethod &#x3D; mainClass.getDeclaredMethod(&quot;main&quot;, String[].class);
+		mainMethod.invoke(null, new Object[] &#123; this.args &#125;);
+	&#125;</code></pre>
+<p>通过我们创建的classLoader，去找<code>Start-Class</code>定义的class类文件。在这个class文件中，找main方法，然后调用这个main方法。<br>咚咚咚咚，Jar启动流程到这里就结束了，后面就是Spring Boot应用的启动过程了。<br>到这里，Spring Boot Jar启动流程就分析完了，是不是非常简洁和条理清晰，很巧妙的方法，佩服这些大佬。<br>大家可以下载Spring Boot的源代码，然后再仔细的回味一下。</p>
+<p>附录：</p>
+<ol>
+<li><p>Spring Boot Jar解压之后的文件目录树</p>
+<pre class="language-none"><code class="language-none">├── BOOT-INF
+│   ├── classes
+│   │   ├── application.properties
+│   │   └── com
+│   │       └── example
+│   │           └── demo
+│   │               └── DemoApplication.class
+│   └── lib
+│       ├── classmate-1.5.0.jar
+│       ├── hibernate-validator-6.0.17.Final.jar
+│       ├── jackson-annotations-2.9.0.jar
+│       ├── jackson-core-2.9.9.jar
+│       ├── jackson-databind-2.9.9.3.jar
+│       ├── jackson-datatype-jdk8-2.9.9.jar
+│       ├── jackson-datatype-jsr310-2.9.9.jar
+│       ├── jackson-module-parameter-names-2.9.9.jar
+│       ├── jakarta.annotation-api-1.3.5.jar
+│       ├── jakarta.validation-api-2.0.1.jar
+│       ├── jboss-logging-3.4.1.Final.jar
+│       ├── jul-to-slf4j-1.7.28.jar
+│       ├── log4j-api-2.12.1.jar
+│       ├── log4j-to-slf4j-2.12.1.jar
+│       ├── logback-classic-1.2.3.jar
+│       ├── logback-core-1.2.3.jar
+│       ├── slf4j-api-1.7.28.jar
+│       ├── snakeyaml-1.25.jar
+│       ├── spring-aop-5.2.0.RC2.jar
+│       ├── spring-beans-5.2.0.RC2.jar
+│       ├── spring-boot-2.2.0.M6.jar
+│       ├── spring-boot-autoconfigure-2.2.0.M6.jar
+│       ├── spring-boot-starter-2.2.0.M6.jar
+│       ├── spring-boot-starter-json-2.2.0.M6.jar
+│       ├── spring-boot-starter-logging-2.2.0.M6.jar
+│       ├── spring-boot-starter-tomcat-2.2.0.M6.jar
+│       ├── spring-boot-starter-validation-2.2.0.M6.jar
+│       ├── spring-boot-starter-web-2.2.0.M6.jar
+│       ├── spring-context-5.2.0.RC2.jar
+│       ├── spring-core-5.2.0.RC2.jar
+│       ├── spring-expression-5.2.0.RC2.jar
+│       ├── spring-jcl-5.2.0.RC2.jar
+│       ├── spring-test-5.2.0.RC2.jar
+│       ├── spring-web-5.2.0.RC2.jar
+│       ├── spring-webmvc-5.2.0.RC2.jar
+│       ├── tomcat-embed-core-9.0.24.jar
+│       ├── tomcat-embed-el-9.0.24.jar
+│       └── tomcat-embed-websocket-9.0.24.jar
+├── META-INF
+│   ├── MANIFEST.MF
+│   └── maven
+│       └── com.example
+│           └── demo
+│               ├── pom.properties
+│               └── pom.xml
+└── org
+    └── springframework
+        └── boot
+            └── loader
+                ├── ExecutableArchiveLauncher.class
+                ├── JarLauncher.class
+                ├── LaunchedURLClassLoader$UseFastConnectionExceptionsEnumeration.class
+                ├── LaunchedURLClassLoader.class
+                ├── Launcher.class
+                ├── MainMethodRunner.class
+                ├── PropertiesLauncher$1.class
+                ├── PropertiesLauncher$ArchiveEntryFilter.class
+                ├── PropertiesLauncher$PrefixMatchingArchiveFilter.class
+                ├── PropertiesLauncher.class
+                ├── WarLauncher.class
+                ├── archive
+                │   ├── Archive$Entry.class
+                │   ├── Archive$EntryFilter.class
+                │   ├── Archive.class
+                │   ├── ExplodedArchive$1.class
+                │   ├── ExplodedArchive$FileEntry.class
+                │   ├── ExplodedArchive$FileEntryIterator$EntryComparator.class
+                │   ├── ExplodedArchive$FileEntryIterator.class
+                │   ├── ExplodedArchive.class
+                │   ├── JarFileArchive$EntryIterator.class
+                │   ├── JarFileArchive$JarFileEntry.class
+                │   └── JarFileArchive.class
+                ├── data
+                │   ├── RandomAccessData.class
+                │   ├── RandomAccessDataFile$1.class
+                │   ├── RandomAccessDataFile$DataInputStream.class
+                │   ├── RandomAccessDataFile$FileAccess.class
+                │   └── RandomAccessDataFile.class
+                ├── jar
+                │   ├── AsciiBytes.class
+                │   ├── Bytes.class
+                │   ├── CentralDirectoryEndRecord.class
+                │   ├── CentralDirectoryFileHeader.class
+                │   ├── CentralDirectoryParser.class
+                │   ├── CentralDirectoryVisitor.class
+                │   ├── FileHeader.class
+                │   ├── Handler.class
+                │   ├── JarEntry.class
+                │   ├── JarEntryFilter.class
+                │   ├── JarFile$1.class
+                │   ├── JarFile$2.class
+                │   ├── JarFile$JarFileType.class
+                │   ├── JarFile.class
+                │   ├── JarFileEntries$1.class
+                │   ├── JarFileEntries$EntryIterator.class
+                │   ├── JarFileEntries.class
+                │   ├── JarURLConnection$1.class
+                │   ├── JarURLConnection$2.class
+                │   ├── JarURLConnection$CloseAction.class
+                │   ├── JarURLConnection$JarEntryName.class
+                │   ├── JarURLConnection.class
+                │   ├── StringSequence.class
+                │   └── ZipInflaterInputStream.class
+                └── util
+                    └── SystemPropertyUtils.class</code></pre>
+</li>
+<li><p>普通Jar解压之后的文件树：</p>
+<pre class="language-none"><code class="language-none">├── META-INF
+│   ├── MANIFEST.MF
+│   └── maven
+│       └── com.guofeng
+│           └── first-spring-boot
+│               ├── pom.properties
+│               └── pom.xml
+└── com
+    └── guofeng
+        └── think
+            └── App.class</code></pre></li>
+</ol>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">枫山别院</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.fsby.fun/2019/09/29/Spring-Boot-Jar-start-step/">https://www.fsby.fun/2019/09/29/Spring-Boot-Jar-start-step/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">枫山别院</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Spring/">
+                                    <span class="chip bg-color">Spring</span>
+                                </a>
+                            
+                                <a href="/tags/Boot/">
+                                    <span class="chip bg-color">Boot</span>
+                                </a>
+                            
+                                <a href="/tags/Jar/">
+                                    <span class="chip bg-color">Jar</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%90%AF%E5%8A%A8/">
+                                    <span class="chip bg-color">启动</span>
+                                </a>
+                            
+                                <a href="/tags/FatJar/">
+                                    <span class="chip bg-color">FatJar</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%88%86%E6%9E%90/">
+                                    <span class="chip bg-color">分析</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2019/10/25/Java-class-file-analysis/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="Java Class 字节码文件结构分析----附带逐字节码分析图">
+                        
+                        <span class="card-title">Java Class 字节码文件结构分析----附带逐字节码分析图</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2019-10-25
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Java/" class="post-category">
+                                    Java
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Java/">
+                        <span class="chip bg-color">Java</span>
+                    </a>
+                    
+                    <a href="/tags/Class/">
+                        <span class="chip bg-color">Class</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%AD%97%E8%8A%82%E7%A0%81/">
+                        <span class="chip bg-color">字节码</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%88%86%E6%9E%90%E5%9B%BE/">
+                        <span class="chip bg-color">分析图</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BB%93%E6%9E%84/">
+                        <span class="chip bg-color">结构</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2019/09/28/mvn-dependency/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="maven的mvn dependency依赖分析和常用命令介绍">
+                        
+                        <span class="card-title">maven的mvn dependency依赖分析和常用命令介绍</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2019-09-28
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/maven/" class="post-category">
+                                    maven
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/maven/">
+                        <span class="chip bg-color">maven</span>
+                    </a>
+                    
+                    <a href="/tags/dependency/">
+                        <span class="chip bg-color">dependency</span>
+                    </a>
+                    
+                    <a href="/tags/mvn/">
+                        <span class="chip bg-color">mvn</span>
+                    </a>
+                    
+                    <a href="/tags/%E4%BE%9D%E8%B5%96/">
+                        <span class="chip bg-color">依赖</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 枫山别院<br />'
+            + '文章作者: 枫山别院<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2022</span>
+            
+            
+            <a href="/about" target="_blank">枫山别院</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">42.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+	
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

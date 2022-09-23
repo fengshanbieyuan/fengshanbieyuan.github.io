@@ -1,0 +1,1362 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="HikariCP源码分析之ConcurrentBag一, 枫山别院,博客,Java,框架,架构,hikari,hikariCP">
+    <meta name="description" content="逆水行舟用力撑，一篙松劲退千寻">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D51WXCP58N"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-D51WXCP58N');
+</script>
+
+
+    <title>HikariCP源码分析之ConcurrentBag一 | 枫山别院</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">枫山别院</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">枫山别院</div>
+        <div class="logo-desc">
+            
+            逆水行舟用力撑，一篙松劲退千寻
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/20.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">HikariCP源码分析之ConcurrentBag一</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Hikari/">
+                                <span class="chip bg-color">Hikari</span>
+                            </a>
+                        
+                            <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+                                <span class="chip bg-color">中间件</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                <span class="chip bg-color">数据库</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
+                                <span class="chip bg-color">源码解析</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%BA%90%E4%BB%A3%E7%A0%81/">
+                                <span class="chip bg-color">源代码</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/HikariCP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="post-category">
+                                HikariCP源码解析
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2020-07-30
+                </div>
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.3k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    12 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <blockquote>
+<p>源代码版本2.4.5-SNAPSHOT</p>
+</blockquote>
+<p>大家好，今天我们一起分析下 HikariCP 的核心ConcurrentBag，它是管理连接池的最重要的核心类。从它的名字大家可以看得出来，它是一个并发管理类，性能非常好，这是它性能甩其他连接池十条街的秘密所在。</p>
+<h2 id="代码概览"><a href="#代码概览" class="headerlink" title="代码概览"></a>代码概览</h2><p>我们先看一下代码，注意这不是全部的代码，省略了不太重要的部分。大家可以看到我加了非常详细的注释，对详解不太感兴趣的朋友可以直接读一下代码即可，不过这部分历时好几个夜晚我才写完，大家可以稍稍捧个场：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">//可用连接同步器, 用于线程间空闲连接数的通知, synchronizer.currentSequence()方法可以获取当前数量</span>
+<span class="token comment">//其实就是一个计数器, 连接池中创建了一个连接或者还回了一个连接就 + 1, 但是连接池的连接被借走, 是不会 -1 的, 只加不减</span>
+<span class="token comment">//用于在线程从连接池中获取连接时, 查询是否有空闲连接添加到连接池, 详见borrow方法</span>
+<span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">QueuedSequenceSynchronizer</span> synchronizer<span class="token punctuation">;</span>
+<span class="token comment">//sharedList保存了所有的连接</span>
+<span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">CopyOnWriteArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span> sharedList<span class="token punctuation">;</span>
+<span class="token comment">//threadList可能会保存sharedList中连接的引用</span>
+<span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">ThreadLocal</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">></span><span class="token punctuation">></span></span> threadList<span class="token punctuation">;</span>
+<span class="token comment">//对HikariPool的引用, 用于请求创建新连接</span>
+<span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">IBagStateListener</span> listener<span class="token punctuation">;</span>
+<span class="token comment">//当前等待获取连接的线程数</span>
+<span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">AtomicInteger</span> waiters<span class="token punctuation">;</span>
+<span class="token comment">//标记连接池是否关闭的状态</span>
+<span class="token keyword">private</span> <span class="token keyword">volatile</span> <span class="token keyword">boolean</span> closed<span class="token punctuation">;</span>
+
+
+<span class="token comment">/**
+ * 该方法会从连接池中获取连接, 如果没有连接可用, 会一直等待timeout超时
+ *
+ * @param timeout  超时时间
+ * @param timeUnit 时间单位
+ * @return a borrowed instance from the bag or null if a timeout occurs
+ * @throws InterruptedException if interrupted while waiting
+ */</span>
+<span class="token keyword">public</span> <span class="token class-name">T</span> <span class="token function">borrow</span><span class="token punctuation">(</span><span class="token keyword">long</span> timeout<span class="token punctuation">,</span> <span class="token keyword">final</span> <span class="token class-name">TimeUnit</span> timeUnit<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">&#123;</span>
+   <span class="token comment">//①</span>
+   <span class="token comment">//先尝试从ThreadLocal中获取</span>
+   <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">></span></span> list <span class="token operator">=</span> threadList<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span>weakThreadLocals <span class="token operator">&amp;&amp;</span> list <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token comment">//如果ThreadLocal是 null, 就初始化, 防止后面 npe</span>
+      list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      threadList<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+   <span class="token comment">//②</span>
+   <span class="token comment">//如果ThreadLocal中有连接的话, 就遍历, 尝试获取</span>
+   <span class="token comment">//从后往前反向遍历是有好处的, 因为最后一次使用的连接, 空闲的可能性比较大, 之前的连接可能会被其他线程偷窃走了</span>
+   <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">final</span> <span class="token class-name">Object</span> entry <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token annotation punctuation">@SuppressWarnings</span><span class="token punctuation">(</span><span class="token string">"unchecked"</span><span class="token punctuation">)</span> <span class="token keyword">final</span> <span class="token class-name">T</span> bagEntry <span class="token operator">=</span> weakThreadLocals <span class="token operator">?</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">WeakReference</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">></span></span><span class="token punctuation">)</span> entry<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token punctuation">(</span><span class="token class-name">T</span><span class="token punctuation">)</span> entry<span class="token punctuation">;</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>bagEntry <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> bagEntry<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>STATE_NOT_IN_USE<span class="token punctuation">,</span> STATE_IN_USE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+         <span class="token keyword">return</span> bagEntry<span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+   <span class="token punctuation">&#125;</span>
+   <span class="token comment">//③</span>
+   <span class="token comment">//如果没有从ThreadLocal中获取到连接, 那么就sharedList连接池中遍历, 获取连接, timeout时间后超时</span>
+   <span class="token comment">//因为ThreadLocal中保存的连接是当前线程使用过的, 才会在ThreadLocal中保留引用, 连接池中可能还有其他空闲的连接, 所以要遍历连接池</span>
+   <span class="token comment">//看一下requite(final T bagEntry)方法的实现, 还回去的连接放到了ThreadLocal中</span>
+   timeout <span class="token operator">=</span> timeUnit<span class="token punctuation">.</span><span class="token function">toNanos</span><span class="token punctuation">(</span>timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token class-name">Future</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Boolean</span><span class="token punctuation">></span></span> addItemFuture <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+   <span class="token comment">//记录从连接池获取连接的开始时间, 后面用</span>
+   <span class="token keyword">final</span> <span class="token keyword">long</span> startScan <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">final</span> <span class="token keyword">long</span> originTimeout <span class="token operator">=</span> timeout<span class="token punctuation">;</span>
+   <span class="token keyword">long</span> startSeq<span class="token punctuation">;</span>
+   <span class="token comment">//将等待连接的线程计数器加 1</span>
+   waiters<span class="token punctuation">.</span><span class="token function">incrementAndGet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
+         <span class="token comment">// scan the shared list</span>
+         <span class="token keyword">do</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">//④</span>
+            <span class="token comment">//当前连接池中的连接数, 在连接池中添加新连接的时候, 该值会增加</span>
+            startSeq <span class="token operator">=</span> synchronizer<span class="token punctuation">.</span><span class="token function">currentSequence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">T</span> bagEntry <span class="token operator">:</span> sharedList<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+               <span class="token keyword">if</span> <span class="token punctuation">(</span>bagEntry<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>STATE_NOT_IN_USE<span class="token punctuation">,</span> STATE_IN_USE<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                  <span class="token comment">// if we might have stolen another thread's new connection, restart the add...</span>
+                  <span class="token comment">//⑤</span>
+                  <span class="token comment">//如果waiters大于 1, 说明除了当前线程之外, 还有其他线程在等待空闲连接</span>
+                  <span class="token comment">//这里, 当前线程的addItemFuture是 null, 说明自己没有请求创建新连接, 但是拿到了连接, 这就说明是拿到了其他线程请求创建的连接, 这就是所谓的偷窃了其他线程的连接, 然后当前线程请求创建一个新连接, 补偿给其他线程</span>
+                  <span class="token keyword">if</span> <span class="token punctuation">(</span>waiters<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> addItemFuture <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                     <span class="token comment">//提交一个异步添加新连接的任务</span>
+                     listener<span class="token punctuation">.</span><span class="token function">addBagItem</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                  <span class="token punctuation">&#125;</span>
+                  <span class="token keyword">return</span> bagEntry<span class="token punctuation">;</span>
+               <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+         <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>startSeq <span class="token operator">&lt;</span> synchronizer<span class="token punctuation">.</span><span class="token function">currentSequence</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//如果连接池中的空闲连接数量比循环之前多了, 说明有新连接加入, 继续循环获取</span>
+         <span class="token comment">//⑥</span>
+         <span class="token comment">//循环完一遍连接池(也可能循环多次, 如果正好在第一次循环完连接池后有新连接加入, 那么会继续循环), 还是没有能拿到空闲连接, 就请求创建新的连接</span>
+         <span class="token keyword">if</span> <span class="token punctuation">(</span>addItemFuture <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> addItemFuture<span class="token punctuation">.</span><span class="token function">isDone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            addItemFuture <span class="token operator">=</span> listener<span class="token punctuation">.</span><span class="token function">addBagItem</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+         <span class="token punctuation">&#125;</span>
+         <span class="token comment">//计算 剩余的超时时间 = 用户设置的connectionTimeout - (系统当前时间 - 开始获取连接的时间_代码①处 即从连接池中获取连接一共使用的时间)</span>
+         timeout <span class="token operator">=</span> originTimeout <span class="token operator">-</span> <span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> startScan<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span> <span class="token keyword">while</span> <span class="token punctuation">(</span>timeout <span class="token operator">></span> <span class="token number">10_000L</span> <span class="token operator">&amp;&amp;</span> synchronizer<span class="token punctuation">.</span><span class="token function">waitUntilSequenceExceeded</span><span class="token punctuation">(</span>startSeq<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//③</span>
+      <span class="token comment">//⑦</span>
+      <span class="token comment">//这里的循环条件比较复杂</span>
+      <span class="token comment">//1. 如果剩余的超时时间, 大于10_000纳秒</span>
+      <span class="token comment">//2. startSeq的数量, 即空闲连接数超过循环之前的数量</span>
+      <span class="token comment">//3. 没有超过超时时间timeout</span>
+      <span class="token comment">//满足以上 3 个条件才会继续循环, 否则阻塞线程, 直到满足以上条件</span>
+      <span class="token comment">//如果一直等到timeout超时时间用完都没有满足条件, 结束阻塞, 往下走</span>
+      <span class="token comment">//有可能会动态改变的条件, 只有startSeq数量改变, 是②处添加的创建连接请求</span>
+   <span class="token punctuation">&#125;</span> <span class="token keyword">finally</span> <span class="token punctuation">&#123;</span>
+      waiters<span class="token punctuation">.</span><span class="token function">decrementAndGet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+
+   <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/**
+ * 该方法将借出去的连接还回到连接池中
+ * 不通过该方法还回的连接会造成内存泄露
+ *
+ * @param bagEntry the value to return to the bag
+ * @throws NullPointerException  if value is null
+ * @throws IllegalStateException if the requited value was not borrowed from the bag
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">requite</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">T</span> bagEntry<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+   <span class="token comment">//⑧</span>
+   <span class="token comment">//lazySet方法不能保证连接会立刻被设置成可用状态, 这是个延迟方法</span>
+   <span class="token comment">//这是一种优化, 如果要立即生效的话, 可能会需要使用volatile等, 让其他线程立即发现, 这会降低性能, 使用lazySet浪费不了多少时间, 但是不会浪费性能</span>
+   bagEntry<span class="token punctuation">.</span><span class="token function">lazySet</span><span class="token punctuation">(</span>STATE_NOT_IN_USE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+   <span class="token comment">//⑨</span>
+   <span class="token comment">//将连接放回到threadLocal中</span>
+   <span class="token keyword">final</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">></span></span> threadLocalList <span class="token operator">=</span> threadList<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span>threadLocalList <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      threadLocalList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>weakThreadLocals <span class="token operator">?</span> <span class="token keyword">new</span> <span class="token class-name">WeakReference</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span>bagEntry<span class="token punctuation">)</span> <span class="token operator">:</span> bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+   <span class="token comment">//通知等待线程, 有可用连接</span>
+   synchronizer<span class="token punctuation">.</span><span class="token function">signal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/**
+ * 在连接池中添加一个连接
+ * 新连接都是添加到sharedList中, threadList是sharedList中的部分连接的引用
+ *
+ * @param bagEntry an object to add to the bag
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">T</span> bagEntry<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span>closed<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      LOGGER<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"ConcurrentBag has been closed, ignoring add()"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalStateException</span><span class="token punctuation">(</span><span class="token string">"ConcurrentBag has been closed, ignoring add()"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+   <span class="token comment">//⑩</span>
+   sharedList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   synchronizer<span class="token punctuation">.</span><span class="token function">signal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/**
+ * 从连接池中移除一个连接.
+ * 这个方法只能用于从&lt;code>borrow(long, TimeUnit)&lt;/code> 或者 &lt;code>reserve(T)&lt;/code>方法中获取到的连接
+ * 也就是说, 这个方法只能移除处于使用中和保留状态的连接
+ *
+ * @param bagEntry the value to remove
+ * @return true if the entry was removed, false otherwise
+ * @throws IllegalStateException if an attempt is made to remove an object
+ *                               from the bag that was not borrowed or reserved first
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">remove</span><span class="token punctuation">(</span><span class="token keyword">final</span> <span class="token class-name">T</span> bagEntry<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+   <span class="token comment">//⑪</span>
+   <span class="token comment">//尝试标记移除使用中和保留状态的连接, 如果标记失败, 就是空闲的连接, 直接返回 false</span>
+   <span class="token comment">//也就是检查连接的状态, 不能移除空闲的连接或者已经标记移除的连接</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>bagEntry<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>STATE_IN_USE<span class="token punctuation">,</span> STATE_REMOVED<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>bagEntry<span class="token punctuation">.</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>STATE_RESERVED<span class="token punctuation">,</span> STATE_REMOVED<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>closed<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      LOGGER<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Attempt to remove an object from the bag that was not borrowed or reserved: &#123;&#125;"</span><span class="token punctuation">,</span> bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+   <span class="token comment">//如果上面标记成功了, 那么从连接池中移除这个连接</span>
+   <span class="token keyword">final</span> <span class="token keyword">boolean</span> removed <span class="token operator">=</span> sharedList<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>removed <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>closed<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      LOGGER<span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">"Attempt to remove an object from the bag that does not exist: &#123;&#125;"</span><span class="token punctuation">,</span> bagEntry<span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span>
+
+   <span class="token comment">// synchronizer.signal();</span>
+   <span class="token keyword">return</span> removed<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>上面的代码是ConcurrentBag中的成员变量和最重要的四个方法，ConcurrentBag中的属性我们穿插在代码中解释。</p>
+<h2 id="borrow方法"><a href="#borrow方法" class="headerlink" title="borrow方法"></a>borrow方法</h2><p>borrow方法应该是整个 HikariCP 中最最核心的方法，它是我们从连接池中获取连接的时候最终会调用到的方法，一切秘密都在这里了。我们分析下：</p>
+<h3 id="①ThreadLocal"><a href="#①ThreadLocal" class="headerlink" title="①ThreadLocal"></a>①ThreadLocal</h3><pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">//①</span>
+<span class="token comment">//先尝试从ThreadLocal中获取</span>
+<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">></span></span> list <span class="token operator">=</span> threadList<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>weakThreadLocals <span class="token operator">&amp;&amp;</span> list <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">//如果ThreadLocal是 null, 就初始化, 防止后面 npe</span>
+  list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  threadList<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p><code>threadList</code>是在ConcurrentBag上的成员变量，它的定义是<code>private final ThreadLocal&lt;List&gt; threadList;</code>，可见它是一个<code>ThreadLocal</code>，也就是每个线程都有独享的一个 <code>List</code>，它是用于保存当前线程用过的连接。注意这里我说的是”用过”，不是所有的连接。因为还有一个成员变量<code>private final CopyOnWriteArrayList&lt;T&gt; sharedList;</code>，它是真正的保存所有的连接的地方，它是一个<code>CopyOnWriteArrayList</code>，在写入的时候会先复制一个 <code>sharedList2</code>，然后修改这个新的 <code>sharedList2</code>，最后将变量地址指向新的<code>sharedList2</code>，不是直接写入当前的<code>sharedList</code>，典型的空间换时间的一个做法，可以避免写入前要锁住<code>sharedList</code>，从而导致降低性能。</p>
+<p>HikariCP 使用过的连接，在还回连接池的时候，是直接放在了<code>ThreadLocal</code>中。说到这里，可能会有同学问了：<code>sharedList</code>中保存了所有的连接，当用户借走了一个连接，不是应该把这个连接从<code>sharedList</code>中移除，然后还回来的时候再把连接加入到<code>sharedList</code>中？为什么还回去的时候，没有放到<code>sharedList</code>中呢？</p>
+<p>首先，明确一点，HikariCP 不是这样做的。为什么呢？如果用户借用连接的时候，你从<code>sharedList</code>中移除了，那么相当于这个连接脱离了 HikariCP 的管理，后面 HikariCP 还怎么管理这个连接呢？比如这个连接的生命周期到时间了，连接都让用户拐跑了，我还怎么关闭这个连接呢？所以，所有的连接都不能脱离掌控，一个都不能少。其实，我们在<code>sharedList</code>中保存的仅仅是数据库连接的引用，这些连接是所有的线程都可见的，各个线程也可以随意保存连接的引用，只是要使用的时候必须要走borrow方法，按流程来。</p>
+<p>为什么要放到线程的<code>threadList</code>中？</p>
+<p>因为下次获取的时候比较方便，也许会提高性能。每个线程都优先从自己的本地线程中拿，竞争的可能性大大降低啊，也许这个连接刚刚用完到再次获取的时间极短，这个连接很可能还空闲着。只有在本地线程中的连接都不能使用的时候，才去<code>sharedList</code>这个 HikariCP的总仓库里获取。</p>
+<p>举一个生活例子：假如你是一个连锁店老板，提供汽车出租服务，有一个总仓库，所有的连锁店都从这里提车出租给用户。刚开始，你是每租一辆车都去仓库直接提货，用户还车的时候，你直接送到仓库。过了一段时间，你觉得这样不行啊，太浪费时间了，而且所有的连锁店都这样，各个店的老板都去提车，太忙了，还得排队。要不用户还回来的车先放店里吧，这样下次有用户租车就不用去仓库了，直接给他，方便很多，店里没车了再去总仓提车。其他连锁店都开始这么搞，大家都先用店里的车不够再去总仓。生意火爆，有一天店里没车了，你去仓库提车，仓库管理员说：仓库也没车了，天通苑的连锁店里有闲着的，你去那里提吧，于是你把天通苑连锁店的车借走了。所以各个连锁店之间也有相互借车。</p>
+<p>例子可能不太恰当，一时也想不到同样道理的生活例子，但是就这个意思。HikariCP 也是这样，用户使用的连接，还回连接池的时候，直接放到线程的本地<code>threadList</code>中，如果用户又要借用连接，先看本地有没有，优先使用本地连接，只有本地没有或者都不可用的时候，再去 HikariCP 的连接池里获取。但是跟借车不同，因为我们本地是保存的<code>sharedList</code>中连接的引用，虽然你还有这个连接的引用，但是很可能它已经被其他线程从<code>sharedList</code>借走了，这就是HikariCP所谓的线程间的连接窃取。所以线程在本地的<code>threadList</code>就算拿到了连接，也必须检查下状态，是不是可用的。</p>
+<p>说到这里，还没有解析代码，扯远了。①处代码就是先从本地的<code>threadList</code>里取出连接的 List，然后检查下List 是否为空，是空的直接初始化一个 List，因为下面要用到，防止抛空指针了。大家可以看到判空的时候，还有一个条件是<code>weakThreadLocals</code>，这个标识是表示<code>threadList</code>是否是弱引用。如果是弱引用，那么很可能 GC 的时候会被回收掉，所以变成 null 了，但是如果不是弱引用的话，那么它是在初始化ConcurrentBag的时候，就是一个FastList了，不用担心是 null。那么什么情况下<code>threadList</code>会是弱引用呢？当 HikariCP 运行在容器中时，会使用弱引用，因为在容器重新部署的时候，可能会导致发成内存泄露，具体大家可以看下#39 的 issue。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">枫山别院</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://www.fsby.fun/2020/07/30/HikariCP-source-code-8/">https://www.fsby.fun/2020/07/30/HikariCP-source-code-8/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">枫山别院</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Hikari/">
+                                    <span class="chip bg-color">Hikari</span>
+                                </a>
+                            
+                                <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+                                    <span class="chip bg-color">中间件</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                                    <span class="chip bg-color">数据库</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
+                                    <span class="chip bg-color">源码解析</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%BA%90%E4%BB%A3%E7%A0%81/">
+                                    <span class="chip bg-color">源代码</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2020/07/30/HikariCP-source-code-0/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="HikariCP源码解析系列目录">
+                        
+                        <span class="card-title">HikariCP源码解析系列目录</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-07-30
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/HikariCP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="post-category">
+                                    HikariCP源码解析
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Hikari/">
+                        <span class="chip bg-color">Hikari</span>
+                    </a>
+                    
+                    <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+                        <span class="chip bg-color">中间件</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                        <span class="chip bg-color">数据库</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
+                        <span class="chip bg-color">源码解析</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BA%90%E4%BB%A3%E7%A0%81/">
+                        <span class="chip bg-color">源代码</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/07/12/HikariCP-source-code-6/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="HikariConfig的配置解析">
+                        
+                        <span class="card-title">HikariConfig的配置解析</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-07-12
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/HikariCP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="post-category">
+                                    HikariCP源码解析
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Hikari/">
+                        <span class="chip bg-color">Hikari</span>
+                    </a>
+                    
+                    <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+                        <span class="chip bg-color">中间件</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                        <span class="chip bg-color">数据库</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
+                        <span class="chip bg-color">源码解析</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%BA%90%E4%BB%A3%E7%A0%81/">
+                        <span class="chip bg-color">源代码</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: 枫山别院<br />'
+            + '文章作者: 枫山别院<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2022</span>
+            
+            
+            <a href="/about" target="_blank">枫山别院</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">42.6k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+	
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
