@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="闲聊Java编程入门三：编程环境, 枫山别院,博客,Java,框架,架构,hikari,hikariCP">
+    <meta name="keywords" content="闲聊Java编程入门二：理解编程, 枫山别院,博客,Java,框架,架构,hikari,hikariCP">
     <meta name="description" content="逆水行舟用力撑，一篙松劲退千寻">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -27,7 +27,7 @@
 </script>
 
 
-    <title>闲聊Java编程入门三：编程环境 | 枫山别院</title>
+    <title>闲聊Java编程入门二：理解编程 | 枫山别院</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -214,12 +214,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">闲聊Java编程入门三：编程环境</h1>
+                    <h1 class="description center-align post-title">闲聊Java编程入门二：理解编程</h1>
                 </div>
             </div>
         </div>
@@ -368,7 +368,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-09-30
+                    2022-10-01
                 </div>
                 
 
@@ -377,14 +377,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    245
+                    1.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    3 分
                 </div>
                 
 
@@ -410,17 +410,30 @@
                 <blockquote>
 <p>基于Java 8</p>
 </blockquote>
-<h1 id="编程环境"><a href="#编程环境" class="headerlink" title="编程环境"></a>编程环境</h1><p>大家应该还记得我说过，上大学的时候，好多同学倒在了Java开发环境的配置的第一关上。所以，我们就直接省略掉那些无关的东西。<br>在此帮大家选了几个可以直接在网页上运行Java语言的网站，我们直接在这些网站上学习就可以了。</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/tryrun/runcode?lang=java-openjdk">https://www.w3cschool.cn/tryrun/runcode?lang=java-openjdk</a></li>
-<li><a target="_blank" rel="noopener" href="https://tool.lu/coderunner/">https://tool.lu/coderunner/</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.bejson.com/runcode/java/">https://www.bejson.com/runcode/java/</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cainiaojc.com/tool/java/">https://www.cainiaojc.com/tool/java/</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.nhooo.com/tool/java/">https://www.nhooo.com/tool/java/</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.json.cn/runcode/run_java/">https://www.json.cn/runcode/run_java/</a></li>
-</ul>
-<p>界面都是大同小异的，大家可以从上面选一个最快的网站。<br>以第一个为例：<br><img src="/images/run-java-online.jpg" alt="示例"></p>
-<p>黑色的框是我们输入代码的地方，白色的框是我们看代码运行结果的地方。<br>黑色输入框中有一些代码，现在不懂没有关系，我们先不用理会，大家可以点击一下运行代码，看看会显示什么。</p>
+<h2 id="什么是编程"><a href="#什么是编程" class="headerlink" title="什么是编程"></a>什么是编程</h2><p>既然大家在学习编程，那么我相信其实大家心里对编程是有一定的理解的。通俗的讲，编程就是按照我们的意图，对计算机编写命令，让计算机运行这些命令。</p>
+<p>首先明确一点，计算机只是个机器，他目前没有任何的理解能力，仅仅是个能运行命令的工具而已。它是一个榆木脑袋，死脑筋，只能按照你的命令运行。</p>
+<p>我觉得程序员更像是一个计算机的“驯兽师”，就像马戏团的驯兽师一样，教导动物去做一些表演，区别就是程序员教导的是一台机器。所以我们的工作，就是发出一个一个的“口令”，让我们的“动物”能按照我们的意图“表演”。</p>
+<p>因此，我们学习编程，就是学习计算机能都“听懂”的命令而已。只要熟悉了计算机能听懂的的语言，那么我们就可以指挥计算机按照我们设计好的程序进行“表演”啦。</p>
+<p>很多很多的命令就组成了一个程序。</p>
+<p>比如你想托朋友帮你办个手续，你写了一封信，告诉他，先干啥，再干啥。。。。。最后干啥，一步一步的让你朋友帮你办理。</p>
+<p>写一个程序，就是写一个命令组成的“信”，你要让计算机看懂，就要按照它的语言的书写规范来写这个“信”，教它一步一步给你办理。</p>
+<p>同样的，假如你用外星语言写信托朋友给你办事，估计是办不成的。</p>
+<h2 id="什么是Java"><a href="#什么是Java" class="headerlink" title="什么是Java"></a>什么是Java</h2><p>其实计算机的世界，跟我们人类的世界是有很多共通的。</p>
+<p>现在世界上最流行的人类语言，就是英语了吧。其次是普通话，法语，日语等等。“hello”，“你好”，都表达同一个意思，就是一句你好的问候，只是写法和发音不同而已。</p>
+<p>Java也只是计算机世界中的一种语言而已，计算机的语言。其他的比较流行的，还有C，Python，Go，Rust等等，非常多的语言。</p>
+<p>人类诞生出不同的语言，那是因为地域原因，不同的地方自然语言不同。</p>
+<p>那么计算机为什么会有这么多种语言？</p>
+<p>计算机语言的诞生，其实是有多种目的的。</p>
+<p>第一个比较重要的，是不同的语言擅长的领域不同。好多计算机语言的发明，都是因为有人觉得这种语言在做某种工作的时候不好用，所以就自己发明了一个。比如我们要学习的Java，比较擅长开发网站的服务器端软件。C语言就比较擅长开发与操作系统相关的软件。</p>
+<p>第二个原因就是，有些语言是某个公司发明的，其他公司可能与该公司有竞争关系，所以不想用对手发明的语言，于是自己又发明了一个。比较著名的就是Google与Oracle因为android系统使用Java语言的官司了。</p>
+<p>不同语言擅长的领域不一样，所以我们在开发软件的时候，也要考虑要使用什么语言比较好。</p>
+<p>为什么会有这种差别呢？</p>
+<p>如果我让你造一台车，你会不会所有的零件都自己造？从打造螺丝钉开始？那么要猴年马月才能造出来啊。</p>
+<p>现实中，我们可以委托给一个车企代工，因为他们都已经有相应的生产线了，所以可以非常方便快捷的把车造出来。</p>
+<p>相反，你肯定不会把造车的请求委托给生产方便面的企业吧？跨行业了，他们不擅长制造。</p>
+<p>编程语言也是这样的，不同的编程语言就像不同的企业，擅长的领域不同。</p>
+<p>Java在网页服务端系统开发的生态非常完备，这是其他语言比不了的。</p>
+<p>好多开源的软件你可以直接拿来用，不用自己从“螺丝钉”开始打造，汽车的零部件已经都帮你造好了，你自己组装改造一下就可以了。</p>
 
                 
             </div>
@@ -447,7 +460,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://www.fsby.fun/2022/09/30/learn-java-3/">https://www.fsby.fun/2022/09/30/learn-java-3/</a>
+                    <a href="https://www.fsby.fun/2022/10/01/learn-java-2/">https://www.fsby.fun/2022/10/01/learn-java-2/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -668,13 +681,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/09/30/learn-java-1/">
+                <a href="/2022/10/01/learn-java-3/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="闲聊Java编程入门一：前言">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="闲聊Java编程入门三：编程环境">
                         
-                        <span class="card-title">闲聊Java编程入门一：前言</span>
+                        <span class="card-title">闲聊Java编程入门三：编程环境</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -685,7 +698,7 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-09-30
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-10-01
                         </span>
                         <span class="publish-author">
                             
@@ -725,13 +738,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/09/30/learn-java-4/">
+                <a href="/2022/10/01/learn-java-1/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="闲聊Java编程入门四：常用类型">
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="闲聊Java编程入门一：前言">
                         
-                        <span class="card-title">闲聊Java编程入门四：常用类型</span>
+                        <span class="card-title">闲聊Java编程入门一：前言</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -742,7 +755,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-09-30
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-10-01
                             </span>
                         <span class="publish-author">
                             
