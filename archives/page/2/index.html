@@ -656,13 +656,13 @@ HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源�
             <article class="cd-timeline-content" data-aos="fade-up">
                 <div class="article col s12 m6">
                     <div class="card">
-                        <a href="/2020/07/05/HikariCP-source-code-4/">
+                        <a href="/2020/07/05/HikariCP-source-code-5/">
                             <div class="card-image">
                                 
                                 
-                                <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
+                                <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析二">
                                 
-                                <span class="card-title">HikariCP源码分析之初始化分析一</span>
+                                <span class="card-title">HikariCP源码分析之初始化分析二</span>
                             </div>
                         </a>
                         <div class="card-content article-content">
@@ -671,8 +671,7 @@ HikariPool的getConnection()方法在上一篇《HikariCP获取连接流程源�
                                     
 源代码版本2.4.5-SNAPSHOT
 
-HikariDataSource的初始化
-HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
+HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：
                                 
                             </div>
                             <div class="publish-info">
@@ -727,13 +726,13 @@ HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。
             <article class="cd-timeline-content" data-aos="fade-up">
                 <div class="article col s12 m6">
                     <div class="card">
-                        <a href="/2020/07/05/HikariCP-source-code-5/">
+                        <a href="/2020/07/05/HikariCP-source-code-4/">
                             <div class="card-image">
                                 
                                 
-                                <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析二">
+                                <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
                                 
-                                <span class="card-title">HikariCP源码分析之初始化分析二</span>
+                                <span class="card-title">HikariCP源码分析之初始化分析一</span>
                             </div>
                         </a>
                         <div class="card-content article-content">
@@ -742,7 +741,8 @@ HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。
                                     
 源代码版本2.4.5-SNAPSHOT
 
-HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：
+HikariDataSource的初始化
+HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
                                 
                             </div>
                             <div class="publish-info">
@@ -1261,7 +1261,7 @@ public class Test &#123;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">46.8k</span>&nbsp;字
+                class="white-color">47.3k</span>&nbsp;字
             
             
             

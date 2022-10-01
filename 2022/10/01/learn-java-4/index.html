@@ -377,14 +377,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.9k
+                    2.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    6 分
+                    8 分
                 </div>
                 
 
@@ -497,6 +497,31 @@
 
 <p>运行一下，是不是显示出来了呢？</p>
 <p>如果没有，再检查一下是否一样，有没有忘了使用英文的引号。</p>
+<h2 id="我们似乎还忘了一种简单的计算"><a href="#我们似乎还忘了一种简单的计算" class="headerlink" title="我们似乎还忘了一种简单的计算"></a>我们似乎还忘了一种简单的计算</h2><p>小学课程里，除了加减乘除，好像还有大于和小于的比较。<br>如果我在代码里输入如下的代码，会显示什么呢？</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token number">3</span> <span class="token operator">></span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<p><code>3 &gt; 2</code>，说了一句大实话。请执行一下看看。</p>
+<p>我的计算机告诉我，结果是<code>true</code>。如果你跟我一样，那么我们就发现了一个新大陆。</p>
+<p>那么如果是这样呢？</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token number">3</span> <span class="token operator">&lt;</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>这时候计算机告诉我，结果是<code>false</code>。</p>
+<p>我们知道，在英文中，<code>true</code>的意思是符合事实的，真实的，真的。 <code>false</code>的意思是假的，错误的。</p>
+<p>那么，我们在计算<code>3 &gt; 2</code>的时候，计算机其实是想告诉我们，这是真的，正确的。<code>3 &lt; 2</code>的时候，告诉我们，这是错误的，假的。</p>
+<p>看来，计算机还能做一些比较大小的计算，可以告诉我们结果是不是正确的。如果是正确的，就告诉我们<code>true</code>，错误的就告诉我们<code>false</code>。</p>
+<p>那么，我们推断，肯定计算机是认识<code>true</code>和<code>false</code>两个词的。</p>
+<p>是的，这两个词也是对应一个类型的，叫做布尔类型，英文是boolean。又是一个奇怪的名字，不要深究，因为我干了这么多年，到现在也不知道为什么，只知道是英文翻译来的。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>之前我们在上面说，A和B是不能相加的，除非我们约定一种计算规则。<br>请自己尝试一下，我们是否跟计算机有关于字符相加的约定规则，计算结果是什么呢？</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token char">'A'</span> <span class="token operator">+</span> <span class="token char">'B'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>如果是小写的a和b呢？</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token char">'a'</span> <span class="token operator">+</span> <span class="token char">'b'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>再如果是字符串呢？能相加吗？</p>
+<p>试一试看：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"hello"</span> <span class="token operator">+</span> <span class="token string">"Java"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>如果是减法呢？</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token char">'A'</span> <span class="token operator">-</span> <span class="token char">'B'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>如果我们比较两个字母的大小呢？</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token char">'A'</span> <span class="token operator">></span> <span class="token char">'B'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>请大家尝试一下。</p>
 
                 
             </div>
@@ -1032,7 +1057,7 @@
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">46.8k</span>&nbsp;字
+                class="white-color">47.3k</span>&nbsp;字
             
             
             
