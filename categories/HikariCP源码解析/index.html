@@ -293,11 +293,11 @@
                 </a>
                 
                 
-                <a href="/categories/Spring-Boot/" title="Spring-Boot: 1">
+                <a href="/categories/%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" title="问题排查: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #E8F8F5;">Spring-Boot
-                        <span class="tag-length">1</span>
+                            style="background-color: #E8F8F5;">问题排查
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
@@ -311,20 +311,11 @@
                 </a>
                 
                 
-                <a href="/categories/Dart/" title="Dart: 1">
+                <a href="/categories/Spring-Boot/" title="Spring-Boot: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F8F9F9;">Dart
+                            style="background-color: #F8F9F9;">Spring-Boot
                         <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/" title="问题排查: 2">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #82E0AA;">问题排查
-                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
@@ -332,8 +323,17 @@
                 <a href="/categories/Java%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/" title="Java入门教程: 5">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #D7BDE2;">Java入门教程
+                            style="background-color: #82E0AA;">Java入门教程
                         <span class="tag-length">5</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/categories/%E9%95%9C%E5%83%8F%E6%BA%90/" title="镜像源: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #D7BDE2;">镜像源
+                        <span class="tag-length">1</span>
                     </span>
                 </a>
                 
@@ -347,19 +347,10 @@
                 </a>
                 
                 
-                <a href="/categories/%E9%95%9C%E5%83%8F%E6%BA%90/" title="镜像源: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #85C1E9;">镜像源
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
                 <a href="/categories/Swift/" title="Swift: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F8C471;">Swift
+                            style="background-color: #85C1E9;">Swift
                         <span class="tag-length">1</span>
                     </span>
                 </a>
@@ -368,7 +359,7 @@
                 <a href="/categories/%E7%BB%88%E7%AB%AF/" title="终端: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F9E79F;">终端
+                            style="background-color: #F8C471;">终端
                         <span class="tag-length">1</span>
                     </span>
                 </a>
@@ -726,13 +717,13 @@ HikariCP获取连接流程源码分析三 | 枫
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/12/HikariCP-source-code-7/">
+                    <a href="/2020/07/12/HikariCP-source-code-6/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariConfig初始化分析">
+                            <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="HikariConfig的配置解析">
                             
-                            <span class="card-title">HikariConfig初始化分析</span>
+                            <span class="card-title">HikariConfig的配置解析</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
@@ -741,10 +732,8 @@ HikariCP获取连接流程源码分析三 | 枫
                                 
 源代码版本2.4.5-SNAPSHOT
 
-HikariConfig有 3 个构造方法，这三个构造方法其实都差不多，无我们逐个看一下：
-无参构造第一个无参的构造，代码如下：
-public HikariConfig() &#123;
-    
+使用HikariConfig初始化 HikariCP在《HikariCP源码分析之初始化分析一》中，我们解析了 HikariCP 的两种初始化方式，其中提到了使用HikariConfig的方式：
+
                             
                         </div>
                         <div class="publish-info">
@@ -794,13 +783,13 @@ public HikariConfig() &#123;
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/12/HikariCP-source-code-6/">
+                    <a href="/2020/07/12/HikariCP-source-code-7/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="HikariConfig的配置解析">
+                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="HikariConfig初始化分析">
                             
-                            <span class="card-title">HikariConfig的配置解析</span>
+                            <span class="card-title">HikariConfig初始化分析</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
@@ -809,8 +798,10 @@ public HikariConfig() &#123;
                                 
 源代码版本2.4.5-SNAPSHOT
 
-使用HikariConfig初始化 HikariCP在《HikariCP源码分析之初始化分析一》中，我们解析了 HikariCP 的两种初始化方式，其中提到了使用HikariConfig的方式：
-
+HikariConfig有 3 个构造方法，这三个构造方法其实都差不多，无我们逐个看一下：
+无参构造第一个无参的构造，代码如下：
+public HikariConfig() &#123;
+    
                             
                         </div>
                         <div class="publish-info">
@@ -928,13 +919,13 @@ if (poolEntry.isMarkedEvicted() ||
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/05/HikariCP-source-code-5/">
+                    <a href="/2020/07/05/HikariCP-source-code-4/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析二">
+                            <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
                             
-                            <span class="card-title">HikariCP源码分析之初始化分析二</span>
+                            <span class="card-title">HikariCP源码分析之初始化分析一</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
@@ -943,7 +934,8 @@ if (poolEntry.isMarkedEvicted() ||
                                 
 源代码版本2.4.5-SNAPSHOT
 
-HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：
+HikariDataSource的初始化
+HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
                             
                         </div>
                         <div class="publish-info">
@@ -993,13 +985,13 @@ HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new Hi
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/07/05/HikariCP-source-code-4/">
+                    <a href="/2020/07/05/HikariCP-source-code-5/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析一">
+                            <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="HikariCP源码分析之初始化分析二">
                             
-                            <span class="card-title">HikariCP源码分析之初始化分析一</span>
+                            <span class="card-title">HikariCP源码分析之初始化分析二</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
@@ -1008,8 +1000,7 @@ HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new Hi
                                 
 源代码版本2.4.5-SNAPSHOT
 
-HikariDataSource的初始化
-HikariDataSource是 HikariCP 开放给用户使用连接池的主要操作类。所以，我们创建一个 HikariCP 的连接池，其实就是构造一个H
+HikariPool的初始化在上一节，我们说到了pool = fastPathPool = new HikariPool(this);中的new HikariPool(this)。我们来看下代码：
                             
                         </div>
                         <div class="publish-info">
